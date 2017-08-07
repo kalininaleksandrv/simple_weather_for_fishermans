@@ -66,7 +66,6 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         cf_coordoutput.setText(s);
     }
 
-    @Override
     public void isBtnPressed() {
 
         cfpresenter.isBtnPressed();
