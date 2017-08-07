@@ -1,5 +1,5 @@
 
-package dev.eyesless.simple_weather_for_fishermans.geocoding_response_classes;
+package dev.eyesless.simple_weather_for_fishermans.geocoding_responce_classes;
 
 import java.util.List;
 import com.google.gson.annotations.Expose;
