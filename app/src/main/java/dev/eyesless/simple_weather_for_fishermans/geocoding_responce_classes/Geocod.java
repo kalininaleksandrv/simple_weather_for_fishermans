@@ -1,11 +1,11 @@
 
-package dev.eyesless.simple_weather_for_fishermans.geocoding_response_classes;
+package dev.eyesless.simple_weather_for_fishermans.geocoding_responce_classes;
 
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class GeocodingResponce {
+public class Geocod {
 
     @SerializedName("results")
     @Expose
@@ -14,9 +14,7 @@ public class GeocodingResponce {
     @Expose
     private String status;
 
-    public List<Result> getResults() {
-        return results;
-    }
+    public List<Result> getResults() {return results;}
 
     public void setResults(List<Result> results) {
         this.results = results;

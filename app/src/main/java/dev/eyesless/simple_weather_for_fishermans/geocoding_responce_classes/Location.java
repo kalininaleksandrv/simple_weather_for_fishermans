@@ -1,10 +1,10 @@
 
-package dev.eyesless.simple_weather_for_fishermans.geocoding_response_classes;
+package dev.eyesless.simple_weather_for_fishermans.geocoding_responce_classes;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Southwest {
+public class Location {
 
     @SerializedName("lat")
     @Expose
