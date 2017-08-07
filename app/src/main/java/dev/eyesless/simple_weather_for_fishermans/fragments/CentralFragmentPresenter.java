@@ -11,7 +11,7 @@ class CentralFragmentPresenter {
     }
 
 
-    protected void isBtnPressed() {
+     void isBtnPressed() {
 
         String s = cfinterface.getPlace();
         cfinterface.setCoords(s);

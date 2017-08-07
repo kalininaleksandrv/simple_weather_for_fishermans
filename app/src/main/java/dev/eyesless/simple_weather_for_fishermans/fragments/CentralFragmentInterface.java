@@ -5,6 +5,5 @@ package dev.eyesless.simple_weather_for_fishermans.fragments;
 
     String getPlace ();
     void setCoords (String s);
-    void isBtnPressed ();
 
 }

@@ -1,5 +1,6 @@
 package dev.eyesless.simple_weather_for_fishermans;
 
+import android.content.res.Configuration;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -8,19 +9,27 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import dev.eyesless.simple_weather_for_fishermans.fragments.CentralFragmentImpl;
 
-public class AMainActivity extends AppCompatActivity {
+public class AMainActivity extends AppCompatActivity implements AMainIntwerface {
 
     private static final int LAYOUT = R.layout.activity_amain;
     private Toolbar mytoolbar;
     private ActionBarDrawerToggle drawerToggle;
     private DrawerLayout drawer;
     private NavigationView naview;
+    AMainPresenter presenter;
 
-
+    public AMainActivity() {
+        presenter = new AMainPresenter(this);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,46 +43,87 @@ public class AMainActivity extends AppCompatActivity {
         inittoolbar();
 
         initDrawerTogle ();
+
     }
 
-    private void initNavigationView() {
 
+    //create navigation view and plugged custom menu (res/menu) and header
+    private void initNavigationView() {
         drawer = (DrawerLayout) findViewById(R.id.drawer_main);
         naview = (NavigationView) findViewById(R.id.navigation_view);
         naview.getMenu().clear();
         naview.inflateMenu(R.menu.menu_navigation);
         naview.inflateHeaderView(R.layout.navigation_header);
-
     }
 
     //create custom toolbar
     private void inittoolbar() {
-
         mytoolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mytoolbar);
     }
 
-    //код Drawer Togle кнопка выдвижения и задвижения drawer-а
-    private ActionBarDrawerToggle initDrawerTogle() {
-
-        if (getSupportActionBar() != null){
-
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeButtonEnabled(true);
-
-        }
+    //Ddrawer togle on and of listner
+    private void initDrawerTogle() {
 
         drawerToggle = new ActionBarDrawerToggle(this, drawer, R.string.drawer_open, R.string.drawer_closed){
             public void onDrawerClosed (View v) {
                 super.onDrawerClosed(v);
+                Log.i("MY_TAG", "close");
             }
             public void onDrawerOpened (View v) {
                 super.onDrawerOpened(v);
+                Log.i("MY_TAG", "open");
             }
         };
 
-        return drawerToggle;
+        drawer.addDrawerListener(drawerToggle);
+
+        if (getSupportActionBar() != null){
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
+
+    //get drawer closed by click on item (condition to open drawer by click on hamburger)
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true;}
+
+             uppermenuselector (item.getItemId());
+
+        //here is plase to handle another items on uper menu
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void uppermenuselector(int itemId) {
+
+        presenter.setmenuid (itemId);
+
+    }
+
+    // Sync the toggle state after onRestoreInstanceState has occurred.
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
+    }
+
+    //unnown magic with configuration changes
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    //set up upper custom menu (res/menu)
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_mainactivity, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
 
     //main method for remoove frames when clicked
     public void frameRemoover(Fragment fragment, String mytag) {
@@ -86,4 +136,11 @@ public class AMainActivity extends AppCompatActivity {
 
     }
 
+    //making toasts
+    @Override
+    public void toastmaker(String s) {
+        final Toast myToast = Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG);
+        myToast.setGravity(Gravity.CENTER, 0, 30);
+        myToast.show();
+    }
 }
