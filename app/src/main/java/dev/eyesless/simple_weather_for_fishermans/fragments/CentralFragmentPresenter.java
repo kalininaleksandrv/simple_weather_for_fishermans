@@ -23,7 +23,7 @@ class CentralFragmentPresenter {
     CentralFragmentPresenter(CentralFragmentInterface cfi) {
 
         this.cfinterface = cfi;
-        this.private_key = dev.eyesless.simple_weather_for_fishermans.Keys.getPrivateKey();
+        this.private_key = dev.eyesless.simple_weather_for_fishermans.Keys.getGoogleMapPrivateKey();
 
     }
 

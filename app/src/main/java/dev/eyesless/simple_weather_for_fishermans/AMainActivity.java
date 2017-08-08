@@ -16,11 +16,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+
 import dev.eyesless.simple_weather_for_fishermans.fragments.CentralFragmentImpl;
 
 public class AMainActivity extends AppCompatActivity implements AMainIntwerface {
 
     private static final int LAYOUT = R.layout.activity_amain;
+    private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private Toolbar mytoolbar;
     private ActionBarDrawerToggle drawerToggle;
     private DrawerLayout drawer;
@@ -46,6 +50,13 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface 
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        checkPlayServices();
+
+    }
 
     //create navigation view and plugged custom menu (res/menu) and header
     private void initNavigationView() {
@@ -142,5 +153,21 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface 
         final Toast myToast = Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG);
         myToast.setGravity(Gravity.CENTER, 0, 30);
         myToast.show();
+    }
+
+    //check the avaliability of google play services because app using Google Places API
+    private boolean checkPlayServices() {
+        GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
+        int result = googleAPI.isGooglePlayServicesAvailable(this);
+        if(result != ConnectionResult.SUCCESS) {
+            if(googleAPI.isUserResolvableError(result)) {
+                googleAPI.getErrorDialog(this, result,
+                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            }
+
+            return false;
+        }
+
+        return true;
     }
 }
