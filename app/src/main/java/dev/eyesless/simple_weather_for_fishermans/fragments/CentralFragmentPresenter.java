@@ -17,12 +17,13 @@ import retrofit2.Response;
 class CentralFragmentPresenter {
 
     private CentralFragmentInterface cfinterface;
-    private String PRIVATE_KEY = "";
+    private String private_key;
 
 
     CentralFragmentPresenter(CentralFragmentInterface cfi) {
 
         this.cfinterface = cfi;
+        this.private_key = dev.eyesless.simple_weather_for_fishermans.Keys.getPrivateKey();
 
     }
 
@@ -32,7 +33,7 @@ class CentralFragmentPresenter {
 
         String fix = a.replaceAll("\\s+","+");
 
-         geocoding_interfaces.CoordinatesFactory.getInstance().getCoordinates(fix, PRIVATE_KEY).enqueue(new Callback<Geocod>() {
+         geocoding_interfaces.CoordinatesFactory.getInstance().getCoordinates(fix, private_key).enqueue(new Callback<Geocod>() {
 
              @Override
              public void onResponse(@NonNull Call<Geocod> call, @NonNull Response<Geocod> response) {
