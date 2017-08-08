@@ -28,9 +28,9 @@ class CentralFragmentPresenter {
 
      void isBtnPressed() {
 
-        String s = cfinterface.getPlace();
+        String a = cfinterface.getPlace();
 
-        String fix = "Moscow+Russia";
+        String fix = a.replaceAll("\\s+","+");
 
          geocoding_interfaces.CoordinatesFactory.getInstance().getCoordinates(fix, PRIVATE_KEY).enqueue(new Callback<Geocod>() {
 

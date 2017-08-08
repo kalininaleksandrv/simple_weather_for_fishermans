@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Simple_Weather_For_Fishermans</string>
-    <string name="founded_city">Населенный пункт</string>
+    <string name="founded_city">Москва, Россия</string>
     <string name="find_coords">Найти координаты</string>
     <string name="drawer_open">Открыт</string>
     <string name="drawer_closed">Закрыт</string>
