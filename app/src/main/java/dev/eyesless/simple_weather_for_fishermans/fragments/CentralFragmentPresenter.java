@@ -8,6 +8,8 @@ import java.util.List;
 import dev.eyesless.simple_weather_for_fishermans.api_interface.geocoding_interfaces;
 import dev.eyesless.simple_weather_for_fishermans.geocoding_responce_classes.Geocod;
 import dev.eyesless.simple_weather_for_fishermans.geocoding_responce_classes.Result;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -15,6 +17,8 @@ import retrofit2.Response;
 class CentralFragmentPresenter {
 
     private CentralFragmentInterface cfinterface;
+    private String PRIVATE_KEY = "";
+
 
     CentralFragmentPresenter(CentralFragmentInterface cfi) {
 
@@ -22,12 +26,13 @@ class CentralFragmentPresenter {
 
     }
 
-
      void isBtnPressed() {
 
         String s = cfinterface.getPlace();
 
-         geocoding_interfaces.CoordinatesFactory.getInstance().getCoordinates().enqueue(new Callback<Geocod>() {
+        String fix = "Moscow+Russia";
+
+         geocoding_interfaces.CoordinatesFactory.getInstance().getCoordinates(fix, PRIVATE_KEY).enqueue(new Callback<Geocod>() {
 
              @Override
              public void onResponse(@NonNull Call<Geocod> call, @NonNull Response<Geocod> response) {
