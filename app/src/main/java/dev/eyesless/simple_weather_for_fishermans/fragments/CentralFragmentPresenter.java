@@ -21,6 +21,9 @@ class CentralFragmentPresenter {
     private String private_key;
     private AMainActivity mActivity;
     private final String DEFOULT_LOC = "Москва, Россия";
+    final static int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+    private String autocompleted;
+
 
     CentralFragmentPresenter(CentralFragmentInterface cfi) {
 
@@ -31,7 +34,13 @@ class CentralFragmentPresenter {
 
      void isBtnPressed() {
 
-         String fix = DEFOULT_LOC.replaceAll("\\s+","+");
+         autocompleted = cfinterface.getautocompleetedresult();
+
+         String fix;
+
+         if (autocompleted == null){fix = DEFOULT_LOC.replaceAll("\\s+","+");}
+         else
+             {fix = autocompleted.replaceAll("\\s+","+");}
 
          geocoding_interfaces.CoordinatesFactory.getInstance().getCoordinates(fix, private_key).enqueue(new Callback<Geocod>() {
 
@@ -63,7 +72,6 @@ class CentralFragmentPresenter {
 
     void isImgBtnPressed() {
 
-        int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
 
         try {
             Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
@@ -85,4 +93,7 @@ class CentralFragmentPresenter {
     String getDefoultLoc() {
         return DEFOULT_LOC;
     }
+
+
+
 }

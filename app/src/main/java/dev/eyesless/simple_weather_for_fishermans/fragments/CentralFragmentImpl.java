@@ -2,8 +2,10 @@ package dev.eyesless.simple_weather_for_fishermans.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +14,17 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 
 import dev.eyesless.simple_weather_for_fishermans.AMainActivity;
 import dev.eyesless.simple_weather_for_fishermans.R;
 import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Image;
+
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 
 public class CentralFragmentImpl extends Fragment implements CentralFragmentInterface {
 
@@ -28,6 +36,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     private ImageButton cf_imagebutton_find;
     CentralFragmentPresenter cfpresenter;
     private AMainActivity mActivity;
+    private String autocompleted;
 
     public CentralFragmentImpl() {
 
@@ -89,6 +98,11 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         cf_coordoutput.setText(s);
     }
 
+    @Override
+    public String getautocompleetedresult() {
+        return autocompleted;
+    }
+
     public void isBtnPressed() {
 
         cfpresenter.isBtnPressed();
@@ -121,4 +135,25 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
             isImgBtnPressed();
         }
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CentralFragmentPresenter.PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlaceAutocomplete.getPlace(mActivity, data);
+                autocompleted = place.getAddress().toString();
+                Log.e("MY_TAG", "Place: " + place.getName());
+                Log.e("MY_TAG", "Place: " + place.getAddress());
+            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                Status status = PlaceAutocomplete.getStatus(mActivity, data);
+                // TODO: Handle the error.
+                Log.e("MY_TAG", status.getStatusMessage());
+
+            } else if (resultCode == RESULT_CANCELED) {
+                Log.e("MY_TAG", "operation canceled by user");
+            }
+        }
+    }
+
+
 }

@@ -5,4 +5,6 @@ package dev.eyesless.simple_weather_for_fishermans.fragments;
 
      void setCoords (String s);
 
+     String getautocompleetedresult ();
+
 }
