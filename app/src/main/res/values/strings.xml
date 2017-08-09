@@ -6,6 +6,8 @@
     <string name="drawer_closed">Закрыт</string>
     <string name="about">О программе</string>
     <string name="action_settings">Настройки</string>
+    <string name="to_change">вы можете изменить локацию на необходимую</string>
+    <string name="btn_img_find_coords">изменить место</string>
 
 
 
