@@ -1,5 +1,8 @@
 package dev.eyesless.simple_weather_for_fishermans.api_interface;
 
+import android.support.annotation.NonNull;
+import android.util.Log;
+
 import dev.eyesless.simple_weather_for_fishermans.geocoding_responce_classes.Geocod;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -24,7 +27,12 @@ public interface geocoding_interfaces {
 
             if (service == null) {
 
-                HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+                HttpLoggingInterceptor logging = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
+                    @Override public void log(@NonNull String message) {
+                        Log.e("MY_TAG", "OkHttp: " + message);
+                    }
+                });
+
                 logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
                 OkHttpClient client = new OkHttpClient.Builder()
                         .addInterceptor(logging)
