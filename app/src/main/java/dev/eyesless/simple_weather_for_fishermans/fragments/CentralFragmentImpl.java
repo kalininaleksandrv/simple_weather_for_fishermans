@@ -144,5 +144,4 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
             }
         }
     }
-
 }
