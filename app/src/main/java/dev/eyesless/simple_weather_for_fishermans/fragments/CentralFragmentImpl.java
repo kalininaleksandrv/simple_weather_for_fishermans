@@ -1,6 +1,5 @@
 package dev.eyesless.simple_weather_for_fishermans.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,18 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 
 import dev.eyesless.simple_weather_for_fishermans.AMainActivity;
 import dev.eyesless.simple_weather_for_fishermans.R;
-import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Image;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -45,9 +41,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
 
     public CentralFragmentImpl() {
 
-
         cfpresenter = new CentralFragmentPresenter(this, getContext());
-
     }
 
 
@@ -68,7 +62,6 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     @Override
     public void onStart() {
         super.onStart();
-
         this.parentview = getView();
 
         inititems ();
@@ -78,7 +71,6 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         cf_button_find.setOnClickListener(new cfOnClickListner());
 
         cf_imagebutton_find.setOnClickListener(new cfIBtnOnClickListner());
-
     }
 
     private void inititems() {
@@ -87,7 +79,6 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         cf_button_find = (Button) parentview.findViewById(R.id.btn_find_coords);
         cf_coordoutput = (TextView) parentview.findViewById(R.id.txt_coordinates);
         cf_imagebutton_find = (ImageButton) parentview.findViewById(R.id.btn_img_find_coords);
-
     }
 
     public void setDefoultLoc() {
@@ -109,19 +100,16 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     public void isBtnPressed() {
 
         cfpresenter.isBtnPressed();
-
     }
 
     public void isImgBtnPressed() {
 
         cfpresenter.isImgBtnPressed();
-
     }
 
     public void activitysetter (AMainActivity aMainActivity){
 
         cfpresenter.setActivity (aMainActivity);
-
     }
 
     private class cfOnClickListner implements View.OnClickListener {
@@ -130,7 +118,6 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
 
             isBtnPressed();
             setDefoultLoc();
-
         }
     }
 
@@ -151,10 +138,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
 
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(mActivity, data);
-
-                mActivity.toastmaker(getResources().getString(R.string.autocompleeterror));
                 Log.e("MY_TAG", status.getStatusMessage());
-
             } else if (resultCode == RESULT_CANCELED) {
                 Log.e("MY_TAG", "operation canceled by user");
             }

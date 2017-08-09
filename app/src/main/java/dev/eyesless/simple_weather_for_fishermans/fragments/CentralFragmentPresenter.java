@@ -1,6 +1,5 @@
 package dev.eyesless.simple_weather_for_fishermans.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -26,13 +25,11 @@ class CentralFragmentPresenter {
     private final String DEFOULT_LOC = "Москва, Россия";
     private String autocompleted;
 
-
     CentralFragmentPresenter(CentralFragmentInterface cfi, Context context) {
 
         this.cfinterface = cfi;
         this.private_key = dev.eyesless.simple_weather_for_fishermans.Keys.getGoogleMapPrivateKey();
         this.context = context;
-
     }
 
     //call when button pressed in IMPL
@@ -79,7 +76,6 @@ class CentralFragmentPresenter {
             Log.e("Failed ", e.getMessage());
         } catch (GooglePlayServicesNotAvailableException e) {
             Log.e("Failed ", e.getMessage());        }
-
     }
 
     // set aMainActivity

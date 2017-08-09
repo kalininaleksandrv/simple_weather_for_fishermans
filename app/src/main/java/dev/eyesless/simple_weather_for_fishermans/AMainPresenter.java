@@ -6,7 +6,6 @@ class AMainPresenter {
 
     private int MenuId;
 
-
     AMainPresenter(AMainIntwerface aMainIntwerface) {
         this.aMainIntwerface = aMainIntwerface;
     }
@@ -14,7 +13,6 @@ class AMainPresenter {
      void setmenuid(int itemId) {
 
         this.MenuId = itemId;
-
         aMainIntwerface.toastmaker(String.valueOf(itemId));
     }
 }

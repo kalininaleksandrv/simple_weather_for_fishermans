@@ -20,7 +20,6 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 
 import dev.eyesless.simple_weather_for_fishermans.fragments.CentralFragmentImpl;
@@ -35,8 +34,6 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface 
     private NavigationView naview;
     AMainPresenter presenter;
     public final static int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
-
-
 
     public AMainActivity() {
         presenter = new AMainPresenter(this);
@@ -54,15 +51,12 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface 
         inittoolbar();
 
         initDrawerTogle ();
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         checkPlayServices();
-
     }
 
     //create navigation view and plugged custom menu (res/menu) and header
@@ -108,7 +102,6 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface 
 
         if (drawerToggle.onOptionsItemSelected(item)) {
             return true;}
-
              uppermenuselector (item.getItemId());
 
         //here is plase to handle another items on uper menu
@@ -116,9 +109,7 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface 
     }
 
     public void uppermenuselector(int itemId) {
-
         presenter.setmenuid (itemId);
-
     }
 
     // Sync the toggle state after onRestoreInstanceState has occurred.
@@ -171,10 +162,8 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface 
                 googleAPI.getErrorDialog(this, result,
                         PLAY_SERVICES_RESOLUTION_REQUEST).show();
             }
-
             return false;
         }
-
         return true;
     }
 
@@ -191,7 +180,7 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface 
 
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, data);
-                // TODO: Handle the error.
+                toastmaker(getResources().getString(R.string.autocompleeterror));
                 Log.e("MY_TAG", status.getStatusMessage());
 
             } else if (resultCode == RESULT_CANCELED) {
