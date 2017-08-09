@@ -1,5 +1,6 @@
 package dev.eyesless.simple_weather_for_fishermans.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -24,6 +25,7 @@ class CentralFragmentPresenter {
     private Context context;
     private final String DEFOULT_LOC = "Москва, Россия";
     private String autocompleted;
+
 
     CentralFragmentPresenter(CentralFragmentInterface cfi, Context context) {
 
