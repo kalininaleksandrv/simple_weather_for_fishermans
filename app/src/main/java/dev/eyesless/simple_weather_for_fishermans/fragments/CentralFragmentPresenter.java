@@ -1,15 +1,16 @@
 package dev.eyesless.simple_weather_for_fishermans.fragments;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import java.util.List;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 
+import dev.eyesless.simple_weather_for_fishermans.AMainActivity;
 import dev.eyesless.simple_weather_for_fishermans.api_interface.geocoding_interfaces;
 import dev.eyesless.simple_weather_for_fishermans.geocoding_responce_classes.Geocod;
-import dev.eyesless.simple_weather_for_fishermans.geocoding_responce_classes.Result;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -18,7 +19,8 @@ class CentralFragmentPresenter {
 
     private CentralFragmentInterface cfinterface;
     private String private_key;
-
+    private AMainActivity mActivity;
+    private final String DEFOULT_LOC = "Москва, Россия";
 
     CentralFragmentPresenter(CentralFragmentInterface cfi) {
 
@@ -29,9 +31,7 @@ class CentralFragmentPresenter {
 
      void isBtnPressed() {
 
-        String a = cfinterface.getPlace();
-
-        String fix = a.replaceAll("\\s+","+");
+         String fix = DEFOULT_LOC.replaceAll("\\s+","+");
 
          geocoding_interfaces.CoordinatesFactory.getInstance().getCoordinates(fix, private_key).enqueue(new Callback<Geocod>() {
 
@@ -61,4 +61,28 @@ class CentralFragmentPresenter {
 
     }
 
+    void isImgBtnPressed() {
+
+        int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+
+        try {
+            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
+                            .build(mActivity);
+            mActivity.startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+        } catch (GooglePlayServicesRepairableException e) {
+            Log.e("Failed ", e.getMessage());
+        } catch (GooglePlayServicesNotAvailableException e) {
+            Log.e("Failed ", e.getMessage());        }
+
+    }
+
+    void setActivity(AMainActivity aMainActivity) {
+
+        this.mActivity = aMainActivity;
+
+    }
+
+    String getDefoultLoc() {
+        return DEFOULT_LOC;
+    }
 }
