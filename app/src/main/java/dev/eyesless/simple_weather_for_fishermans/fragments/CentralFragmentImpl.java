@@ -36,12 +36,17 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     private ImageButton cf_imagebutton_find;
     CentralFragmentPresenter cfpresenter;
     private AMainActivity mActivity;
+
+    public void setAutocompleted(String autocompleted) {
+        this.autocompleted = autocompleted;
+    }
+
     private String autocompleted;
 
     public CentralFragmentImpl() {
 
 
-        cfpresenter = new CentralFragmentPresenter(this);
+        cfpresenter = new CentralFragmentPresenter(this, getContext());
 
     }
 
@@ -85,8 +90,6 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
 
     }
 
-
-
     public void setDefoultLoc() {
 
        cf_defoultloc.setText(cfpresenter.getDefoultLoc());
@@ -126,6 +129,8 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         public void onClick(View v) {
 
             isBtnPressed();
+            setDefoultLoc();
+
         }
     }
 
@@ -136,17 +141,18 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         }
     }
 
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CentralFragmentPresenter.PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+        super.onActivityResult(requestCode,resultCode, data);
+        if (requestCode == AMainActivity.PLACE_AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Place place = PlaceAutocomplete.getPlace(mActivity, data);
-                autocompleted = place.getAddress().toString();
-                Log.e("MY_TAG", "Place: " + place.getName());
-                Log.e("MY_TAG", "Place: " + place.getAddress());
+
+                setAutocompleted(place.getAddress().toString());
+
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(mActivity, data);
-                // TODO: Handle the error.
+
+                mActivity.toastmaker(getResources().getString(R.string.autocompleeterror));
                 Log.e("MY_TAG", status.getStatusMessage());
 
             } else if (resultCode == RESULT_CANCELED) {
@@ -154,6 +160,5 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
             }
         }
     }
-
 
 }
