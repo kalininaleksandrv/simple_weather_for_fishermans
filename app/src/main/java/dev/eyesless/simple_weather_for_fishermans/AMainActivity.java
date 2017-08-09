@@ -1,13 +1,14 @@
 package dev.eyesless.simple_weather_for_fishermans;
 
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -18,6 +19,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 
 import dev.eyesless.simple_weather_for_fishermans.fragments.CentralFragmentImpl;
 
@@ -30,6 +34,9 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface 
     private DrawerLayout drawer;
     private NavigationView naview;
     AMainPresenter presenter;
+    public final static int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+
+
 
     public AMainActivity() {
         presenter = new AMainPresenter(this);
@@ -40,7 +47,7 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface 
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT);
 
-        frameRemoover(new CentralFragmentImpl(), "ButtonsMain");
+        frameRemoover(new CentralFragmentImpl(), "Central");
 
         initNavigationView();
 
@@ -169,5 +176,27 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface 
         }
 
         return true;
+    }
+
+    //result of autocompleet transfering to Central Fragment
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+
+                Fragment fragment = getSupportFragmentManager().findFragmentByTag("Central");
+                if (fragment != null) {
+                    fragment.onActivityResult(requestCode, resultCode, data);
+                }
+
+            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                Status status = PlaceAutocomplete.getStatus(this, data);
+                // TODO: Handle the error.
+                Log.e("MY_TAG", status.getStatusMessage());
+
+            } else if (resultCode == RESULT_CANCELED) {
+                Log.e("MY_TAG", "operation canceled by user");
+            }
+        }
     }
 }
