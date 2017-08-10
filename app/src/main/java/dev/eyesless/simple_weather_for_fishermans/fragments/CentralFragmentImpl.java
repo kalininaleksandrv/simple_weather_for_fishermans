@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
@@ -48,7 +50,6 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         return inflater.inflate(INFLATED_VIEW, container, false);
     }
 
@@ -73,22 +74,8 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         cf_imagebutton_find.setOnClickListener(new cfIBtnOnClickListner());
     }
 
-    private void inititems() {
-
-        cf_defoultloc = (TextView) parentview.findViewById(R.id.txt_defaults);
-        cf_button_find = (Button) parentview.findViewById(R.id.btn_find_coords);
-        cf_coordoutput = (TextView) parentview.findViewById(R.id.txt_coordinates);
-        cf_imagebutton_find = (ImageButton) parentview.findViewById(R.id.btn_img_find_coords);
-    }
-
-    public void setDefoultLoc() {
-
-       cf_defoultloc.setText(cfpresenter.getDefoultLoc());
-    }
-
     @Override
     public void setCoords(String s) {
-
         cf_coordoutput.setText(s);
     }
 
@@ -97,25 +84,14 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         return autocompleted;
     }
 
-    public void isBtnPressed() {
-
-        cfpresenter.isBtnPressed();
-    }
-
-    public void isImgBtnPressed() {
-
-        cfpresenter.isImgBtnPressed();
-    }
-
-    public void activitysetter (AMainActivity aMainActivity){
-
-        cfpresenter.setActivity (aMainActivity);
+    @Override
+    public void startActivityFromPresenter() {
+        cfpresenter.startActivity(this);
     }
 
     private class cfOnClickListner implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-
             isBtnPressed();
             setDefoultLoc();
         }
@@ -128,20 +104,51 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         }
     }
 
+    //result of autocompleet transfering to Central Fragment
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode,resultCode, data);
-        if (requestCode == AMainActivity.PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+        if (requestCode == CentralFragmentPresenter.PLACE_AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
+
                 Place place = PlaceAutocomplete.getPlace(mActivity, data);
 
                 setAutocompleted(place.getAddress().toString());
 
+                Log.e("MY_TAG", place.getAddress().toString());
+
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(mActivity, data);
+                mActivity.toastmaker(getResources().getString(R.string.autocompleeterror));
                 Log.e("MY_TAG", status.getStatusMessage());
+
             } else if (resultCode == RESULT_CANCELED) {
                 Log.e("MY_TAG", "operation canceled by user");
             }
         }
     }
+
+    private void inititems() {
+        cf_defoultloc = (TextView) parentview.findViewById(R.id.txt_defaults);
+        cf_button_find = (Button) parentview.findViewById(R.id.btn_find_coords);
+        cf_coordoutput = (TextView) parentview.findViewById(R.id.txt_coordinates);
+        cf_imagebutton_find = (ImageButton) parentview.findViewById(R.id.btn_img_find_coords);
+    }
+
+    public void setDefoultLoc() {
+       cf_defoultloc.setText(cfpresenter.getDefoultLoc());
+    }
+
+    public void isBtnPressed() {
+        cfpresenter.isBtnPressed();
+    }
+
+    public void isImgBtnPressed() {
+        cfpresenter.isImgBtnPressed();
+    }
+
+    public void activitysetter (AMainActivity aMainActivity){
+        cfpresenter.setActivity (aMainActivity);
+    }
+
+
 }
