@@ -22,16 +22,16 @@ class CentralFragmentPresenter {
     private CentralFragmentInterface cfinterface;
     private String private_key;
     private AMainActivity mActivity;
-    private Context context;
     private final String DEFOULT_LOC = "Москва, Россия";
     private String autocompleted;
+    final static int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+
 
 
     CentralFragmentPresenter(CentralFragmentInterface cfi, Context context) {
 
         this.cfinterface = cfi;
         this.private_key = dev.eyesless.simple_weather_for_fishermans.Keys.getGoogleMapPrivateKey();
-        this.context = context;
     }
 
     //call when button pressed in IMPL
@@ -70,14 +70,7 @@ class CentralFragmentPresenter {
     // start autocompleet intent on mainactivity level
     void isImgBtnPressed() {
 
-        try {
-            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
-                            .build(mActivity);
-            mActivity.startActivityForResult(intent, AMainActivity.PLACE_AUTOCOMPLETE_REQUEST_CODE);
-        } catch (GooglePlayServicesRepairableException e) {
-            Log.e("Failed ", e.getMessage());
-        } catch (GooglePlayServicesNotAvailableException e) {
-            Log.e("Failed ", e.getMessage());        }
+        cfinterface.startActivityFromPresenter();
     }
 
     // set aMainActivity
@@ -93,4 +86,17 @@ class CentralFragmentPresenter {
         }
     }
 
+    void startActivity(CentralFragmentImpl centralFragment) {
+
+        try {
+            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
+                    .build(mActivity);
+
+            centralFragment.startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+        } catch (GooglePlayServicesRepairableException e) {
+            Log.e("Failed: Google Play", e.getMessage());
+        } catch (GooglePlayServicesNotAvailableException e) {
+            Log.e("Failed: Play . n aval. ", e.getMessage());        }
+
+    }
 }

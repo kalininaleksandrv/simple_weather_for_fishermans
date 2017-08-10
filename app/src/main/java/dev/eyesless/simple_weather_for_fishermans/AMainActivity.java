@@ -167,25 +167,5 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface 
         return true;
     }
 
-    //result of autocompleet transfering to Central Fragment
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
 
-                Fragment fragment = getSupportFragmentManager().findFragmentByTag("Central");
-                if (fragment != null) {
-                    fragment.onActivityResult(requestCode, resultCode, data);
-                }
-
-            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                Status status = PlaceAutocomplete.getStatus(this, data);
-                toastmaker(getResources().getString(R.string.autocompleeterror));
-                Log.e("MY_TAG", status.getStatusMessage());
-
-            } else if (resultCode == RESULT_CANCELED) {
-                Log.e("MY_TAG", "operation canceled by user");
-            }
-        }
-    }
 }
