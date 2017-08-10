@@ -35,9 +35,8 @@ class CentralFragmentPresenter {
     }
 
     //call when button pressed in IMPL
-     void isBtnPressed() {
+     void startSearch() {
 
-         //get new adress from autocompleet callback
          autocompleted = cfinterface.getautocompleetedresult();
 
          String fix;
@@ -66,11 +65,6 @@ class CentralFragmentPresenter {
                  Log.e("Failed ", t.getMessage());
              }
          });
-    }
-    // start autocompleet intent on mainactivity level
-    void isImgBtnPressed() {
-
-        cfinterface.startActivityFromPresenter();
     }
 
     // set aMainActivity

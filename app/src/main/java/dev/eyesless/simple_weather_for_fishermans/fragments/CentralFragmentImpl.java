@@ -28,7 +28,6 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
 
     private static final int INFLATED_VIEW = R.layout.fragment_central;
     private View parentview;
-    private Button cf_button_find;
     private TextView cf_coordoutput;
     private TextView cf_defoultloc;
     private ImageButton cf_imagebutton_find;
@@ -69,7 +68,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
 
         setDefoultLoc();
 
-        cf_button_find.setOnClickListener(new cfOnClickListner());
+        cfpresenter.startSearch();
 
         cf_imagebutton_find.setOnClickListener(new cfIBtnOnClickListner());
     }
@@ -89,13 +88,6 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         cfpresenter.startActivity(this);
     }
 
-    private class cfOnClickListner implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            isBtnPressed();
-            setDefoultLoc();
-        }
-    }
 
     private class cfIBtnOnClickListner implements View.OnClickListener {
         @Override
@@ -116,6 +108,9 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
 
                 Log.e("MY_TAG", place.getAddress().toString());
 
+                cfpresenter.startSearch();
+                setDefoultLoc();
+
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(mActivity, data);
                 mActivity.toastmaker(getResources().getString(R.string.autocompleeterror));
@@ -129,7 +124,6 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
 
     private void inititems() {
         cf_defoultloc = (TextView) parentview.findViewById(R.id.txt_defaults);
-        cf_button_find = (Button) parentview.findViewById(R.id.btn_find_coords);
         cf_coordoutput = (TextView) parentview.findViewById(R.id.txt_coordinates);
         cf_imagebutton_find = (ImageButton) parentview.findViewById(R.id.btn_img_find_coords);
     }
@@ -138,12 +132,9 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
        cf_defoultloc.setText(cfpresenter.getDefoultLoc());
     }
 
-    public void isBtnPressed() {
-        cfpresenter.isBtnPressed();
-    }
-
     public void isImgBtnPressed() {
-        cfpresenter.isImgBtnPressed();
+        startActivityFromPresenter();
+
     }
 
     public void activitysetter (AMainActivity aMainActivity){
