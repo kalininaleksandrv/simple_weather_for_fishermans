@@ -8,4 +8,9 @@ package dev.eyesless.simple_weather_for_fishermans.fragments;
 
      void startActivityFromPresenter ();
 
-}
+     void setDefoultLoc();
+
+     void setLocUnavaliable ();
+
+
+ }

@@ -13,6 +13,16 @@ public class Location {
     @Expose
     private double lng;
 
+    public String getLastlocation() {
+        return lastlocation;
+    }
+
+    public void setLastlocation(String lastlocation) {
+        this.lastlocation = lastlocation;
+    }
+
+    private String lastlocation;
+
     public double getLat() {
         return lat;
     }

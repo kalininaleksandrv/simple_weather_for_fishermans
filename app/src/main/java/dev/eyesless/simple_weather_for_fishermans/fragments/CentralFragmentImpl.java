@@ -30,13 +30,14 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     private View parentview;
     private TextView cf_coordoutput;
     private TextView cf_defoultloc;
+    private TextView cf_txttochange;
     private ImageButton cf_imagebutton_find;
     CentralFragmentPresenter cfpresenter;
     private AMainActivity mActivity;
 
         public CentralFragmentImpl() {
 
-        cfpresenter = new CentralFragmentPresenter(this, getContext());
+        cfpresenter = new CentralFragmentPresenter(this);
     }
 
 
@@ -114,6 +115,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     private void inititems() {
         cf_defoultloc = (TextView) parentview.findViewById(R.id.txt_defaults);
         cf_coordoutput = (TextView) parentview.findViewById(R.id.txt_coordinates);
+        cf_txttochange = (TextView) parentview.findViewById(R.id.txt_to_change);
         cf_imagebutton_find = (ImageButton) parentview.findViewById(R.id.btn_img_find_coords);
     }
 
@@ -128,6 +130,18 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
 
     public void activitysetter (AMainActivity aMainActivity){
         cfpresenter.setActivity (aMainActivity);
+    }
+
+    @Override
+    public void setLocUnavaliable () {
+
+        String unavaliable = getResources().getString(R.string.locunavaliable);
+        String noinet = getResources().getString(R.string.nonetworcconnection);
+
+        cf_txttochange.setText(unavaliable);
+
+        mActivity.toastmaker(unavaliable+noinet);
+
     }
 
 
