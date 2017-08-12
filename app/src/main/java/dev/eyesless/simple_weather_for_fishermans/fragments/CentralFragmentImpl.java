@@ -60,11 +60,8 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         this.parentview = getView();
 
         inititems ();
-
         setDefoultLoc();
-
         cfpresenter.startSearch();
-
         cf_imagebutton_find.setOnClickListener(new cfIBtnOnClickListner());
     }
 
@@ -95,9 +92,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
                 Place place = PlaceAutocomplete.getPlace(mActivity, data);
 
                 cfpresenter.setAutocompleted(place.getAddress().toString());
-
                 Log.e("MY_TAG", place.getAddress().toString());
-
                 cfpresenter.startSearch();
                 setDefoultLoc();
 
@@ -125,7 +120,6 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
 
     public void isImgBtnPressed() {
         startActivityFromPresenter();
-
     }
 
     public void activitysetter (AMainActivity aMainActivity){
@@ -134,15 +128,9 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
 
     @Override
     public void setLocUnavaliable () {
-
         String unavaliable = getResources().getString(R.string.locunavaliable);
         String noinet = getResources().getString(R.string.nonetworcconnection);
-
         cf_txttochange.setText(unavaliable);
-
         mActivity.toastmaker(unavaliable+noinet);
-
     }
-
-
 }

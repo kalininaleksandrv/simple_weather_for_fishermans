@@ -37,10 +37,10 @@ public class Repository {
                     incomelocation = response.body().getResults().get(0).getGeometry().getLocation();}
                     else {
                         incomelocation = getLastLocation();
+                        Log.e("MY_TAG", "get last location");
                     }
                 }
                 catch (Exception e) {
-                    repository_interface.setCoordinates(getLastLocation());
                     Log.e("MY_TAG", e.getMessage());
                 }
                 repository_interface.setCoordinates(incomelocation);

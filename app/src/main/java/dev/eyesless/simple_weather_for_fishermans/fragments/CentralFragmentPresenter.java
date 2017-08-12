@@ -57,6 +57,7 @@ class CentralFragmentPresenter implements Repository_interface {
         }
     }
 
+    //start intent to autocompletion location
     void startActivity(CentralFragmentImpl centralFragment) {
 
         try {
@@ -75,15 +76,19 @@ class CentralFragmentPresenter implements Repository_interface {
         this.autocompleted = autocompleted;
     }
 
+    //if field getlastlocation in class location != null, what means that acsess to map.google unavaliable, set allert about it, or (if ok) set presented coordinates
     @Override
     public void setCoordinates(Location location) {
 
-        cfinterface.setCoords(String.valueOf(location.getLat()) + " and " + String.valueOf(location.getLng()));
 
-        if (location.getLastlocation() != null)
+        if (location.getLastlocation() != null){
         setAutocompleted(location.getLastlocation());
         cfinterface.setDefoultLoc();
-        cfinterface.setLocUnavaliable();
+        cfinterface.setLocUnavaliable();} else {
+
+            cfinterface.setCoords(String.valueOf(location.getLat()) + " and " + String.valueOf(location.getLng()));
+
+        }
 
     }
 }
