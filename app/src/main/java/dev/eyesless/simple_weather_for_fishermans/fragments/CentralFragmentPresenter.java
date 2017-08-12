@@ -13,6 +13,7 @@ import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import dev.eyesless.simple_weather_for_fishermans.AMainActivity;
 import dev.eyesless.simple_weather_for_fishermans.api_interface.geocoding_interfaces;
 import dev.eyesless.simple_weather_for_fishermans.geocoding_responce_classes.Geocod;
+import dev.eyesless.simple_weather_for_fishermans.repository.Repository_interface;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -20,6 +21,7 @@ import retrofit2.Response;
 class CentralFragmentPresenter {
 
     private CentralFragmentInterface cfinterface;
+    private Repository_interface repinterface;
     private String private_key;
     private AMainActivity mActivity;
     private final String DEFOULT_LOC = "Москва, Россия";
@@ -37,8 +39,6 @@ class CentralFragmentPresenter {
     //call when button pressed in IMPL
      void startSearch() {
 
-         autocompleted = cfinterface.getautocompleetedresult();
-
          String fix;
 
          //prepare to request autocompleeted place or defoult plase (Moscow, Russia)
@@ -55,10 +55,11 @@ class CentralFragmentPresenter {
                  try {
                      lat = response.body().getResults().get(0).getGeometry().getLocation().getLat();
                      lng = response.body().getResults().get(0).getGeometry().getLocation().getLng();
+
                  } catch (Exception e) {
                      Log.e("MY_TAG", e.getMessage());
                  }
-                 cfinterface.setCoords(String.valueOf(lat) + " - " + String.valueOf(lng));
+                 cfinterface.setCoords(String.valueOf(lat) + " and " + String.valueOf(lng));
              }
              @Override
              public void onFailure(@NonNull Call<Geocod> call, @NonNull Throwable t) {
@@ -92,5 +93,9 @@ class CentralFragmentPresenter {
         } catch (GooglePlayServicesNotAvailableException e) {
             Log.e("Failed: Play . n aval. ", e.getMessage());        }
 
+    }
+
+    void setAutocompleted(String autocompleted) {
+        this.autocompleted = autocompleted;
     }
 }
