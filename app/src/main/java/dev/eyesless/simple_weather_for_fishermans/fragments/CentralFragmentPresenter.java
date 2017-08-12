@@ -1,39 +1,32 @@
 package dev.eyesless.simple_weather_for_fishermans.fragments;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-
 import dev.eyesless.simple_weather_for_fishermans.AMainActivity;
-import dev.eyesless.simple_weather_for_fishermans.api_interface.geocoding_interfaces;
-import dev.eyesless.simple_weather_for_fishermans.geocoding_responce_classes.Geocod;
+import dev.eyesless.simple_weather_for_fishermans.R;
+import dev.eyesless.simple_weather_for_fishermans.geocoding_responce_classes.Location;
+import dev.eyesless.simple_weather_for_fishermans.repository.Repository;
 import dev.eyesless.simple_weather_for_fishermans.repository.Repository_interface;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-class CentralFragmentPresenter {
+class CentralFragmentPresenter implements Repository_interface {
 
     private CentralFragmentInterface cfinterface;
-    private Repository_interface repinterface;
-    private String private_key;
+    private Repository repository;
     private AMainActivity mActivity;
     private final String DEFOULT_LOC = "Москва, Россия";
     private String autocompleted;
     final static int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
 
-
-
-    CentralFragmentPresenter(CentralFragmentInterface cfi, Context context) {
+    CentralFragmentPresenter(CentralFragmentInterface cfi) {
 
         this.cfinterface = cfi;
-        this.private_key = dev.eyesless.simple_weather_for_fishermans.Keys.getGoogleMapPrivateKey();
+
+
+        repository = new Repository (this);
     }
 
     //call when button pressed in IMPL
@@ -46,26 +39,9 @@ class CentralFragmentPresenter {
          else
              {fix = autocompleted.replaceAll("\\s+","+");}
 
-         //send request to google maps and return result to setCoords method of Implementation (which set it up to textView)
-         geocoding_interfaces.CoordinatesFactory.getInstance().getCoordinates(fix, private_key).enqueue(new Callback<Geocod>() {
-             @Override
-             public void onResponse(@NonNull Call<Geocod> call, @NonNull Response<Geocod> response) {
-                 double lat = 0;
-                 double lng = 0;
-                 try {
-                     lat = response.body().getResults().get(0).getGeometry().getLocation().getLat();
-                     lng = response.body().getResults().get(0).getGeometry().getLocation().getLng();
+         repository.getCoordsByLocation (fix);
 
-                 } catch (Exception e) {
-                     Log.e("MY_TAG", e.getMessage());
-                 }
-                 cfinterface.setCoords(String.valueOf(lat) + " and " + String.valueOf(lng));
-             }
-             @Override
-             public void onFailure(@NonNull Call<Geocod> call, @NonNull Throwable t) {
-                 Log.e("Failed ", t.getMessage());
-             }
-         });
+
     }
 
     // set aMainActivity
@@ -97,5 +73,17 @@ class CentralFragmentPresenter {
 
     void setAutocompleted(String autocompleted) {
         this.autocompleted = autocompleted;
+    }
+
+    @Override
+    public void setCoordinates(Location location) {
+
+        cfinterface.setCoords(String.valueOf(location.getLat()) + " and " + String.valueOf(location.getLng()));
+
+        if (location.getLastlocation() != null)
+        setAutocompleted(location.getLastlocation());
+        cfinterface.setDefoultLoc();
+        cfinterface.setLocUnavaliable();
+
     }
 }
