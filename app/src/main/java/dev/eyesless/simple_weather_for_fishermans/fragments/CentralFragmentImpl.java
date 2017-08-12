@@ -34,13 +34,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     CentralFragmentPresenter cfpresenter;
     private AMainActivity mActivity;
 
-    public void setAutocompleted(String autocompleted) {
-        this.autocompleted = autocompleted;
-    }
-
-    private String autocompleted;
-
-    public CentralFragmentImpl() {
+        public CentralFragmentImpl() {
 
         cfpresenter = new CentralFragmentPresenter(this, getContext());
     }
@@ -79,11 +73,6 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     }
 
     @Override
-    public String getautocompleetedresult() {
-        return autocompleted;
-    }
-
-    @Override
     public void startActivityFromPresenter() {
         cfpresenter.startActivity(this);
     }
@@ -104,7 +93,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
 
                 Place place = PlaceAutocomplete.getPlace(mActivity, data);
 
-                setAutocompleted(place.getAddress().toString());
+                cfpresenter.setAutocompleted(place.getAddress().toString());
 
                 Log.e("MY_TAG", place.getAddress().toString());
 
