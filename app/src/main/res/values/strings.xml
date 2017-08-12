@@ -11,7 +11,19 @@
     <string name="autocompleeterror">К сожалению, во время выбора адреса произошла ошибка, прпробуйте снова</string>
     <string name="nonetworcconnection">Проверьте доступ к Интернету или поробуйте изменить место</string>
     <string name="locunavaliable">Изменение локации не доступно</string>
-
-
+    <string name="sund">ВС</string>
+    <string name="mond">ПН</string>
+    <string name="tues">ВТ</string>
+    <string name="wens">СР</string>
+    <string name="thus">ЧТ</string>
+    <string name="frid">ПТ</string>
+    <string name="satu">СБ</string>
+    <string name="celsium">C</string>
+    <string name="wind">W-</string>
+    <string name="pressure">мм</string>
+    <string name="nodata_close">Н\Д</string>
+    <string name="nodata_full">нет данных</string>
+    <string name="its_weather">нет данных</string>
+    <string name="its_fishing">нет данных</string>
 
 </resources>

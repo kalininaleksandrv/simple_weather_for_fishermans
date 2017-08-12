@@ -8,12 +8,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
@@ -32,6 +30,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     private TextView cf_defoultloc;
     private TextView cf_txttochange;
     private ImageButton cf_imagebutton_find;
+    private FrameLayout cf_frame1;
     CentralFragmentPresenter cfpresenter;
     private AMainActivity mActivity;
 
@@ -63,6 +62,9 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         setDefoultLoc();
         cfpresenter.startSearch();
         cf_imagebutton_find.setOnClickListener(new cfIBtnOnClickListner());
+
+        cf_frame1.setFocusable(true);
+
     }
 
     @Override
@@ -112,6 +114,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         cf_coordoutput = (TextView) parentview.findViewById(R.id.txt_coordinates);
         cf_txttochange = (TextView) parentview.findViewById(R.id.txt_to_change);
         cf_imagebutton_find = (ImageButton) parentview.findViewById(R.id.btn_img_find_coords);
+        cf_frame1 = (FrameLayout) parentview.findViewById(R.id.frame1);
     }
 
     public void setDefoultLoc() {
