@@ -1,16 +1,18 @@
 package dev.eyesless.simple_weather_for_fishermans.fragments;
 
 import android.content.Intent;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+
 import dev.eyesless.simple_weather_for_fishermans.AMainActivity;
-import dev.eyesless.simple_weather_for_fishermans.R;
 import dev.eyesless.simple_weather_for_fishermans.geocoding_responce_classes.Location;
 import dev.eyesless.simple_weather_for_fishermans.repository.Repository;
 import dev.eyesless.simple_weather_for_fishermans.repository.Repository_interface;
+import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Daily;
 
 class CentralFragmentPresenter implements Repository_interface {
 
@@ -19,6 +21,8 @@ class CentralFragmentPresenter implements Repository_interface {
     private AMainActivity mActivity;
     private final String DEFOULT_LOC = "Москва, Россия";
     private String autocompleted;
+    private Daily forecastdataset;
+    private RVadapter rvadapter;
     final static int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
 
     CentralFragmentPresenter(CentralFragmentInterface cfi) {
@@ -91,4 +95,23 @@ class CentralFragmentPresenter implements Repository_interface {
         }
 
     }
+
+    RecyclerView.Adapter getRecyclerAdapter() {
+
+        repository.getWeatherDataset();
+
+        rvadapter = new RVadapter(getForecastdataset().getData());
+        // TODO: 13.08.2017 make it returns from callback
+
+        return rvadapter;
+    }
+
+    private Daily getForecastdataset() {
+        return forecastdataset;
+    }
+
+    public void setForecastdataset(Daily forecastdataset) {
+        this.forecastdataset = forecastdataset;
+    }
+
 }
