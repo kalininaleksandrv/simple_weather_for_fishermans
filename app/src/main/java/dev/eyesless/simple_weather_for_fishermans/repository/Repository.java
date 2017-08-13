@@ -7,6 +7,7 @@ import android.util.Log;
 import dev.eyesless.simple_weather_for_fishermans.api_interface.geocoding_interfaces;
 import dev.eyesless.simple_weather_for_fishermans.geocoding_responce_classes.Geocod;
 import dev.eyesless.simple_weather_for_fishermans.geocoding_responce_classes.Location;
+import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Daily;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -19,6 +20,8 @@ public class Repository {
 
     private Repository_interface repository_interface;
     private String private_key;
+    
+    private Daily tempreturneddaily;
 
     public Repository(Repository_interface repository_interface) {
         this.repository_interface = repository_interface;
@@ -59,5 +62,12 @@ public class Repository {
         lastlocation.setLng(DEFAULT_LNG);
         lastlocation.setLastlocation(DEFAULT_LOCATION);
         return lastlocation;
+    }
+
+    public Daily getWeatherDataset() {
+
+        // TODO: 13.08.2017 create temp Daily class to test RVadapter before work with net 
+        
+        return tempreturneddaily;
     }
 }

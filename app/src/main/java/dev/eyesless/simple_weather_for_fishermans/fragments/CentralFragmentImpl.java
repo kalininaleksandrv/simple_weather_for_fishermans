@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,9 +32,9 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     private TextView cf_defoultloc;
     private TextView cf_txttochange;
     private ImageButton cf_imagebutton_find;
-    private FrameLayout cf_frame1;
     CentralFragmentPresenter cfpresenter;
     private AMainActivity mActivity;
+    private RecyclerView cf_recycler;
 
         public CentralFragmentImpl() {
 
@@ -62,9 +64,17 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         setDefoultLoc();
         cfpresenter.startSearch();
         cf_imagebutton_find.setOnClickListener(new cfIBtnOnClickListner());
+        recyclerparamsinit();
 
-        cf_frame1.setFocusable(true);
 
+
+    }
+
+    //set extended params to recycler view
+    private void recyclerparamsinit() {
+        cf_recycler.setHasFixedSize(true);
+        cf_recycler.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        cf_recycler.setAdapter(cfpresenter.getRecyclerAdapter());
     }
 
     @Override
@@ -114,7 +124,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         cf_coordoutput = (TextView) parentview.findViewById(R.id.txt_coordinates);
         cf_txttochange = (TextView) parentview.findViewById(R.id.txt_to_change);
         cf_imagebutton_find = (ImageButton) parentview.findViewById(R.id.btn_img_find_coords);
-        cf_frame1 = (FrameLayout) parentview.findViewById(R.id.frame1);
+        cf_recycler = (RecyclerView) parentview.findViewById(R.id.recycler_view_cf);
     }
 
     public void setDefoultLoc() {
