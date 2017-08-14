@@ -4,10 +4,14 @@ import android.renderscript.Double2;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import dev.eyesless.simple_weather_for_fishermans.api_interface.geocoding_interfaces;
 import dev.eyesless.simple_weather_for_fishermans.geocoding_responce_classes.Geocod;
 import dev.eyesless.simple_weather_for_fishermans.geocoding_responce_classes.Location;
 import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Daily;
+import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Datum;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -64,10 +68,44 @@ public class Repository {
         return lastlocation;
     }
 
-    public Daily getWeatherDataset() {
+    //create set of weather data and callback it to presenter setForecastDataSet
+    public void getWeatherDataset() {
 
-        // TODO: 13.08.2017 create temp Daily class to test RVadapter before work with net 
+        tempreturneddaily = new Daily();
+
+        Datum monday = new Datum();
+        monday.setTime(1502658000);
+        monday.setTemperatureMin(17.56);
+        monday.setTemperatureMax(23.96);
+        monday.setPressure(1000.00);
+        monday.setWindBearing(215);
+        monday.setPrecipProbability(0.47);
+
+        Datum tusday = new Datum();
+        tusday.setTime(1502744400);
+        tusday.setTemperatureMin(18.06);
+        tusday.setTemperatureMax(25.90);
+        tusday.setPressure(1100.00);
+        tusday.setWindBearing(120);
+        tusday.setPrecipProbability(1);
+
+        Datum wensday = new Datum();
+        wensday.setTime(1502830800);
+        wensday.setTemperatureMin(14.36);
+        wensday.setTemperatureMax(21.06);
+        wensday.setPressure(1200.00);
+        wensday.setWindBearing(10);
+        wensday.setPrecipProbability(0);
+
+        List<Datum> listdatum = new ArrayList<>();
+
+        listdatum.add(monday);
+        listdatum.add(tusday);
+        listdatum.add(wensday);
+
+        tempreturneddaily.setData(listdatum);
+        tempreturneddaily.setSummary("погода ацтой");
         
-        return tempreturneddaily;
+        repository_interface.setForecastdataset(tempreturneddaily);
     }
 }

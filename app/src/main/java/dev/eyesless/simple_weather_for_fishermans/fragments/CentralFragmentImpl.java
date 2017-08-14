@@ -66,8 +66,6 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         cf_imagebutton_find.setOnClickListener(new cfIBtnOnClickListner());
         recyclerparamsinit();
 
-
-
     }
 
     //set extended params to recycler view
