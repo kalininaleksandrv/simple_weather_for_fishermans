@@ -7,6 +7,8 @@ public interface Repository_interface {
 
     void setCoordinates(Location location);
 
+    void setForecastdataset(Daily forecastdataset);
+
 
 //    Daily getForecast (String coordinates);
 //

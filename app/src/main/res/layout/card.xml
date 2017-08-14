@@ -18,116 +18,102 @@
             >
 
             <TextView
-                android:id="@+id/textView_day"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/mond"
-                android:textSize="@dimen/text_size_big"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/textView_tempr" />
-
-            <TextView
                 android:id="@+id/textView_tempr"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/nodata_close"
-                app:layout_constraintLeft_toRightOf="@+id/textView_day"
                 android:textSize="@dimen/text_size_big"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/textView_temp_char" />
-
-            <TextView
-                android:id="@+id/textView_temp_char"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/celsium"
-                app:layout_constraintLeft_toRightOf="@+id/textView_tempr"
-                android:textSize="@dimen/text_size_big"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/textView_wind_char" />
-
-            <TextView
-                android:id="@+id/textView_wind_char"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/wind"
-                app:layout_constraintLeft_toRightOf="@+id/textView_temp_char"
-                android:textSize="@dimen/text_size_big"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/textView_wind" />
-
-            <TextView
-                android:id="@+id/textView_wind"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/nodata_close"
-                app:layout_constraintLeft_toRightOf="@+id/textView_wind_char"
-                android:textSize="@dimen/text_size_big"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/textView_pressure" />
-
-            <TextView
-                android:id="@+id/textView_pressure"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/nodata_close"
-                app:layout_constraintLeft_toRightOf="@+id/textView_wind"
-                android:textSize="@dimen/text_size_big"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/textView_pressure_char" />
-
-            <TextView
-                android:id="@+id/textView_pressure_char"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/pressure"
-                app:layout_constraintLeft_toRightOf="@+id/textView_pressure"
-                android:textSize="@dimen/text_size_big"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/imageView_weather" />
-
-            <TextView
-                android:id="@+id/textView_data"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:textSize="@dimen/text_size_smallest"
-                android:text="@string/nodata_full"
-                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
                 android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/textView_day"
-                android:layout_marginStart="8dp"
-                android:layout_marginRight="8dp"
-                app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginEnd="8dp" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginStart="8dp" />
+
+            <ImageView
+                android:id="@+id/imageView_drop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/drop"
+                android:contentDescription="@string/its_weather"
+                android:foregroundGravity="center"
+                app:layout_constraintTop_toTopOf="@+id/textView_tempr"
+                app:layout_constraintBottom_toBottomOf="@+id/textView_tempr"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                app:layout_constraintLeft_toRightOf="@+id/textView_tempr"
+                android:layout_marginStart="16dp" />
+
+            <TextView
+                android:id="@+id/textView_percip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/nodata_close"
+                android:textSize="@dimen/text_size_big"
+                app:layout_constraintLeft_toRightOf="@+id/imageView_drop"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="0dp" />
 
             <ImageView
                 android:id="@+id/imageView_weather"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/ic_sync_black_48dp"
-                app:layout_constraintLeft_toRightOf="@+id/textView_pressure_char"
+                android:contentDescription="@string/its_weather"
                 app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="8dp"
                 app:layout_constraintRight_toLeftOf="@+id/imageView_fish"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginBottom="0dp"
-                android:layout_marginTop="0dp"
-                app:layout_constraintVertical_bias="0.0"
-                android:contentDescription="@string/its_weather" />
+                android:layout_marginEnd="8dp" />
 
             <ImageView
                 android:id="@+id/imageView_fish"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/ic_sync_black_48dp"
-                app:layout_constraintLeft_toRightOf="@+id/imageView_weather"
-                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/its_fishing"
+                android:layout_marginEnd="8dp"
                 app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:id="@+id/textView_wind"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginBottom="0dp"
-                android:contentDescription="@string/its_fishing"/>
+                android:text="@string/nodata_full"
+                android:textSize="@dimen/text_size_small"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView_tempr" />
+
+            <TextView
+                android:id="@+id/textView_pressure"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="0dp"
+                android:text="@string/nodata_full"
+                android:textSize="@dimen/text_size_small"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView_wind" />
+
+            <TextView
+                android:id="@+id/textView_data"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="0dp"
+                android:text="@string/nodata_full"
+                android:textSize="@dimen/text_size_small"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textView_pressure" />
 
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>

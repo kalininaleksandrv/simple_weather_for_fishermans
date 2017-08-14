@@ -32,7 +32,7 @@ public class Datum {
     private long precipIntensityMax;
     @SerializedName("precipProbability")
     @Expose
-    private long precipProbability;
+    private double precipProbability;
     @SerializedName("temperatureMin")
     @Expose
     private double temperatureMin;
@@ -161,11 +161,11 @@ public class Datum {
         this.precipIntensityMax = precipIntensityMax;
     }
 
-    public long getPrecipProbability() {
+    public double getPrecipProbability() {
         return precipProbability;
     }
 
-    public void setPrecipProbability(long precipProbability) {
+    public void setPrecipProbability(double precipProbability) {
         this.precipProbability = precipProbability;
     }
 
