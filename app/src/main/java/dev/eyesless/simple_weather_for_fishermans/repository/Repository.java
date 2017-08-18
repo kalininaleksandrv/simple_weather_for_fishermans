@@ -8,13 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dev.eyesless.simple_weather_for_fishermans.api_interface.geocoding_interfaces;
+import dev.eyesless.simple_weather_for_fishermans.fragments.RVadapter;
 import dev.eyesless.simple_weather_for_fishermans.geocoding_responce_classes.Geocod;
 import dev.eyesless.simple_weather_for_fishermans.geocoding_responce_classes.Location;
 import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Daily;
 import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Datum;
+import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Weather;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import dev.eyesless.simple_weather_for_fishermans.api_interface.weather_interface;
 
 public class Repository {
 
@@ -22,14 +25,22 @@ public class Repository {
     private final Double DEFAULT_LNG = 37.9456611;
     private final String DEFAULT_LOCATION = "Москва, Россия";
 
+    private final String EXCLUDE = "hourly";
+    private final String LANG = "ru";
+    private final String UNITS = "si";
+
     private Repository_interface repository_interface;
     private String private_key;
-    
-    private Daily tempreturneddaily;
+    private String private_key_weather;
+    private Location lastlocation;
+
+    private RVadapter rvadapter;
+
 
     public Repository(Repository_interface repository_interface) {
         this.repository_interface = repository_interface;
         this.private_key = dev.eyesless.simple_weather_for_fishermans.Keys.getGoogleMapPrivateKey();
+        this.private_key_weather = dev.eyesless.simple_weather_for_fishermans.Keys.getDarkSkyPrivateKey();
     }
 
     public void getCoordsByLocation(final String fix) {
@@ -50,13 +61,16 @@ public class Repository {
                 catch (Exception e) {
                     Log.e("MY_TAG", e.getMessage());
                 }
-                repository_interface.setCoordinates(incomelocation);
+
+                setIncomelocation(incomelocation);
+                repository_interface.setCoordinates(getIncomeLocation());
+
             }
             @Override
             public void onFailure(@NonNull Call<Geocod> call, @NonNull Throwable t) {
                 Log.e("Failed ", t.getMessage());
-                repository_interface.setCoordinates(getLastLocation());
-            }
+                setIncomelocation(getLastLocation());
+                repository_interface.setCoordinates(getIncomeLocation());            }
         });
     }
 
@@ -71,41 +85,54 @@ public class Repository {
     //create set of weather data and callback it to presenter setForecastDataSet
     public void getWeatherDataset() {
 
-        tempreturneddaily = new Daily();
+        String coordsstringbilder;
 
-        Datum monday = new Datum();
-        monday.setTime(1502658000);
-        monday.setTemperatureMin(17.56);
-        monday.setTemperatureMax(23.96);
-        monday.setPressure(1000.00);
-        monday.setWindBearing(215);
-        monday.setPrecipProbability(0.47);
+        if (getIncomeLocation() != null){
+            coordsstringbilder = from_loc_to_string (getIncomeLocation());
+        } else {coordsstringbilder = from_loc_to_string(getLastLocation());}
 
-        Datum tusday = new Datum();
-        tusday.setTime(1502744400);
-        tusday.setTemperatureMin(18.06);
-        tusday.setTemperatureMax(25.90);
-        tusday.setPressure(1100.00);
-        tusday.setWindBearing(120);
-        tusday.setPrecipProbability(1);
+        weather_interface.WeatherFactory.getInstance().getWeatherForecasts(private_key_weather,
+                coordsstringbilder, EXCLUDE, LANG, UNITS).enqueue(new Callback<Weather>() {
+            @Override
+            public void onResponse(@NonNull Call<Weather> call, @NonNull Response<Weather> response) {
 
-        Datum wensday = new Datum();
-        wensday.setTime(1502830800);
-        wensday.setTemperatureMin(14.36);
-        wensday.setTemperatureMax(21.06);
-        wensday.setPressure(1200.00);
-        wensday.setWindBearing(10);
-        wensday.setPrecipProbability(0);
+                List<Datum> mylist = response.body().getDaily().getData();
+                // TODO: 18.08.2017 add nonull check
+                repository_interface.setRvadapterList(mylist);
+                repository_interface.adapterrefresh();
+            }
 
-        List<Datum> listdatum = new ArrayList<>();
+            @Override
+            public void onFailure(@NonNull Call<Weather> call, @NonNull Throwable t) {
+                // TODO: 18.08.2017 add code
+            }
+        });
+    }
 
-        listdatum.add(monday);
-        listdatum.add(tusday);
-        listdatum.add(wensday);
+    private String from_loc_to_string(Location incomeLocation) {
 
-        tempreturneddaily.setData(listdatum);
-        tempreturneddaily.setSummary("погода ацтой");
-        
-        repository_interface.setForecastdataset(tempreturneddaily);
+        return String.valueOf(incomeLocation.getLat())+","+String.valueOf(incomeLocation.getLng());
+    }
+
+    private Location getIncomeLocation() {
+        return lastlocation;
+    }
+
+    private void setIncomelocation(Location lastlocation) {
+        this.lastlocation = lastlocation;
+    }
+
+
+
+    public List<Datum> getastrvadapterlist() {
+
+        Datum defoultdatum = new Datum();
+        List<Datum> mydatum = new ArrayList<>();
+        mydatum.add(defoultdatum);
+
+        return mydatum;
     }
 }
+
+// TODO: 17.08.2017 data must cashed in differend thread, shoul develop shem of cashing - first cash or View and so on 
+// TODO: 17.08.2017 show and hide statusbars when cashing 

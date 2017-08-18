@@ -1,21 +1,16 @@
 package dev.eyesless.simple_weather_for_fishermans.repository;
 
+import java.util.List;
+
+import dev.eyesless.simple_weather_for_fishermans.fragments.RVadapter;
 import dev.eyesless.simple_weather_for_fishermans.geocoding_responce_classes.Location;
 import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Daily;
+import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Datum;
 
 public interface Repository_interface {
 
     void setCoordinates(Location location);
-
-    void setForecastdataset(Daily forecastdataset);
-
-
-//    Daily getForecast (String coordinates);
-//
-//    void setForecast (Daily daily);
-//
-//    Daily getPast (String coordinates);
-//
-//    void setPast (Daily daily);
+    void setRvadapterList(List<Datum> rvadapter);
+    void adapterrefresh();
 
 }

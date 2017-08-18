@@ -1,10 +1,12 @@
 
 package dev.eyesless.simple_weather_for_fishermans.weather_response_classes;
 
+import java.io.Serializable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Weather {
+public class Weather implements Serializable
+{
 
     @SerializedName("latitude")
     @Expose
@@ -27,6 +29,7 @@ public class Weather {
     @SerializedName("flags")
     @Expose
     private Flags flags;
+    private final static long serialVersionUID = 2354230000012979107L;
 
     public double getLatitude() {
         return latitude;

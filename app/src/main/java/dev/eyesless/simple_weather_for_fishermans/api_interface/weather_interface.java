@@ -1,8 +1,74 @@
 package dev.eyesless.simple_weather_for_fishermans.api_interface;
 
+import android.support.annotation.NonNull;
+import android.util.Log;
+
+import java.util.List;
+
+import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Datum;
+import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Weather;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
+
 public interface weather_interface {
 
-    String BASE_URL_WEATHER = "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22Moscow%2C%20RU%22)%20and%20u%3D%27c%27&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";
+    //  https://api.darksky.net/forecast/c247b7ec5aed169de0dc9c94a7d24c2a/55.7522,37.6156?exclude=hourly&lang=ru&units=si
+    //  https://api.darksky.net/forecast/c247b7ec5aed169de0dc9c94a7d24c2a/55.7522,37.6156,1502917200?exclude=hourly&lang=ru&units=si
+    //86400 unix milisec in 1 day
+
+    String BASE_URL = "https://api.darksky.net/";
+
+    @GET("forecast/{key}/{coords}")
+    Call<Weather> getWeatherForecasts (@Path("key") String key,
+                                       @Path("coords") String coords,
+                                       @Query("exclude") String exclude,
+                                       @Query("lang") String lang,
+                                       @Query("units") String units);
+
+
+    class WeatherFactory {
+
+        private static weather_interface service;
+
+        public static weather_interface getInstance() {
+
+            if (service == null) {
+
+                HttpLoggingInterceptor logging = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
+                    @Override public void log(@NonNull String message) {
+                        Log.e("MY_TAG", "OkHttp: " + message);
+                    }
+                });
+
+                logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+                OkHttpClient client = new OkHttpClient.Builder()
+                        .addInterceptor(logging)
+                        .build();
+
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(BASE_URL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .client(client)
+                        .build();
+
+                service = retrofit.create(weather_interface.class);
+
+                return service;
+            }
+
+            else {
+                return service;
+            }
+        }
+
+        // TODO: 18.08.2017 could i optimizet it with geocoding interface?
+    }
 
 
 

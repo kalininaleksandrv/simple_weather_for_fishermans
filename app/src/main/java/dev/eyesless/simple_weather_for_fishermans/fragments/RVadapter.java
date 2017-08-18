@@ -17,7 +17,7 @@ import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Datum
 
 
 
-class RVadapter extends RecyclerView.Adapter<RVadapter.WeatherViewHolder>{
+public class RVadapter extends RecyclerView.Adapter<RVadapter.WeatherViewHolder>{
 
     private List<Datum> weatherdataset;
 
@@ -58,7 +58,7 @@ class RVadapter extends RecyclerView.Adapter<RVadapter.WeatherViewHolder>{
     public void onBindViewHolder(WeatherViewHolder holder, int position) {
 
         holder.temperature.setText(String.valueOf((int)weatherdataset.get(position).getTemperatureMin())+(char) 0x00B0+ "C - " +
-                String.valueOf((int)weatherdataset.get(position).getTemperatureMax()) +(char) 0x00B0+ "C");
+        String.valueOf((int)weatherdataset.get(position).getTemperatureMax()) +(char) 0x00B0+ "C");
         holder.wind.setText(String.format("ветер - %s", windfrom(weatherdataset.get(position).getWindBearing())));
         holder.pressure.setText("давление - " + String.valueOf((int)weatherdataset.get(position).getPressure())+"мм. рт. ст.");
         holder.percipe.setText(String.valueOf((int)(weatherdataset.get(position).getPrecipProbability()*100)+" %"));

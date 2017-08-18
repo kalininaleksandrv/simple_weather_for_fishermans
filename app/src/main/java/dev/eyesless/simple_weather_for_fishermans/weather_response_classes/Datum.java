@@ -1,10 +1,12 @@
 
 package dev.eyesless.simple_weather_for_fishermans.weather_response_classes;
 
+import java.io.Serializable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Datum {
+public class Datum implements Serializable
+{
 
     @SerializedName("time")
     @Expose
@@ -26,10 +28,10 @@ public class Datum {
     private double moonPhase;
     @SerializedName("precipIntensity")
     @Expose
-    private long precipIntensity;
+    private double precipIntensity;
     @SerializedName("precipIntensityMax")
     @Expose
-    private long precipIntensityMax;
+    private double precipIntensityMax;
     @SerializedName("precipProbability")
     @Expose
     private double precipProbability;
@@ -96,6 +98,7 @@ public class Datum {
     @SerializedName("precipType")
     @Expose
     private String precipType;
+    private final static long serialVersionUID = 6013148927904092460L;
 
     public long getTime() {
         return time;
@@ -145,19 +148,19 @@ public class Datum {
         this.moonPhase = moonPhase;
     }
 
-    public long getPrecipIntensity() {
+    public double getPrecipIntensity() {
         return precipIntensity;
     }
 
-    public void setPrecipIntensity(long precipIntensity) {
+    public void setPrecipIntensity(double precipIntensity) {
         this.precipIntensity = precipIntensity;
     }
 
-    public long getPrecipIntensityMax() {
+    public double getPrecipIntensityMax() {
         return precipIntensityMax;
     }
 
-    public void setPrecipIntensityMax(long precipIntensityMax) {
+    public void setPrecipIntensityMax(double precipIntensityMax) {
         this.precipIntensityMax = precipIntensityMax;
     }
 
