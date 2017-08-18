@@ -18,8 +18,11 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 
+import java.util.List;
+
 import dev.eyesless.simple_weather_for_fishermans.AMainActivity;
 import dev.eyesless.simple_weather_for_fishermans.R;
+import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Datum;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -35,6 +38,8 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     CentralFragmentPresenter cfpresenter;
     private AMainActivity mActivity;
     private RecyclerView cf_recycler;
+    private RVadapter adapter;
+    List<Datum> rvadapterlist;
 
         public CentralFragmentImpl() {
 
@@ -65,15 +70,39 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         cfpresenter.startSearch();
         cf_imagebutton_find.setOnClickListener(new cfIBtnOnClickListner());
         recyclerparamsinit();
+        cfpresenter.getRecyclerAdapter();
 
     }
+
 
     //set extended params to recycler view
     private void recyclerparamsinit() {
         cf_recycler.setHasFixedSize(true);
         cf_recycler.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        cf_recycler.setAdapter(cfpresenter.getRecyclerAdapter());
+        adapter = new RVadapter(cfpresenter.getRvadapterList());
+        cf_recycler.setAdapter(adapter);
     }
+
+    private void inititems() {
+        cf_defoultloc = (TextView) parentview.findViewById(R.id.txt_defaults);
+        cf_coordoutput = (TextView) parentview.findViewById(R.id.txt_coordinates);
+        cf_txttochange = (TextView) parentview.findViewById(R.id.txt_to_change);
+        cf_imagebutton_find = (ImageButton) parentview.findViewById(R.id.btn_img_find_coords);
+        cf_recycler = (RecyclerView) parentview.findViewById(R.id.recycler_view_cf);
+    }
+
+    public void setDefoultLoc() {
+        cf_defoultloc.setText(cfpresenter.getDefoultLoc());
+    }
+
+    public void isImgBtnPressed() {
+        startActivityFromPresenter();
+    }
+
+    public void activitysetter (AMainActivity aMainActivity){
+        cfpresenter.setActivity (aMainActivity);
+    }
+
 
     @Override
     public void setCoords(String s) {
@@ -117,25 +146,6 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         }
     }
 
-    private void inititems() {
-        cf_defoultloc = (TextView) parentview.findViewById(R.id.txt_defaults);
-        cf_coordoutput = (TextView) parentview.findViewById(R.id.txt_coordinates);
-        cf_txttochange = (TextView) parentview.findViewById(R.id.txt_to_change);
-        cf_imagebutton_find = (ImageButton) parentview.findViewById(R.id.btn_img_find_coords);
-        cf_recycler = (RecyclerView) parentview.findViewById(R.id.recycler_view_cf);
-    }
-
-    public void setDefoultLoc() {
-       cf_defoultloc.setText(cfpresenter.getDefoultLoc());
-    }
-
-    public void isImgBtnPressed() {
-        startActivityFromPresenter();
-    }
-
-    public void activitysetter (AMainActivity aMainActivity){
-        cfpresenter.setActivity (aMainActivity);
-    }
 
     @Override
     public void setLocUnavaliable () {
@@ -144,4 +154,11 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         cf_txttochange.setText(unavaliable);
         mActivity.toastmaker(unavaliable+noinet);
     }
+
+    @Override
+    public void adapterrefresh() {
+        adapter = new RVadapter(cfpresenter.getRvadapterList());
+        cf_recycler.setAdapter(adapter);
+    }
+
 }

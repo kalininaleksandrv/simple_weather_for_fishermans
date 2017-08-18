@@ -1,11 +1,13 @@
 
 package dev.eyesless.simple_weather_for_fishermans.weather_response_classes;
 
+import java.io.Serializable;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Daily {
+public class Daily implements Serializable
+{
 
     @SerializedName("summary")
     @Expose
@@ -16,6 +18,7 @@ public class Daily {
     @SerializedName("data")
     @Expose
     private List<Datum> data = null;
+    private final static long serialVersionUID = 771798568022591908L;
 
     public String getSummary() {
         return summary;

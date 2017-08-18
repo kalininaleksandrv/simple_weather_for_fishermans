@@ -8,11 +8,13 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 
+import java.util.List;
+
 import dev.eyesless.simple_weather_for_fishermans.AMainActivity;
 import dev.eyesless.simple_weather_for_fishermans.geocoding_responce_classes.Location;
 import dev.eyesless.simple_weather_for_fishermans.repository.Repository;
 import dev.eyesless.simple_weather_for_fishermans.repository.Repository_interface;
-import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Daily;
+import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Datum;
 
 class CentralFragmentPresenter implements Repository_interface {
 
@@ -21,8 +23,7 @@ class CentralFragmentPresenter implements Repository_interface {
     private AMainActivity mActivity;
     private final String DEFOULT_LOC = "Москва, Россия";
     private String autocompleted;
-    private Daily forecastdataset;
-    private RVadapter rvadapter;
+    private List<Datum> rvadapterlist;
     final static int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
 
     CentralFragmentPresenter(CentralFragmentInterface cfi) {
@@ -73,6 +74,7 @@ class CentralFragmentPresenter implements Repository_interface {
             Log.e("Failed: Google Play", e.getMessage());
         } catch (GooglePlayServicesNotAvailableException e) {
             Log.e("Failed: Play . n aval. ", e.getMessage());        }
+        //todo test what happend if fragnent stops
 
     }
 
@@ -96,22 +98,27 @@ class CentralFragmentPresenter implements Repository_interface {
 
     }
 
-    RecyclerView.Adapter getRecyclerAdapter() {
+    void getRecyclerAdapter() {
 
-        repository.getWeatherDataset();
+      repository.getWeatherDataset();
 
-        rvadapter = new RVadapter(getForecastdataset().getData());
-        // TODO: 13.08.2017 make it returns from callback
-
-        return rvadapter;
     }
 
-    private Daily getForecastdataset() {
-        return forecastdataset;
+    List<Datum> getRvadapterList() {
+        if (rvadapterlist != null)
+        {return rvadapterlist;}
+        else {return repository.getastrvadapterlist();}
     }
 
-    public void setForecastdataset(Daily forecastdataset) {
-        this.forecastdataset = forecastdataset;
+    public void setRvadapterList(List<Datum> mylist) {
+        rvadapterlist = mylist;
+    }
+
+    @Override
+    public void adapterrefresh() {
+        cfinterface.adapterrefresh();
     }
 
 }
+
+

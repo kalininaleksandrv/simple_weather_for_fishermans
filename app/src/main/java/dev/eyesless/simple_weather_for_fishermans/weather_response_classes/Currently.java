@@ -1,10 +1,12 @@
 
 package dev.eyesless.simple_weather_for_fishermans.weather_response_classes;
 
+import java.io.Serializable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Currently {
+class Currently implements Serializable
+{
 
     @SerializedName("time")
     @Expose
@@ -44,7 +46,7 @@ public class Currently {
     private long windBearing;
     @SerializedName("cloudCover")
     @Expose
-    private long cloudCover;
+    private double cloudCover;
     @SerializedName("pressure")
     @Expose
     private double pressure;
@@ -54,6 +56,7 @@ public class Currently {
     @SerializedName("uvIndex")
     @Expose
     private long uvIndex;
+    private final static long serialVersionUID = 2031874094809294368L;
 
     public long getTime() {
         return time;
@@ -151,11 +154,11 @@ public class Currently {
         this.windBearing = windBearing;
     }
 
-    public long getCloudCover() {
+    public double getCloudCover() {
         return cloudCover;
     }
 
-    public void setCloudCover(long cloudCover) {
+    public void setCloudCover(double cloudCover) {
         this.cloudCover = cloudCover;
     }
 

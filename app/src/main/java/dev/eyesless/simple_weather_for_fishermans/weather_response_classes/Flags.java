@@ -1,11 +1,13 @@
 
 package dev.eyesless.simple_weather_for_fishermans.weather_response_classes;
 
+import java.io.Serializable;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Flags {
+class Flags implements Serializable
+{
 
     @SerializedName("sources")
     @Expose
@@ -16,6 +18,7 @@ public class Flags {
     @SerializedName("units")
     @Expose
     private String units;
+    private final static long serialVersionUID = -7732592651114712946L;
 
     public List<String> getSources() {
         return sources;
