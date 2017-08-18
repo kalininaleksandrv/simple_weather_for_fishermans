@@ -51,12 +51,7 @@ public class Repository {
             public void onResponse(@NonNull Call<Geocod> call, @NonNull Response<Geocod> response) {
                 Location incomelocation = null;
                 try {
-                    if (response.body().getResults() != null){
-                    incomelocation = response.body().getResults().get(0).getGeometry().getLocation();}
-                    else {
-                        incomelocation = getLastLocation();
-                        Log.e("MY_TAG", "get last location");
-                    }
+                    incomelocation = response.body().getResults().get(0).getGeometry().getLocation();
                 }
                 catch (Exception e) {
                     Log.e("MY_TAG", e.getMessage());
@@ -64,13 +59,15 @@ public class Repository {
 
                 setIncomelocation(incomelocation);
                 repository_interface.setCoordinates(getIncomeLocation());
+                getWeatherDataset(getIncomeLocation());
 
             }
             @Override
             public void onFailure(@NonNull Call<Geocod> call, @NonNull Throwable t) {
                 Log.e("Failed ", t.getMessage());
                 setIncomelocation(getLastLocation());
-                repository_interface.setCoordinates(getIncomeLocation());            }
+                repository_interface.setCoordinates(getIncomeLocation());
+            }
         });
     }
 
@@ -83,28 +80,35 @@ public class Repository {
     }
 
     //create set of weather data and callback it to presenter setForecastDataSet
-    public void getWeatherDataset() {
+    public void getWeatherDataset(Location location) {
 
         String coordsstringbilder;
 
-        if (getIncomeLocation() != null){
-            coordsstringbilder = from_loc_to_string (getIncomeLocation());
-        } else {coordsstringbilder = from_loc_to_string(getLastLocation());}
+        if (location!=null) {
+
+            coordsstringbilder = from_loc_to_string (location);
+
+        } else {
+
+            coordsstringbilder = from_loc_to_string (getLastLocation());
+        }
 
         weather_interface.WeatherFactory.getInstance().getWeatherForecasts(private_key_weather,
                 coordsstringbilder, EXCLUDE, LANG, UNITS).enqueue(new Callback<Weather>() {
             @Override
             public void onResponse(@NonNull Call<Weather> call, @NonNull Response<Weather> response) {
 
-                List<Datum> mylist = response.body().getDaily().getData();
-                // TODO: 18.08.2017 add nonull check
+                List<Datum> mylist;
+                mylist = response.body().getDaily().getData();
+                mylist.remove(0);
                 repository_interface.setRvadapterList(mylist);
                 repository_interface.adapterrefresh();
             }
 
             @Override
             public void onFailure(@NonNull Call<Weather> call, @NonNull Throwable t) {
-                // TODO: 18.08.2017 add code
+                repository_interface.setRvadapterList(getastrvadapterlist());
+                repository_interface.adapterrefresh();
             }
         });
     }

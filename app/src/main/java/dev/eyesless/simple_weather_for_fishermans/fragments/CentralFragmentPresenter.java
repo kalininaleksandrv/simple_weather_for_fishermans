@@ -100,7 +100,7 @@ class CentralFragmentPresenter implements Repository_interface {
 
     void getRecyclerAdapter() {
 
-      repository.getWeatherDataset();
+      repository.getWeatherDataset(null);
 
     }
 
