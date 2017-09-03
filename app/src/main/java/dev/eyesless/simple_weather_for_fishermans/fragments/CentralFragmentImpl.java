@@ -3,14 +3,15 @@ package dev.eyesless.simple_weather_for_fishermans.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -39,13 +40,15 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     private AMainActivity mActivity;
     private RecyclerView cf_recycler;
     private RVadapter adapter;
-    List<Datum> rvadapterlist;
+    private LoaderManager mLoader;
+    final static String CURRENT_LOC = "currentloc";
+    private String currentcocation;
 
-        public CentralFragmentImpl() {
 
-        cfpresenter = new CentralFragmentPresenter(this);
+    public CentralFragmentImpl() {
+
+            cfpresenter = new CentralFragmentPresenter(this);
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,23 +60,30 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     public void onAttach(Context context) {
         super.onAttach(context);
         mActivity = (AMainActivity)getActivity();
-        activitysetter(mActivity);
+        mLoader =  mActivity.getSupportLoaderManager();
+        activitysetter(mActivity, mLoader);
     }
 
     @Override
     public void onStart() {
         super.onStart();
         this.parentview = getView();
-
         inititems ();
         setDefoultLoc();
-        cfpresenter.startSearch();
+        cfpresenter.startSearch(false);
         cf_imagebutton_find.setOnClickListener(new cfIBtnOnClickListner());
         recyclerparamsinit();
-        cfpresenter.getRecyclerAdapter();
-
     }
 
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            setCurrentcocation(savedInstanceState.getString(CURRENT_LOC));
+            Log.e("MY_TAG", "restoring defoult loc " + savedInstanceState.getString(CURRENT_LOC));
+        }
+    }
 
     //set extended params to recycler view
     private void recyclerparamsinit() {
@@ -92,34 +102,33 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     }
 
     public void setDefoultLoc() {
-        cf_defoultloc.setText(cfpresenter.getDefoultLoc());
+
+        if (cfpresenter.getAutocompleeted() == null){
+            if (getCurrentcocation() == null){setCurrentcocation(CentralFragmentPresenter.DEFOULT_LOC);}
+        } else {setCurrentcocation (cfpresenter.getAutocompleeted());}
+            cf_defoultloc.setText(getCurrentcocation());
     }
 
-    public void isImgBtnPressed() {
-        startActivityFromPresenter();
-    }
-
-    public void activitysetter (AMainActivity aMainActivity){
+    public void activitysetter (AMainActivity aMainActivity, LoaderManager loadmmngr){
         cfpresenter.setActivity (aMainActivity);
+        cfpresenter.setLoadManager (loadmmngr);
     }
-
 
     @Override
     public void setCoords(String s) {
         cf_coordoutput.setText(s);
     }
 
-    @Override
-    public void startActivityFromPresenter() {
-        cfpresenter.startActivity(this);
-    }
-
-
     private class cfIBtnOnClickListner implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            isImgBtnPressed();
+            startActivityFromPresenter();
         }
+    }
+
+    @Override
+    public void startActivityFromPresenter() {
+        cfpresenter.startActivity(this);
     }
 
     //result of autocompleet transfering to Central Fragment
@@ -132,7 +141,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
 
                 cfpresenter.setAutocompleted(place.getAddress().toString());
                 Log.e("MY_TAG", place.getAddress().toString());
-                cfpresenter.startSearch();
+                cfpresenter.startSearch(true);
                 setDefoultLoc();
 
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
@@ -146,7 +155,6 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         }
     }
 
-
     @Override
     public void setLocUnavaliable () {
         String unavaliable = getResources().getString(R.string.locunavaliable);
@@ -156,9 +164,26 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     }
 
     @Override
-    public void adapterrefresh() {
-        adapter = new RVadapter(cfpresenter.getRvadapterList());
+    public void adapterrefresh(List<Datum> mylist) {
+        Log.e("MY_TAG", "refreshing adapter on view " + mylist.get(0).getSummary());
+        adapter = new RVadapter(mylist);
         cf_recycler.setAdapter(adapter);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (cf_defoultloc != null) {
+            outState.putString(CURRENT_LOC, getCurrentcocation());
+        }
+    }
+
+    //getters and setters
+    public String getCurrentcocation() {
+        return currentcocation;
+    }
+
+    public void setCurrentcocation(String currentcocation) {
+        this.currentcocation = currentcocation;
+    }
 }

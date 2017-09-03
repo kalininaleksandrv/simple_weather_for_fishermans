@@ -19,10 +19,10 @@ class Currently implements Serializable
     private String icon;
     @SerializedName("precipIntensity")
     @Expose
-    private long precipIntensity;
+    private double precipIntensity;
     @SerializedName("precipProbability")
     @Expose
-    private long precipProbability;
+    private double precipProbability;
     @SerializedName("temperature")
     @Expose
     private double temperature;
@@ -82,19 +82,19 @@ class Currently implements Serializable
         this.icon = icon;
     }
 
-    public long getPrecipIntensity() {
+    public double getPrecipIntensity() {
         return precipIntensity;
     }
 
-    public void setPrecipIntensity(long precipIntensity) {
+    public void setPrecipIntensity(double precipIntensity) {
         this.precipIntensity = precipIntensity;
     }
 
-    public long getPrecipProbability() {
+    public double getPrecipProbability() {
         return precipProbability;
     }
 
-    public void setPrecipProbability(long precipProbability) {
+    public void setPrecipProbability(double precipProbability) {
         this.precipProbability = precipProbability;
     }
 

@@ -45,6 +45,8 @@ public class RVadapter extends RecyclerView.Adapter<RVadapter.WeatherViewHolder>
     RVadapter(List<Datum> data) {
 
         this.weatherdataset = data;
+        Log.e("MY_TAG", "creating RV " + data.get(0).getSummary());
+
 
     }
 
@@ -57,7 +59,7 @@ public class RVadapter extends RecyclerView.Adapter<RVadapter.WeatherViewHolder>
     @Override
     public void onBindViewHolder(WeatherViewHolder holder, int position) {
 
-        holder.temperature.setText(String.valueOf((int)weatherdataset.get(position).getTemperatureMin())+(char) 0x00B0+ "C - " +
+        holder.temperature.setText(String.valueOf((int)weatherdataset.get(position).getTemperatureMin())+(char) 0x00B0+ "C / " +
         String.valueOf((int)weatherdataset.get(position).getTemperatureMax()) +(char) 0x00B0+ "C");
         holder.wind.setText(String.format("ветер - %s", windfrom(weatherdataset.get(position).getWindBearing())));
         holder.pressure.setText("давление - " + String.valueOf((int)weatherdataset.get(position).getPressure())+"мм. рт. ст.");
@@ -94,11 +96,7 @@ public class RVadapter extends RecyclerView.Adapter<RVadapter.WeatherViewHolder>
             SimpleDateFormat sdf = new SimpleDateFormat("EE, dd-MM-yyyy");
             // TODO: 14.08.2017 disable this warning
 
-            String formattedDate = sdf.format(date);
-
-            Log.e("MY_TAG", "DATE"+formattedDate);
-
-            return formattedDate;
+            return sdf.format(date);
         } else {
 
             return "00-00-0000";
