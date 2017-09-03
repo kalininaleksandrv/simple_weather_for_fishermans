@@ -1,7 +1,11 @@
 package dev.eyesless.simple_weather_for_fishermans.fragments;
 
 
- interface CentralFragmentInterface {
+import java.util.List;
+
+import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Datum;
+
+interface CentralFragmentInterface {
 
      //call when presenter set a coord in view
      void setCoords (String s);
@@ -12,7 +16,7 @@ package dev.eyesless.simple_weather_for_fishermans.fragments;
 
      void setLocUnavaliable ();
 
-     void adapterrefresh();
+     void adapterrefresh(List<Datum> mylist);
 
 
  }

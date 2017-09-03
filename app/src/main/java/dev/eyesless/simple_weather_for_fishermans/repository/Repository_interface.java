@@ -10,7 +10,6 @@ import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Datum
 public interface Repository_interface {
 
     void setCoordinates(Location location);
-    void setRvadapterList(List<Datum> rvadapter);
-    void adapterrefresh();
 
+    void adapterrefresh(List<Datum> mylist);
 }

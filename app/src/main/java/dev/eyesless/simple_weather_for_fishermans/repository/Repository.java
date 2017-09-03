@@ -34,8 +34,6 @@ public class Repository {
     private String private_key_weather;
     private Location lastlocation;
 
-    private RVadapter rvadapter;
-
 
     public Repository(Repository_interface repository_interface) {
         this.repository_interface = repository_interface;
@@ -71,14 +69,6 @@ public class Repository {
         });
     }
 
-    private Location getLastLocation() {
-        Location lastlocation = new Location();
-        lastlocation.setLat(DEFAULT_LAT);
-        lastlocation.setLng(DEFAULT_LNG);
-        lastlocation.setLastlocation(DEFAULT_LOCATION);
-        return lastlocation;
-    }
-
     //create set of weather data and callback it to presenter setForecastDataSet
     public void getWeatherDataset(Location location) {
 
@@ -101,14 +91,13 @@ public class Repository {
                 List<Datum> mylist;
                 mylist = response.body().getDaily().getData();
                 mylist.remove(0);
-                repository_interface.setRvadapterList(mylist);
-                repository_interface.adapterrefresh();
+                repository_interface.adapterrefresh(mylist);
             }
 
             @Override
             public void onFailure(@NonNull Call<Weather> call, @NonNull Throwable t) {
-                repository_interface.setRvadapterList(getastrvadapterlist());
-                repository_interface.adapterrefresh();
+                repository_interface.adapterrefresh(getastrvadapterlist());
+                Log.e("MY_TAG", "reqwest FAILURE: " + t.toString());
             }
         });
     }
@@ -126,8 +115,6 @@ public class Repository {
         this.lastlocation = lastlocation;
     }
 
-
-
     public List<Datum> getastrvadapterlist() {
 
         Datum defoultdatum = new Datum();
@@ -135,6 +122,15 @@ public class Repository {
         mydatum.add(defoultdatum);
 
         return mydatum;
+    }
+
+    public Location getLastLocation() {
+        Log.e("MY_TAG", "Setting Lastlocation");
+        Location lastlocation = new Location();
+        lastlocation.setLat(DEFAULT_LAT);
+        lastlocation.setLng(DEFAULT_LNG);
+        lastlocation.setLastlocation(DEFAULT_LOCATION);
+        return lastlocation;
     }
 }
 

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -33,7 +34,6 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface 
     private DrawerLayout drawer;
     private NavigationView naview;
     AMainPresenter presenter;
-    public final static int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
 
     public AMainActivity() {
         presenter = new AMainPresenter(this);
@@ -44,7 +44,9 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface 
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT);
 
-        frameRemoover(new CentralFragmentImpl(), "Central");
+        if (savedInstanceState == null) {
+            frameRemoover(new CentralFragmentImpl(), "Central");
+        }
 
         initNavigationView();
 
