@@ -100,8 +100,8 @@ public class CentralFragmentPresenter implements Repository_interface, LoaderMan
     }
 
     @Override
-    public void adapterrefresh(List<Datum> mylist) {
-        cfinterface.adapterrefresh(mylist);
+    public void adapterrefresh(List<Datum> mylist, boolean isdatanew) {
+        cfinterface.adapterrefresh(mylist, isdatanew);
         Log.e("MY_TAG", "refreshing adapter on presenter " + mylist.get(0).getSummary());
     }
 

@@ -11,5 +11,5 @@ public interface Repository_interface {
 
     void setCoordinates(Location location);
 
-    void adapterrefresh(List<Datum> mylist);
+    void adapterrefresh(List<Datum> mylist, boolean isdatanew);
 }

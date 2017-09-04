@@ -16,7 +16,7 @@ interface CentralFragmentInterface {
 
      void setLocUnavaliable ();
 
-     void adapterrefresh(List<Datum> mylist);
+     void adapterrefresh(List<Datum> mylist, boolean isdatanew);
 
 
  }
