@@ -48,17 +48,19 @@ public class Repository {
             @Override
             public void onResponse(@NonNull Call<Geocod> call, @NonNull Response<Geocod> response) {
                 Location incomelocation = null;
-                try {
-                    incomelocation = response.body().getResults().get(0).getGeometry().getLocation();
+                if (response.body().getResults() != null) {
+                    try {
+                        incomelocation = response.body().getResults().get(0).getGeometry().getLocation();
+                    } catch (Exception e) {
+                        Log.e("MY_TAG", e.getMessage());
+                    }
+                } else {
+                    setIncomelocation(getLastLocation());
+                    Log.e("MY_TAG", "COORDS reqwest OK but prodused NULL: ");
                 }
-                catch (Exception e) {
-                    Log.e("MY_TAG", e.getMessage());
-                }
-
                 setIncomelocation(incomelocation);
                 repository_interface.setCoordinates(getIncomeLocation());
                 getWeatherDataset(getIncomeLocation());
-
             }
             @Override
             public void onFailure(@NonNull Call<Geocod> call, @NonNull Throwable t) {
@@ -88,15 +90,20 @@ public class Repository {
             @Override
             public void onResponse(@NonNull Call<Weather> call, @NonNull Response<Weather> response) {
 
-                List<Datum> mylist;
-                mylist = response.body().getDaily().getData();
-                mylist.remove(0);
-                repository_interface.adapterrefresh(mylist);
+                if (response.body().getDaily() != null) {
+                    List<Datum> mylist;
+                    mylist = response.body().getDaily().getData();
+                    mylist.remove(0);
+                    repository_interface.adapterrefresh(mylist, true);
+                } else {
+                    repository_interface.adapterrefresh(getastrvadapterlist(), false);
+                    Log.e("MY_TAG", "WEATHER reqwest OK but prodused NULL: ");
+                }
             }
 
             @Override
             public void onFailure(@NonNull Call<Weather> call, @NonNull Throwable t) {
-                repository_interface.adapterrefresh(getastrvadapterlist());
+                repository_interface.adapterrefresh(getastrvadapterlist(), false);
                 Log.e("MY_TAG", "reqwest FAILURE: " + t.toString());
             }
         });

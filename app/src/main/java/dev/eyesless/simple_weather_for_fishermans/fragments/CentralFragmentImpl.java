@@ -35,6 +35,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     private TextView cf_coordoutput;
     private TextView cf_defoultloc;
     private TextView cf_txttochange;
+    private TextView cf_trytoload;
     private ImageButton cf_imagebutton_find;
     CentralFragmentPresenter cfpresenter;
     private AMainActivity mActivity;
@@ -69,6 +70,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         super.onStart();
         this.parentview = getView();
         inititems ();
+        cf_recycler.setVisibility(View.INVISIBLE);
         setDefoultLoc();
         cfpresenter.startSearch(false);
         cf_imagebutton_find.setOnClickListener(new cfIBtnOnClickListner());
@@ -97,6 +99,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         cf_defoultloc = (TextView) parentview.findViewById(R.id.txt_defaults);
         cf_coordoutput = (TextView) parentview.findViewById(R.id.txt_coordinates);
         cf_txttochange = (TextView) parentview.findViewById(R.id.txt_to_change);
+        cf_trytoload = (TextView) parentview.findViewById(R.id.try_to_load_data);
         cf_imagebutton_find = (ImageButton) parentview.findViewById(R.id.btn_img_find_coords);
         cf_recycler = (RecyclerView) parentview.findViewById(R.id.recycler_view_cf);
     }
@@ -164,10 +167,13 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     }
 
     @Override
-    public void adapterrefresh(List<Datum> mylist) {
+    public void adapterrefresh(List<Datum> mylist, boolean isdatanew) {
         Log.e("MY_TAG", "refreshing adapter on view " + mylist.get(0).getSummary());
         adapter = new RVadapter(mylist);
         cf_recycler.setAdapter(adapter);
+        cf_recycler.setVisibility(View.VISIBLE);
+        cf_trytoload.setVisibility(View.INVISIBLE);
+        if (!isdatanew){mActivity.toastmaker(getString(R.string.nonewdata));}
     }
 
     @Override
