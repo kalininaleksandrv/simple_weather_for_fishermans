@@ -18,5 +18,4 @@ interface CentralFragmentInterface {
 
      void adapterrefresh(List<Datum> mylist, boolean isdatanew);
 
-
  }

@@ -52,46 +52,56 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(INFLATED_VIEW, container, false);
-    }
-
-    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         mActivity = (AMainActivity)getActivity();
-        mLoader =  mActivity.getSupportLoaderManager();
-        activitysetter(mActivity, mLoader);
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        this.parentview = getView();
-        inititems ();
-        cf_recycler.setVisibility(View.INVISIBLE);
-        setDefoultLoc();
-        cfpresenter.startSearch(false);
-        cf_imagebutton_find.setOnClickListener(new cfIBtnOnClickListner());
-        recyclerparamsinit();
-    }
-
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             setCurrentcocation(savedInstanceState.getString(CURRENT_LOC));
             Log.e("MY_TAG", "restoring defoult loc " + savedInstanceState.getString(CURRENT_LOC));
         }
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(INFLATED_VIEW, container, false);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mLoader = getLoaderManager();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        activitysetter(mActivity, mLoader);
+        this.parentview = getView();
+        inititems ();
+        cf_recycler.setVisibility(View.INVISIBLE);
+        setDefoultLoc();
+        startSearch();
+        cf_imagebutton_find.setOnClickListener(new cfIBtnOnClickListner());
+        recyclerparamsinit();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mActivity = null;
+    }
+
     //set extended params to recycler view
     private void recyclerparamsinit() {
         cf_recycler.setHasFixedSize(true);
         cf_recycler.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        adapter = new RVadapter(cfpresenter.getRvadapterList());
+        adapter = new RVadapter(cfpresenter.getTempAdapterList());
         cf_recycler.setAdapter(adapter);
     }
 
@@ -110,6 +120,10 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
             if (getCurrentcocation() == null){setCurrentcocation(CentralFragmentPresenter.DEFOULT_LOC);}
         } else {setCurrentcocation (cfpresenter.getAutocompleeted());}
             cf_defoultloc.setText(getCurrentcocation());
+    }
+
+    private void startSearch() {
+        cfpresenter.startSearch(false);
     }
 
     public void activitysetter (AMainActivity aMainActivity, LoaderManager loadmmngr){

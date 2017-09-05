@@ -98,7 +98,16 @@ public class Datum implements Serializable
     @SerializedName("precipType")
     @Expose
     private String precipType;
+
+    @SerializedName("isnew")
+    @Expose
+    private boolean isNew = true;
     private final static long serialVersionUID = 6013148927904092460L;
+
+    //isnew its trigger to define - is data new or loading from base, by defoult its true when restored from DB - setting false
+    public boolean isNew() {return isNew;}
+
+    public void setNew(boolean aNew) {isNew = aNew;}
 
     public long getTime() {
         return time;
