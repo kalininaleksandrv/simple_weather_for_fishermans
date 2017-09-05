@@ -16,16 +16,12 @@ import java.util.List;
 import dev.eyesless.simple_weather_for_fishermans.AMainActivity;
 import dev.eyesless.simple_weather_for_fishermans.R;
 import dev.eyesless.simple_weather_for_fishermans.geocoding_responce_classes.Location;
-import dev.eyesless.simple_weather_for_fishermans.repository.CoordinatesLoader;
-import dev.eyesless.simple_weather_for_fishermans.repository.Repository;
-import dev.eyesless.simple_weather_for_fishermans.repository.Repository_interface;
 import dev.eyesless.simple_weather_for_fishermans.repository.WeatherLoader;
 import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Datum;
 
-public class CentralFragmentPresenter implements Repository_interface, LoaderManager.LoaderCallbacks<List<Datum>> {
+public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<List<Datum>> {
 
     private CentralFragmentInterface cfinterface;
-    private Repository repository;
     private AMainActivity mActivity;
     final static String DEFOULT_LOC = "Москва, Россия";
     private String autocompleted;
@@ -35,7 +31,6 @@ public class CentralFragmentPresenter implements Repository_interface, LoaderMan
 
     CentralFragmentPresenter(CentralFragmentInterface cfi) {
         this.cfinterface = cfi;
-        repository = new Repository (this);
     }
 
     //call when button pressed in IMPL
@@ -79,20 +74,7 @@ public class CentralFragmentPresenter implements Repository_interface, LoaderMan
             Log.e("Failed: Play . n aval. ", e.getMessage());        }
     }
 
-    //if field getlastlocation in class location != null, what means that acsess to map.google unavaliable, set allert about it, or (if ok) set presented coordinates
-    @Override
-    public void setCoordinates(Location location) {
-
-        if (location.getLastlocation() != null){
-        setAutocompleted(location.getLastlocation());
-        cfinterface.setLocUnavaliable();}
-        else {
-            cfinterface.setCoords(String.valueOf(location.getLat()) + " and " + String.valueOf(location.getLng()));
-        }
-    }
-
-    @Override
-    public void adapterrefresh(List<Datum> mylist, boolean isdatanew) {
+    private void adapterrefresh(List<Datum> mylist, boolean isdatanew) {
         cfinterface.adapterrefresh(mylist, isdatanew);
         Log.e("MY_TAG", "refreshing adapter on presenter " + isdatanew);
     }

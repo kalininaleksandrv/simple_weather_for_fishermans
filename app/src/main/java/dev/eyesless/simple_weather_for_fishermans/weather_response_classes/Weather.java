@@ -19,7 +19,7 @@ public class Weather implements Serializable
     private String timezone;
     @SerializedName("offset")
     @Expose
-    private long offset;
+    private double offset;
     @SerializedName("currently")
     @Expose
     private Currently currently;
@@ -55,11 +55,11 @@ public class Weather implements Serializable
         this.timezone = timezone;
     }
 
-    public long getOffset() {
+    public double getOffset() {
         return offset;
     }
 
-    public void setOffset(long offset) {
+    public void setOffset(double offset) {
         this.offset = offset;
     }
 
