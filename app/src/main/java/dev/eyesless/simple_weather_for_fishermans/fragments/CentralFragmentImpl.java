@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.Status;
@@ -37,6 +38,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     private TextView cf_txttochange;
     private TextView cf_trytoload;
     private ImageButton cf_imagebutton_find;
+    private ProgressBar cf_progress;
     CentralFragmentPresenter cfpresenter;
     private AMainActivity mActivity;
     private RecyclerView cf_recycler;
@@ -85,6 +87,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         this.parentview = getView();
         inititems ();
         cf_recycler.setVisibility(View.INVISIBLE);
+        cf_progress.setVisibility(View.VISIBLE);
         setDefoultLoc();
         startSearch();
         cf_imagebutton_find.setOnClickListener(new cfIBtnOnClickListner());
@@ -112,6 +115,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         cf_trytoload = (TextView) parentview.findViewById(R.id.try_to_load_data);
         cf_imagebutton_find = (ImageButton) parentview.findViewById(R.id.btn_img_find_coords);
         cf_recycler = (RecyclerView) parentview.findViewById(R.id.recycler_view_cf);
+        cf_progress = (ProgressBar) parentview.findViewById(R.id.progressBar_cf);
     }
 
     public void setDefoultLoc() {
@@ -160,6 +164,8 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
                 Log.e("MY_TAG", place.getAddress().toString());
                 cfpresenter.startSearch(true);
                 setDefoultLoc();
+                cf_progress.setVisibility(View.VISIBLE);
+                cf_trytoload.setVisibility(View.VISIBLE);
 
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(mActivity, data);
@@ -186,6 +192,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         adapter = new RVadapter(mylist);
         cf_recycler.setAdapter(adapter);
         cf_recycler.setVisibility(View.VISIBLE);
+        cf_progress.setVisibility(View.INVISIBLE);
         cf_trytoload.setVisibility(View.INVISIBLE);
         if (!isdatanew){mActivity.toastmaker(getString(R.string.nonewdata));}
     }

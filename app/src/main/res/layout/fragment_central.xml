@@ -53,20 +53,6 @@
             app:layout_constraintRight_toRightOf="parent" />
 
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_cf"
-        android:scrollbars="vertical"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/txt_to_change"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/txt_coordinates" />
-
     <TextView
                 android:id="@+id/txt_coordinates"
                 android:layout_width="0dp"
@@ -94,9 +80,34 @@
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginBottom="8dp"
-        app:layout_constraintTop_toTopOf="@+id/recycler_view_cf"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toTopOf="@+id/txt_coordinates" />
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_cf"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/txt_coordinates"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_to_change"
+        />
+
+    <ProgressBar
+        android:id="@+id/progressBar_cf"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_to_change"
+        app:layout_constraintBottom_toTopOf="@+id/txt_coordinates"
+        />
 
 </android.support.constraint.ConstraintLayout>
