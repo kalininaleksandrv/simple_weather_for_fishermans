@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -17,7 +18,7 @@ import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Datum
 
 
 
-public class RVadapter extends RecyclerView.Adapter<RVadapter.WeatherViewHolder>{
+class RVadapter extends RecyclerView.Adapter<RVadapter.WeatherViewHolder>{
 
     private List<Datum> weatherdataset;
 
@@ -29,6 +30,7 @@ public class RVadapter extends RecyclerView.Adapter<RVadapter.WeatherViewHolder>
         TextView pressure;
         TextView percipe;
         TextView date;
+        ImageView weather;
 
         WeatherViewHolder(View itemView) {
             super(itemView);
@@ -39,6 +41,7 @@ public class RVadapter extends RecyclerView.Adapter<RVadapter.WeatherViewHolder>
             pressure = (TextView) itemView.findViewById(R.id.textView_pressure);
             percipe = (TextView) itemView.findViewById(R.id.textView_percip);
             date = (TextView) itemView.findViewById(R.id.textView_data);
+            weather = (ImageView) itemView.findViewById(R.id.imageView_weather);
         }
     }
 
@@ -65,7 +68,30 @@ public class RVadapter extends RecyclerView.Adapter<RVadapter.WeatherViewHolder>
         holder.pressure.setText("давление - " + String.valueOf((int)weatherdataset.get(position).getPressure())+"мм. рт. ст.");
         holder.percipe.setText(String.valueOf((int)(weatherdataset.get(position).getPrecipProbability()*100)+" %"));
         holder.date.setText(dateconverter(weatherdataset.get(position).getTime()));
+        holder.weather.setImageResource(getimageresfromselector(weatherdataset.get(position).getIcon()));
+    }
 
+    //return R.id. of weather icon based on incom string
+    private int getimageresfromselector(String icon) {
+
+        if (icon!=null) switch (icon) {
+            case "partly-cloudy-day":return R.drawable.cloud_sun;
+            case "partly-cloudy-night":return R.drawable.cloud_moon;
+            case "clear-day":return R.drawable.sun;
+            case "clear-night":return R.drawable.moon;
+            case "rain":return R.drawable.cloud_rain;
+            case "snow":return R.drawable.cloud_snow;
+            case "sleet":return R.drawable.sleet;
+            case "wind":return R.drawable.cloud_wind_sun;
+            case "fog":return R.drawable.cloud_fog;
+            case "cloudy":return R.drawable.cloud;
+
+            default: return R.drawable.ic_sync_black_48dp;
+
+        }
+        else {
+            return R.drawable.ic_sync_black_48dp;
+        }
     }
 
     @Override
