@@ -45,7 +45,8 @@
             android:id="@+id/btn_img_find_coords"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_info_outline_black_24dp"
+            app:srcCompat="@drawable/compass"
+            android:background="@drawable/circle_button_selector"
             android:contentDescription="@string/btn_img_find_coords"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="8dp"
@@ -71,7 +72,7 @@
 
     <TextView
         android:id="@+id/try_to_load_data"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/trytoload"
         android:gravity="center"
@@ -80,8 +81,9 @@
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/txt_coordinates" />
+        app:layout_constraintBottom_toTopOf="@+id/txt_coordinates"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_cf"
@@ -97,7 +99,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_to_change"
-        />
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
     <ProgressBar
         android:id="@+id/progressBar_cf"
