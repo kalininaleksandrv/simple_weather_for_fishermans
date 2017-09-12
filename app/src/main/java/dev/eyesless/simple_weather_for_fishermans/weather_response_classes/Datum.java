@@ -102,12 +102,28 @@ public class Datum implements Serializable
     @SerializedName("isnew")
     @Expose
     private boolean isNew = true;
+
+
+
+    @SerializedName("isBite")
+    @Expose
+    private String isBite = "unknown";
+
     private final static long serialVersionUID = 6013148927904092460L;
 
     //isnew its trigger to define - is data new or loading from base, by defoult its true when restored from DB - setting false
     public boolean isNew() {return isNew;}
 
     public void setNew(boolean aNew) {isNew = aNew;}
+
+    //isBite its added (by me) parameter to reade and write forecast of fish bite
+    public String getIsBite() {
+        return isBite;
+    }
+
+    public void setIsBite(String isBite) {
+        this.isBite = isBite;
+    }
 
     public long getTime() {
         return time;

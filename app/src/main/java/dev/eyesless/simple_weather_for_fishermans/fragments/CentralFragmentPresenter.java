@@ -16,6 +16,7 @@ import java.util.List;
 import dev.eyesless.simple_weather_for_fishermans.AMainActivity;
 import dev.eyesless.simple_weather_for_fishermans.R;
 import dev.eyesless.simple_weather_for_fishermans.geocoding_responce_classes.Location;
+import dev.eyesless.simple_weather_for_fishermans.repository.PrognosticModel;
 import dev.eyesless.simple_weather_for_fishermans.repository.WeatherLoader;
 import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Datum;
 
@@ -74,6 +75,10 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
             Log.e("Failed: Play . n aval. ", e.getMessage());        }
     }
 
+
+    private void addbitedata(List<Datum> data, boolean isNew) {
+    }
+
     private void adapterrefresh(List<Datum> mylist, boolean isdatanew) {
         cfinterface.adapterrefresh(mylist, isdatanew);
         Log.e("MY_TAG", "refreshing adapter on presenter " + isdatanew);
@@ -96,9 +101,15 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
         int id = loader.getId();
         if (id == R.id.weather_loader_id) {
             if (data != null) {
-                Log.e("MY_TAG", "geting no null weather");
                 boolean isNew = data.get(0).isNew();
-                adapterrefresh(data, isNew);
+                List<Datum> datawithbite = new PrognosticModel(data).createBiteList();
+                if (datawithbite != null){
+                    adapterrefresh(datawithbite, isNew);
+                    Log.e("MY_TAG", "datawithbite");
+                } else {
+                    adapterrefresh(data, isNew);
+                    Log.e("MY_TAG", "dataNObite");
+                }
             } else
             {
                 Log.e("MY_TAG", "geting NULL weather");
