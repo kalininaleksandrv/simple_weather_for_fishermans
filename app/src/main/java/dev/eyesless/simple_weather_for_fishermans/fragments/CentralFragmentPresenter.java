@@ -15,7 +15,6 @@ import java.util.List;
 
 import dev.eyesless.simple_weather_for_fishermans.AMainActivity;
 import dev.eyesless.simple_weather_for_fishermans.R;
-import dev.eyesless.simple_weather_for_fishermans.geocoding_responce_classes.Location;
 import dev.eyesless.simple_weather_for_fishermans.repository.PrognosticModel;
 import dev.eyesless.simple_weather_for_fishermans.repository.WeatherLoader;
 import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Datum;

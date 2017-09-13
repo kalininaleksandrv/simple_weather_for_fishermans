@@ -31,6 +31,7 @@ class RVadapter extends RecyclerView.Adapter<RVadapter.WeatherViewHolder>{
         TextView percipe;
         TextView date;
         ImageView weather;
+        ImageView fish;
 
         WeatherViewHolder(View itemView) {
             super(itemView);
@@ -42,6 +43,7 @@ class RVadapter extends RecyclerView.Adapter<RVadapter.WeatherViewHolder>{
             percipe = (TextView) itemView.findViewById(R.id.textView_percip);
             date = (TextView) itemView.findViewById(R.id.textView_data);
             weather = (ImageView) itemView.findViewById(R.id.imageView_weather);
+            weather = (ImageView) itemView.findViewById(R.id.imageView_fish);
         }
     }
 
@@ -69,6 +71,21 @@ class RVadapter extends RecyclerView.Adapter<RVadapter.WeatherViewHolder>{
         holder.percipe.setText(String.valueOf((int)(weatherdataset.get(position).getPrecipProbability()*100)+" %"));
         holder.date.setText(dateconverter(weatherdataset.get(position).getTime()));
         holder.weather.setImageResource(getimageresfromselector(weatherdataset.get(position).getIcon()));
+        holder.weather.setImageResource(getfishresfromselector(weatherdataset.get(position).getIsBite()));
+    }
+
+    private int getfishresfromselector(String fish) {
+
+        if (fish!=null) {
+            switch (fish) {
+                case "good":return R.drawable.arrowup;
+                case "bad":return R.drawable.arrowdown;
+                default:
+                    return R.drawable.arrowneutral;
+            }
+        }else {
+            return R.drawable.arrowneutral;
+        }
     }
 
     //return R.id. of weather icon based on incom string
