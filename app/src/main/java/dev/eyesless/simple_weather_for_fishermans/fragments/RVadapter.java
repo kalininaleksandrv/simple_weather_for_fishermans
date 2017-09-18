@@ -82,6 +82,7 @@ class RVadapter extends RecyclerView.Adapter<RVadapter.WeatherViewHolder>{
                 case "bad":return R.drawable.arrowdown;
                 case "average":return R.drawable.arrowneutral;
                 case "downward":return R.drawable.arrowneutral;
+                case "disaster":return R.drawable.arrowdownward;
 
                 default:
                     return R.drawable.arrowneutral;

@@ -60,6 +60,7 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> {
         Location incomelocation = getLastLocation();
         try {
             incomelocation = response.execute().body().getResults().get(0).getGeometry().getLocation();
+            //todo getResults may produse null
             Log.e("MY_TAG", "try to request new loc");
         } catch (IOException e) {
             Log.e("MY_TAG", e.getMessage());
@@ -72,7 +73,6 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> {
             try {
                 mylist = weather_response.execute().body().getDaily().getData();
                     if (mylist.size()!=0){
-                    mylist.remove(0);
                     Log.e("MY_TAG", "weather reqwes body is SUCSESS");
                     return mylist;
                     }

@@ -74,11 +74,8 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
             Log.e("Failed: Play . n aval. ", e.getMessage());        }
     }
 
-
-    private void addbitedata(List<Datum> data, boolean isNew) {
-    }
-
     private void adapterrefresh(List<Datum> mylist, boolean isdatanew) {
+        mylist.remove(0);
         cfinterface.adapterrefresh(mylist, isdatanew);
         Log.e("MY_TAG", "refreshing adapter on presenter " + isdatanew);
     }
