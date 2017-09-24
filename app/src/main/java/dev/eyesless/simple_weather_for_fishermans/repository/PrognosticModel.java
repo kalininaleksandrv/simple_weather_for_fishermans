@@ -86,23 +86,20 @@ public class PrognosticModel {
 
             if (bitescore >= 100) {
                 Log.w("MY_TAG", "ret GOOD for day " + count + " " + bitescore);
-//                weather = "good";
-                weather = "disaster";
+                weather = "good";
             }
             if ((bitescore>89)&&(bitescore<100)) {
                 Log.w("MY_TAG", "ret AVERAGE for day " + count + " " + bitescore);
-//                weather =  "average";
-                weather = "disaster";
+                weather =  "average";
+
             }
             if ((bitescore>74)&&(bitescore<90)) {
                 Log.w("MY_TAG", "ret DOWNWARD for day " + count + " " + bitescore);
-//                weather =  "downward";
-                weather = "disaster";
+                weather =  "downward";
             }
             if (bitescore <75) {
                 Log.w("MY_TAG", "ret BAD for day " + count + " " + bitescore);
-//                weather =  "bad";
-                weather = "disaster";
+                weather =  "bad";
             }
             Log.w("MY_TAG", "ret WEATHER " + weather + " " + bitescore);
             return weather;

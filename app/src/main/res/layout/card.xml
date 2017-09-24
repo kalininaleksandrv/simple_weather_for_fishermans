@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v7.widget.CardView
-    android:layout_width="match_parent"
+<android.support.v7.widget.CardView android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardElevation="1dp"
     app:cardCornerRadius="3dp"
@@ -9,8 +8,7 @@
     app:cardUseCompatPadding="true"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/card_view_weather"
-    >
+    android:id="@+id/card_view_weather">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -38,8 +36,6 @@
                 android:foregroundGravity="center"
                 app:layout_constraintTop_toTopOf="@+id/textView_tempr"
                 app:layout_constraintBottom_toBottomOf="@+id/textView_tempr"
-                android:layout_marginTop="0dp"
-                android:layout_marginBottom="0dp"
                 app:layout_constraintLeft_toRightOf="@+id/textView_tempr"
                 android:layout_marginStart="16dp" />
 
@@ -51,8 +47,7 @@
                 android:textSize="@dimen/text_size_big"
                 app:layout_constraintLeft_toRightOf="@+id/imageView_drop"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="8dp"
-                android:layout_marginStart="0dp" />
+                android:layout_marginTop="8dp" />
 
             <ImageView
                 android:id="@+id/imageView_weather"
@@ -62,24 +57,26 @@
                 android:contentDescription="@string/its_weather"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginTop="8dp"
-                app:layout_constraintRight_toLeftOf="@+id/imageView_fish"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginBottom="8dp"
-                />
+                app:layout_constraintRight_toLeftOf="@+id/imageView_fish" />
 
             <ImageView
                 android:id="@+id/imageView_fish"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintHeight_default="spread"
+                app:layout_constraintWidth_default="wrap"
+                app:layout_constraintDimensionRatio="4:3"
                 app:srcCompat="@drawable/ic_sync_black_48dp"
                 android:contentDescription="@string/its_fishing"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginBottom="8dp" />
+                app:layout_constraintBottom_toBottomOf="parent" />
 
             <TextView
                 android:id="@+id/textView_wind"
@@ -87,7 +84,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="0dp"
                 android:text="@string/nodata_full"
                 android:textSize="@dimen/text_size_small"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -100,7 +96,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="0dp"
                 android:text="@string/nodata_full"
                 android:textSize="@dimen/text_size_small"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -113,12 +108,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="0dp"
                 android:text="@string/nodata_full"
                 android:textSize="@dimen/text_size_small"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textView_pressure" />
+                app:layout_constraintTop_toBottomOf="@+id/textView_pressure" />
 
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>
