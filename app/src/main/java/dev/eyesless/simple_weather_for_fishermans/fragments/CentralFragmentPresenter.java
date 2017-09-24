@@ -135,15 +135,18 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
         }
         if (id == R.id.past_loader_id){
 
-            if (data != null){
+            if (data != null && data.size()>8){
                 List<Datum> datawithbite = new PrognosticModel(data).createBiteList();
                 if (datawithbite != null){
                     adapterrefresh(datawithbite, true, true);
                     Log.e("MY_TAG", "datawithbite");
                 } else {
                     mActivity.toastmaker(mActivity.getString(R.string.nobitedata));
-                    Log.e("MY_TAG", "dataNObite");
+                    Log.e("MY_TAG", "prognostic model returns null");
                 }
+            } else {
+                mActivity.toastmaker(mActivity.getString(R.string.nobitedata));
+                Log.e("MY_TAG", "past weather loader returns null");
             }
         }
     }
