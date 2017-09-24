@@ -3,9 +3,6 @@ package dev.eyesless.simple_weather_for_fishermans.api_interface;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import java.util.List;
-
-import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Datum;
 import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Weather;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;

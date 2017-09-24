@@ -1,12 +1,10 @@
 package dev.eyesless.simple_weather_for_fishermans;
 
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -20,8 +18,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 
 import dev.eyesless.simple_weather_for_fishermans.fragments.CentralFragmentImpl;
 
@@ -29,11 +25,9 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface 
 
     private static final int LAYOUT = R.layout.activity_amain;
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    private Toolbar mytoolbar;
     private ActionBarDrawerToggle drawerToggle;
     private DrawerLayout drawer;
-    private NavigationView naview;
-    AMainPresenter presenter;
+    private final AMainPresenter presenter;
 
     public AMainActivity() {
         presenter = new AMainPresenter(this);
@@ -64,7 +58,7 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface 
     //create navigation view and plugged custom menu (res/menu) and header
     private void initNavigationView() {
         drawer = (DrawerLayout) findViewById(R.id.drawer_main);
-        naview = (NavigationView) findViewById(R.id.navigation_view);
+        NavigationView naview = (NavigationView) findViewById(R.id.navigation_view);
         naview.getMenu().clear();
         naview.inflateMenu(R.menu.menu_navigation);
         naview.inflateHeaderView(R.layout.navigation_header);
@@ -72,7 +66,7 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface 
 
     //create custom toolbar
     private void inittoolbar() {
-        mytoolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar mytoolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mytoolbar);
     }
 
@@ -110,7 +104,7 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface 
         return super.onOptionsItemSelected(item);
     }
 
-    public void uppermenuselector(int itemId) {
+    private void uppermenuselector(int itemId) {
         presenter.setmenuid (itemId);
     }
 
@@ -137,7 +131,7 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface 
 
 
     //main method for remoove frames when clicked
-    public void frameRemoover(Fragment fragment, String mytag) {
+    private void frameRemoover(Fragment fragment, String mytag) {
 
         android.support.v4.app.FragmentTransaction fratramain = getSupportFragmentManager().beginTransaction();
         fratramain.replace(R.id.replaced_main, fragment, mytag);

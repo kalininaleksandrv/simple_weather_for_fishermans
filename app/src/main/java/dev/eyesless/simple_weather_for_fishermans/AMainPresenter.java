@@ -2,9 +2,7 @@ package dev.eyesless.simple_weather_for_fishermans;
 
 class AMainPresenter {
 
-    private AMainIntwerface aMainIntwerface;
-
-    private int MenuId;
+    private final AMainIntwerface aMainIntwerface;
 
     AMainPresenter(AMainIntwerface aMainIntwerface) {
         this.aMainIntwerface = aMainIntwerface;
@@ -12,7 +10,6 @@ class AMainPresenter {
 
      void setmenuid(int itemId) {
 
-        this.MenuId = itemId;
-        aMainIntwerface.toastmaker(String.valueOf(itemId));
+         aMainIntwerface.toastmaker(String.valueOf(itemId));
     }
 }

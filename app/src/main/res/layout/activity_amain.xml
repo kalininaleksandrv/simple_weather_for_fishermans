@@ -45,7 +45,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guideline_main_1"></FrameLayout>
+            app:layout_constraintTop_toTopOf="@+id/guideline_main_1"/>
 
         <android.support.constraint.Guideline
             android:layout_width="wrap_content"

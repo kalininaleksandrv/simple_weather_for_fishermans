@@ -39,12 +39,12 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     private TextView cf_trytoload;
     private ImageButton cf_imagebutton_find;
     private ProgressBar cf_progress;
-    CentralFragmentPresenter cfpresenter;
+    private final CentralFragmentPresenter cfpresenter;
     private AMainActivity mActivity;
     private RecyclerView cf_recycler;
     private RVadapter adapter;
     private LoaderManager mLoader;
-    final static String CURRENT_LOC = "currentloc";
+    private final static String CURRENT_LOC = "currentloc";
     private String currentcocation;
 
 
@@ -130,7 +130,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         cfpresenter.startSearch(false);
     }
 
-    public void activitysetter (AMainActivity aMainActivity, LoaderManager loadmmngr){
+    private void activitysetter(AMainActivity aMainActivity, LoaderManager loadmmngr){
         cfpresenter.setActivity (aMainActivity);
         cfpresenter.setLoadManager (loadmmngr);
     }
@@ -206,11 +206,11 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     }
 
     //getters and setters
-    public String getCurrentcocation() {
+    private String getCurrentcocation() {
         return currentcocation;
     }
 
-    public void setCurrentcocation(String currentcocation) {
+    private void setCurrentcocation(String currentcocation) {
         this.currentcocation = currentcocation;
     }
 }

@@ -26,11 +26,11 @@ public class PrognosticModel {
     private final static double DAY3_COEFF = 0.25;
     private final static double DAY4_COEFF = 0.4;
 
-    private List<Datum> incomedata;
+    private final List<Datum> incomedata;
     private List<Datum> outcomedata;
 
-    private double[] maxtemparray = new double[8];
-    private double[] mintemparray = new double[8];
+    private final double[] maxtemparray = new double[13];
+    private final double[] mintemparray = new double[13];
 
     public PrognosticModel(List<Datum> incomedata) {
         this.incomedata = incomedata;

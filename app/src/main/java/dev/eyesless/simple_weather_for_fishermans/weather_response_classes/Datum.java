@@ -1,9 +1,10 @@
 
 package dev.eyesless.simple_weather_for_fishermans.weather_response_classes;
 
-import java.io.Serializable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 
 public class Datum implements Serializable
 {
@@ -103,11 +104,11 @@ public class Datum implements Serializable
     @Expose
     private boolean isNew = true;
 
-
-
     @SerializedName("isBite")
     @Expose
     private String isBite = "unknown";
+
+    private String customccordinates;
 
     private final static long serialVersionUID = 6013148927904092460L;
 
@@ -123,6 +124,15 @@ public class Datum implements Serializable
 
     public void setIsBite(String isBite) {
         this.isBite = isBite;
+    }
+
+    //customcoordinates its added (by me) parameter to pass formated coordinates from WeatherLoader to WeatherPastLoader
+    public String getCustomccordinates() {
+        return customccordinates;
+    }
+
+    public void setCustomccordinates(String customccordinates) {
+        this.customccordinates = customccordinates;
     }
 
     public long getTime() {

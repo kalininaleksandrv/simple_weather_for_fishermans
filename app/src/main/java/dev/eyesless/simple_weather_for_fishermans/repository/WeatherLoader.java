@@ -2,7 +2,6 @@ package dev.eyesless.simple_weather_for_fishermans.repository;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
@@ -18,6 +17,7 @@ import dev.eyesless.simple_weather_for_fishermans.geocoding_responce_classes.Loc
 import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Datum;
 import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Weather;
 import retrofit2.Call;
+import retrofit2.Response;
 
 
 public class WeatherLoader extends AsyncTaskLoader <List<Datum>> {
@@ -71,9 +71,11 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> {
         List<Datum> mylist;
 
             try {
-                mylist = weather_response.execute().body().getDaily().getData();
-                    if (mylist.size()!=0){
+                Response<Weather> resp = weather_response.execute();
+                if (resp.isSuccessful()){
+                    mylist = resp.body().getDaily().getData();
                     Log.e("MY_TAG", "weather reqwes body is SUCSESS");
+                    mylist.get(0).setCustomccordinates(from_loc_to_string(incomelocation));
                     return mylist;
                     }
                 else {

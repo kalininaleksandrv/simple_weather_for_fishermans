@@ -17,17 +17,20 @@ import dev.eyesless.simple_weather_for_fishermans.AMainActivity;
 import dev.eyesless.simple_weather_for_fishermans.R;
 import dev.eyesless.simple_weather_for_fishermans.repository.PrognosticModel;
 import dev.eyesless.simple_weather_for_fishermans.repository.WeatherLoader;
+import dev.eyesless.simple_weather_for_fishermans.repository.WeatherPastLoader;
 import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Datum;
 
 public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<List<Datum>> {
 
-    private CentralFragmentInterface cfinterface;
+    private final CentralFragmentInterface cfinterface;
     private AMainActivity mActivity;
     final static String DEFOULT_LOC = "Москва, Россия";
     private String autocompleted;
     final static int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
     public final static String COORDINATES_IN_BUNDLE = "coords";
     private LoaderManager mLoader;
+    private List<Datum> midlist;
+    private boolean isupdate = false;
 
     CentralFragmentPresenter(CentralFragmentInterface cfi) {
         this.cfinterface = cfi;
@@ -53,11 +56,25 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
 
         if (update) {
             mLoader.restartLoader(R.id.weather_loader_id, coordinatesbundle, this);
+            isupdate = true;
             Log.e("MY_TAG", "restart loader");
         } else {
             mLoader.initLoader(R.id.weather_loader_id, coordinatesbundle, this);
             Log.e("MY_TAG", "init loader");
         }
+    }
+
+    private void getPastWithLoader (List<Datum> mylist){
+
+          midlist = mylist;
+            if (isupdate){
+                mLoader.restartLoader(R.id.past_loader_id, Bundle.EMPTY, this);
+                Log.e("MY_TAG", "restart PAST loader");
+            }
+                else {
+                mLoader.initLoader(R.id.past_loader_id, Bundle.EMPTY, this);
+                Log.e("MY_TAG", "init PAST loader");
+            }
     }
 
     //start intent to autocompletion location
@@ -74,8 +91,15 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
             Log.e("Failed: Play . n aval. ", e.getMessage());        }
     }
 
-    private void adapterrefresh(List<Datum> mylist, boolean isdatanew) {
-        mylist.remove(0);
+    private void adapterrefresh(List<Datum> mylist, boolean isdatanew, boolean remooveelements) {
+
+        if (remooveelements) {
+
+            for (int i = 0; i < 5; i++) {
+                mylist.remove(0);
+            }
+        }
+
         cfinterface.adapterrefresh(mylist, isdatanew);
         Log.e("MY_TAG", "refreshing adapter on presenter " + isdatanew);
     }
@@ -87,6 +111,8 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
         switch (id) {
             case R.id.weather_loader_id:
                 return new WeatherLoader(mActivity, args);
+            case R.id.past_loader_id:
+                return new WeatherPastLoader(mActivity, midlist);
             default:
                 return null;
         }
@@ -98,17 +124,26 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
         if (id == R.id.weather_loader_id) {
             if (data != null) {
                 boolean isNew = data.get(0).isNew();
-                List<Datum> datawithbite = new PrognosticModel(data).createBiteList();
-                if (datawithbite != null){
-                    adapterrefresh(datawithbite, isNew);
-                    Log.e("MY_TAG", "datawithbite");
-                } else {
-                    adapterrefresh(data, isNew);
-                    Log.e("MY_TAG", "dataNObite");
-                }
+                adapterrefresh(data, isNew, false);
+                getPastWithLoader(data);
+                Log.e("MY_TAG", "databeforeBITE");
+
             } else
             {
                 Log.e("MY_TAG", "geting NULL weather");
+            }
+        }
+        if (id == R.id.past_loader_id){
+
+            if (data != null){
+                List<Datum> datawithbite = new PrognosticModel(data).createBiteList();
+                if (datawithbite != null){
+                    adapterrefresh(datawithbite, true, true);
+                    Log.e("MY_TAG", "datawithbite");
+                } else {
+                    mActivity.toastmaker(mActivity.getString(R.string.nobitedata));
+                    Log.e("MY_TAG", "dataNObite");
+                }
             }
         }
     }

@@ -2,4 +2,5 @@
 <resources>
     <item name="coordinates_loader_id" type="id"/>
     <item name="weather_loader_id" type="id"/>
+    <item name="past_loader_id" type="id"/>
 </resources>

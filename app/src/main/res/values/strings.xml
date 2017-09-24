@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">Simple_Weather_For_Fishermans</string>
-    <string name="founded_city">Москва, Россия</string>
-    <string name="find_coords">Найти координаты</string>
     <string name="drawer_open">Открыт</string>
     <string name="drawer_closed">Закрыт</string>
     <string name="about">О программе</string>
@@ -11,21 +9,12 @@
     <string name="autocompleeterror">К сожалению, во время выбора адреса произошла ошибка, прпробуйте снова</string>
     <string name="nonetworcconnection">Проверьте доступ к Интернету или поробуйте изменить место</string>
     <string name="locunavaliable">Изменение локации не доступно</string>
-    <string name="sund">ВС</string>
-    <string name="mond">ПН</string>
-    <string name="tues">ВТ</string>
-    <string name="wens">СР</string>
-    <string name="thus">ЧТ</string>
-    <string name="frid">ПТ</string>
-    <string name="satu">СБ</string>
-    <string name="celsium">C</string>
-    <string name="wind">W-</string>
-    <string name="pressure">мм</string>
     <string name="nodata_close">Н\Д</string>
     <string name="nodata_full">нет данных</string>
     <string name="its_weather">нет данных</string>
     <string name="its_fishing">нет данных</string>
     <string name="trytoload">Пробуем получить данные из сети</string>
     <string name="nonewdata">не удалось загрузить данные… показываем старые данные… проверьте доступ к сети</string>
+    <string name="nobitedata">не удалось загрузить данные для прогноза клева… показываем только прогноз погоды</string>
 
 </resources>
