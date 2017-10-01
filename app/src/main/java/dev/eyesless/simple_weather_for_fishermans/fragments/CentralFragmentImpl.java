@@ -94,13 +94,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         recyclerparamsinit();
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mActivity = null;
-    }
-
-    //set extended params to recycler view
+   //set extended params to recycler view
     private void recyclerparamsinit() {
         cf_recycler.setHasFixedSize(true);
         cf_recycler.setLayoutManager(new LinearLayoutManager(this.getContext()));

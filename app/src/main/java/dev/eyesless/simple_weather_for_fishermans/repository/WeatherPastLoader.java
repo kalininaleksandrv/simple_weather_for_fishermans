@@ -28,6 +28,8 @@ public class WeatherPastLoader extends AsyncTaskLoader <List<Datum>> {
 
     private final long ONE_DAY_IN_MS = 86400;
 
+    private boolean isDataDelivery = false;
+
 
 
     public WeatherPastLoader(Context context, List<Datum> listofdata) {
@@ -44,7 +46,9 @@ public class WeatherPastLoader extends AsyncTaskLoader <List<Datum>> {
     @Override
     protected void onStartLoading() {
         super.onStartLoading();
+        if (!isDataDelivery){
         forceLoad();
+        }
     }
 
     @Override
@@ -72,6 +76,7 @@ public class WeatherPastLoader extends AsyncTaskLoader <List<Datum>> {
                 return null;}
             }
 
+        isDataDelivery = true;
         return listofdata;
     }
 

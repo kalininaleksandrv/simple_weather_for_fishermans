@@ -20,11 +20,12 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 
-public class WeatherLoader extends AsyncTaskLoader <List<Datum>> {
+public class WeatherLoader extends AsyncTaskLoader <List<Datum>> implements SharedPreferencesManager {
 
     private String private_key_weather;
     private String coordinates;
     private String private_key;
+    private Context context;
 
 
     private final String EXCLUDE = "hourly";
@@ -35,6 +36,11 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> {
     private final Double DEFAULT_LNG = 37.9456611;
     private final String DEFAULT_LOCATION = "Москва, Россия";
 
+    public final static String PREFSFORCOORDS = "prefscoords";
+
+    private List<Datum> mylist;
+
+
 
     public WeatherLoader(Context context, Bundle args) {
         super(context);
@@ -42,6 +48,7 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> {
         this.private_key_weather = dev.eyesless.simple_weather_for_fishermans.Keys.getDarkSkyPrivateKey();
         this.private_key = dev.eyesless.simple_weather_for_fishermans.Keys.getGoogleMapPrivateKey();
         this.coordinates = args.getString(CentralFragmentPresenter.COORDINATES_IN_BUNDLE);
+        this.context = context; //is this context correct?
         Log.e("MY_TAG", "create coordinates loader");
 
     }
@@ -49,15 +56,19 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> {
     @Override
     protected void onStartLoading() {
         super.onStartLoading();
-        forceLoad();
+
+        if (mylist==null){
+            forceLoad();
+        }
     }
 
     @Override
     public List<Datum> loadInBackground() {
 
+        String askinglocation;
 
         Call<Geocod> response = geocoding_interfaces.CoordinatesFactory.getInstance().getCoordinates(coordinates, private_key);
-        Location incomelocation = getLastLocation();
+        Location incomelocation = null;
         try {
             incomelocation = response.execute().body().getResults().get(0).getGeometry().getLocation();
             //todo getResults may produse null
@@ -66,20 +77,25 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> {
             Log.e("MY_TAG", e.getMessage());
         }
 
+        if (incomelocation == null){
+            askinglocation = getLastLocation();
+        } else {
+            askinglocation = from_loc_to_string(incomelocation);
+        }
+
         Call<Weather> weather_response = weather_interface.WeatherFactory.getInstance().getWeatherForecasts(private_key_weather,
-                from_loc_to_string(incomelocation), EXCLUDE, LANG, UNITS);
-        List<Datum> mylist;
+                askinglocation, EXCLUDE, LANG, UNITS);
 
             try {
                 Response<Weather> resp = weather_response.execute();
                 if (resp.isSuccessful()){
                     mylist = resp.body().getDaily().getData();
-                    Log.e("MY_TAG", "weather reqwes body is SUCSESS");
+                    Log.e("MY_TAG", "weather reqwest body is SUCSESS");
                     mylist.get(0).setCustomccordinates(from_loc_to_string(incomelocation));
                     return mylist;
                     }
                 else {
-                        Log.e("MY_TAG", "weather reqwes body is NULL");
+                        Log.e("MY_TAG", "weather reqwest body is NULL");
                         return getastrvadapterlist();
                     }
             } catch (IOException e) {
@@ -99,17 +115,35 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> {
         return mydatum;
     }
 
-    private Location getLastLocation() {
+    private String getLastLocation() {
         Log.e("MY_TAG", "Setting Lastlocation");
         Location lastlocation = new Location();
         lastlocation.setLat(DEFAULT_LAT);
         lastlocation.setLng(DEFAULT_LNG);
         lastlocation.setLastlocation(DEFAULT_LOCATION);
-        return lastlocation;
+        return from_loc_to_string(lastlocation);
     }
 
     private String from_loc_to_string(Location incomeLocation) {
         return String.valueOf(incomeLocation.getLat())+","+String.valueOf(incomeLocation.getLng());
+    }
+
+
+ //   addToPrefs(PREFSFORCOORDS, data.get(0).getCustomccordinates()
+
+    @Override
+    public void addToPrefs(String prefname, String value) {
+
+    }
+
+    @Override
+    public String getFromPrefs(String prefname) {
+        return null;
+    }
+
+    @Override
+    public void remoovePrefs(String prefname) {
+
     }
 
 }

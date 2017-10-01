@@ -31,6 +31,8 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
     private LoaderManager mLoader;
     private List<Datum> midlist;
     private boolean isupdate = false;
+    private boolean isLoaderExist = false;
+//    private boolean isPastLoaderExist = false;
 
     CentralFragmentPresenter(CentralFragmentInterface cfi) {
         this.cfinterface = cfi;
@@ -54,13 +56,13 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
         Bundle coordinatesbundle = new Bundle();
         coordinatesbundle.putString(COORDINATES_IN_BUNDLE, fix);
 
-        if (update) {
+        if ((update) || (isLoaderExist)) {
             mLoader.restartLoader(R.id.weather_loader_id, coordinatesbundle, this);
             isupdate = true;
             Log.e("MY_TAG", "restart loader");
         } else {
             mLoader.initLoader(R.id.weather_loader_id, coordinatesbundle, this);
-            Log.e("MY_TAG", "init loader");
+            isLoaderExist = true;
         }
     }
 
@@ -72,9 +74,18 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
                 Log.e("MY_TAG", "restart PAST loader");
             }
                 else {
+ //               if (isPastLoaderExist == false){
                 mLoader.initLoader(R.id.past_loader_id, Bundle.EMPTY, this);
-                Log.e("MY_TAG", "init PAST loader");
-            }
+//                isPastLoaderExist = true;
+                Log.e("MY_TAG", "init PAST loader");}
+//            }
+    }
+
+    public void destroyloaders () {
+
+        mLoader.destroyLoader(R.id.weather_loader_id);
+        mLoader.destroyLoader(R.id.past_loader_id);
+
     }
 
     //start intent to autocompletion location
@@ -126,7 +137,7 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
                 boolean isNew = data.get(0).isNew();
                 adapterrefresh(data, isNew, false);
                 getPastWithLoader(data);
-                Log.e("MY_TAG", "databeforeBITE");
+                Log.e("MY_TAG", "databeforeBITE " + data.size());
 
             } else
             {
@@ -178,6 +189,7 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
         mydatum.add(defoultdatum);
         return mydatum;
     }
+
 }
 
 

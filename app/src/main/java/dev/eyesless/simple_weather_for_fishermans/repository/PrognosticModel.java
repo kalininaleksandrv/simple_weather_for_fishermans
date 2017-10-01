@@ -29,11 +29,13 @@ public class PrognosticModel {
     private final List<Datum> incomedata;
     private List<Datum> outcomedata;
 
-    private final double[] maxtemparray = new double[13];
-    private final double[] mintemparray = new double[13];
+    private final double[] maxtemparray;
+    private final double[] mintemparray;
 
     public PrognosticModel(List<Datum> incomedata) {
         this.incomedata = incomedata;
+        maxtemparray = new double[13];
+        mintemparray = new double[13];
     }
 
     public List<Datum> createBiteList(){
