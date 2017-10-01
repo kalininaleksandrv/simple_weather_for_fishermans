@@ -112,6 +112,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         cf_progress = (ProgressBar) parentview.findViewById(R.id.progressBar_cf);
     }
 
+    @Override
     public void setDefoultLoc() {
 
         if (cfpresenter.getAutocompleeted() == null){
@@ -157,7 +158,6 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
                 cfpresenter.setAutocompleted(place.getAddress().toString());
                 Log.e("MY_TAG", place.getAddress().toString());
                 cfpresenter.startSearch(true);
-                setDefoultLoc();
                 cf_progress.setVisibility(View.VISIBLE);
                 cf_trytoload.setVisibility(View.VISIBLE);
 

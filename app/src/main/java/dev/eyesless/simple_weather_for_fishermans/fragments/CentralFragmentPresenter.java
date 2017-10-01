@@ -24,7 +24,7 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
 
     private final CentralFragmentInterface cfinterface;
     private AMainActivity mActivity;
-    final static String DEFOULT_LOC = "Москва, Россия";
+    final static String DEFOULT_LOC = "First, Lounch";
     private String autocompleted;
     final static int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
     public final static String COORDINATES_IN_BUNDLE = "coords";
@@ -32,7 +32,6 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
     private List<Datum> midlist;
     private boolean isupdate = false;
     private boolean isLoaderExist = false;
-//    private boolean isPastLoaderExist = false;
 
     CentralFragmentPresenter(CentralFragmentInterface cfi) {
         this.cfinterface = cfi;
@@ -74,18 +73,8 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
                 Log.e("MY_TAG", "restart PAST loader");
             }
                 else {
- //               if (isPastLoaderExist == false){
                 mLoader.initLoader(R.id.past_loader_id, Bundle.EMPTY, this);
-//                isPastLoaderExist = true;
                 Log.e("MY_TAG", "init PAST loader");}
-//            }
-    }
-
-    public void destroyloaders () {
-
-        mLoader.destroyLoader(R.id.weather_loader_id);
-        mLoader.destroyLoader(R.id.past_loader_id);
-
     }
 
     //start intent to autocompletion location
@@ -135,6 +124,7 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
         if (id == R.id.weather_loader_id) {
             if (data != null) {
                 boolean isNew = data.get(0).isNew();
+                setAutocompleted(data.get(0).getCustomlocationname());
                 adapterrefresh(data, isNew, false);
                 getPastWithLoader(data);
                 Log.e("MY_TAG", "databeforeBITE " + data.size());
@@ -178,7 +168,10 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
         this.mActivity = aMainActivity;
     }
 
-    void setAutocompleted(String autocompleted) {this.autocompleted = autocompleted;}
+    void setAutocompleted(String autocompleted) {
+        this.autocompleted = autocompleted;
+        cfinterface.setDefoultLoc();
+    }
 
     String getAutocompleeted() {return autocompleted;}
 

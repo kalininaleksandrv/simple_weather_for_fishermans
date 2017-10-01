@@ -108,7 +108,13 @@ public class Datum implements Serializable
     @Expose
     private String isBite = "unknown";
 
+    @SerializedName("customcoordinates")
+    @Expose
     private String customccordinates;
+
+    @SerializedName("customocationname")
+    @Expose
+    private String customlocationname;
 
     private final static long serialVersionUID = 6013148927904092460L;
 
@@ -133,6 +139,15 @@ public class Datum implements Serializable
 
     public void setCustomccordinates(String customccordinates) {
         this.customccordinates = customccordinates;
+    }
+
+    //customlocationname its added (by me) parameter to pass actuali location name
+    public String getCustomlocationname() {
+        return customlocationname;
+    }
+
+    public void setCustomlocationname(String customlocationname) {
+        this.customlocationname = customlocationname;
     }
 
     public long getTime() {

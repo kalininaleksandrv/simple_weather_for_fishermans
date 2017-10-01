@@ -1,9 +1,12 @@
 package dev.eyesless.simple_weather_for_fishermans.repository;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
+
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,11 +35,12 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> implements Shar
     private final String LANG = "ru";
     private final String UNITS = "si";
 
-    private final Double DEFAULT_LAT = 56.009657;
-    private final Double DEFAULT_LNG = 37.9456611;
-    private final String DEFAULT_LOCATION = "Москва, Россия";
+    private Double defoultLAT = 55.755826;
+    private Double defoultLNG = 37.6172999;
+    private String defoult_city = "Москва,Россия";
 
-    public final static String PREFSFORCOORDS = "prefscoords";
+    private final static String PREFSNAME = "prefsname";
+    private final static String SAVEDSTRING = "savedstr";
 
     private List<Datum> mylist;
 
@@ -65,20 +69,28 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> implements Shar
     @Override
     public List<Datum> loadInBackground() {
 
+        getLastLocation();
         String askinglocation;
-
-        Call<Geocod> response = geocoding_interfaces.CoordinatesFactory.getInstance().getCoordinates(coordinates, private_key);
         Location incomelocation = null;
-        try {
-            incomelocation = response.execute().body().getResults().get(0).getGeometry().getLocation();
-            //todo getResults may produse null
-            Log.e("MY_TAG", "try to request new loc");
-        } catch (IOException e) {
-            Log.e("MY_TAG", e.getMessage());
+
+        if (!coordinates.equals("First,+Lounch")){
+            defoult_city = coordinates.replace("+", " ");
+            Call<Geocod> response = geocoding_interfaces.CoordinatesFactory.getInstance().getCoordinates(coordinates, private_key);
+            try {
+                incomelocation = response.execute().body().getResults().get(0).getGeometry().getLocation();
+                //todo getResults may produse null
+                Log.e("MY_TAG", "try to request new loc " + coordinates);
+            } catch (IOException e) {
+                Log.e("MY_TAG", e.getMessage());
+            }
+        } else {
+
+            //here loading defoult params from prefs
+
         }
 
         if (incomelocation == null){
-            askinglocation = getLastLocation();
+            askinglocation = new StringBuilder().append(defoultLAT).append(",").append(defoultLNG).toString();
         } else {
             askinglocation = from_loc_to_string(incomelocation);
         }
@@ -91,7 +103,9 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> implements Shar
                 if (resp.isSuccessful()){
                     mylist = resp.body().getDaily().getData();
                     Log.e("MY_TAG", "weather reqwest body is SUCSESS");
-                    mylist.get(0).setCustomccordinates(from_loc_to_string(incomelocation));
+                    mylist.get(0).setCustomccordinates(askinglocation);
+                    mylist.get(0).setCustomlocationname(defoult_city);
+                    addToPrefs(defoult_city, askinglocation);
                     return mylist;
                     }
                 else {
@@ -115,13 +129,13 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> implements Shar
         return mydatum;
     }
 
-    private String getLastLocation() {
-        Log.e("MY_TAG", "Setting Lastlocation");
-        Location lastlocation = new Location();
-        lastlocation.setLat(DEFAULT_LAT);
-        lastlocation.setLng(DEFAULT_LNG);
-        lastlocation.setLastlocation(DEFAULT_LOCATION);
-        return from_loc_to_string(lastlocation);
+    private void getLastLocation() {
+
+        if (getFromPrefs(PREFSNAME)!=null){
+            Log.e("MY_TAG", "HERES PREFS "+getFromPrefs(PREFSNAME));
+        } else {
+        Log.e("MY_TAG", "PREFS IS NULL");}
+
     }
 
     private String from_loc_to_string(Location incomeLocation) {
@@ -129,16 +143,25 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> implements Shar
     }
 
 
- //   addToPrefs(PREFSFORCOORDS, data.get(0).getCustomccordinates()
-
     @Override
-    public void addToPrefs(String prefname, String value) {
+    public void addToPrefs(String valuecity, String valuecoords) {
+        SharedPreferences sharedpref;
+        SharedPreferences.Editor editor;
+        sharedpref = context.getSharedPreferences(PREFSNAME, Context.MODE_PRIVATE);
 
+        editor = sharedpref.edit();
+        Gson gson = new Gson();
+        String jsonSavedString = gson.toJson(new StringBuilder().append(valuecity).append(",").append(valuecoords).toString());
+        editor.putString(SAVEDSTRING, jsonSavedString);
+        editor.apply();
     }
 
     @Override
     public String getFromPrefs(String prefname) {
-        return null;
+
+        SharedPreferences sharedpref = context.getSharedPreferences(prefname, Context.MODE_PRIVATE);
+
+        return sharedpref.getString(SAVEDSTRING," ");
     }
 
     @Override
