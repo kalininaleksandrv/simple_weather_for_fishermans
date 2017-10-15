@@ -45,7 +45,7 @@ public interface weather_interface {
 
                 logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
                 OkHttpClient client = new OkHttpClient.Builder()
-                        .addInterceptor(logging)
+                        .addInterceptor(logging) // TODO: 15.10.2017 remoove before production
                         .build();
 
                 Retrofit retrofit = new Retrofit.Builder()
