@@ -37,7 +37,7 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> implements Shar
 
     private Double defoultLAT = 55.755826;
     private Double defoultLNG = 37.6172999;
-    private String defoult_city = "Москва,Россия";
+    private String defoult_city = "Москва, Россия";
 
     private final static String PREFSNAME = "prefsname";
     private final static String SAVEDSTRING = "savedstr";
@@ -69,30 +69,26 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> implements Shar
     @Override
     public List<Datum> loadInBackground() {
 
-        getLastLocation();
-        String askinglocation;
-        Location incomelocation = null;
+//        getLastLocation();
+        String askinglocation = "";
+        Location incomelocation;
 
         if (!coordinates.equals("First,+Lounch")){
             defoult_city = coordinates.replace("+", " ");
             Call<Geocod> response = geocoding_interfaces.CoordinatesFactory.getInstance().getCoordinates(coordinates, private_key);
             try {
-                incomelocation = response.execute().body().getResults().get(0).getGeometry().getLocation();
-                //todo getResults may produse null
                 Log.e("MY_TAG", "try to request new loc " + coordinates);
+                incomelocation = response.execute().body().getResults().get(0).getGeometry().getLocation();
+                askinglocation = from_loc_to_string(incomelocation);
+                //todo getResults may produse null
             } catch (IOException e) {
                 Log.e("MY_TAG", e.getMessage());
             }
         } else {
 
-            //here loading defoult params from prefs
+                Log.e("MY_TAG", "try to request loc from getLastLocation ");
+                askinglocation = getLastLocation();
 
-        }
-
-        if (incomelocation == null){
-            askinglocation = new StringBuilder().append(defoultLAT).append(",").append(defoultLNG).toString();
-        } else {
-            askinglocation = from_loc_to_string(incomelocation);
         }
 
         Call<Weather> weather_response = weather_interface.WeatherFactory.getInstance().getWeatherForecasts(private_key_weather,
@@ -129,13 +125,14 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> implements Shar
         return mydatum;
     }
 
-    private void getLastLocation() {
+    private String getLastLocation() {
 
-        if (getFromPrefs(PREFSNAME)!=null){
-            Log.e("MY_TAG", "HERES PREFS "+getFromPrefs(PREFSNAME));
+        if (getFromPrefs(PREFSNAME)==null){
+            Log.e("MY_TAG", "NO PREFS, try to request loc from defoult ");
+            return new StringBuilder().append(defoultLAT).append(",").append(defoultLNG).toString();
         } else {
-        Log.e("MY_TAG", "PREFS IS NULL");}
-
+            return getFromPrefs(PREFSNAME).replace("\"", "");
+        }
     }
 
     private String from_loc_to_string(Location incomeLocation) {
@@ -161,7 +158,32 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> implements Shar
 
         SharedPreferences sharedpref = context.getSharedPreferences(prefname, Context.MODE_PRIVATE);
 
-        return sharedpref.getString(SAVEDSTRING," ");
+        if (sharedpref.getString(SAVEDSTRING, null) == null){
+            return null;
+        }
+        else {
+            Log.e("MY_TAG", "HERES PREFS "+sharedpref.getString(SAVEDSTRING, null));
+
+            String [] restored = sharedpref.getString(SAVEDSTRING, null).split(","); //spliting string by sign ","
+
+            if (restored !=null) {
+                int rlen = restored.length; //define size of array, because we're know - last two words in it is coordinates and all other is name of city country etc
+
+                StringBuilder sb = new StringBuilder();
+
+                for (int i=0; i<rlen-2; i++){
+
+                    sb.append(restored[i]).append(", ");
+                }
+
+                defoult_city = sb.toString().replace("\"", "");
+
+                return new StringBuilder().append(restored[rlen-2]).append(",").append(restored[rlen-1]).toString();
+            } else {
+
+                return null;
+            }
+        }
     }
 
     @Override
