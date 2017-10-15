@@ -1,6 +1,8 @@
 package dev.eyesless.simple_weather_for_fishermans.fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -9,6 +11,7 @@ import android.util.Log;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +21,7 @@ import dev.eyesless.simple_weather_for_fishermans.R;
 import dev.eyesless.simple_weather_for_fishermans.repository.PrognosticModel;
 import dev.eyesless.simple_weather_for_fishermans.repository.WeatherLoader;
 import dev.eyesless.simple_weather_for_fishermans.repository.WeatherPastLoader;
+import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Daily;
 import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Datum;
 
 public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<List<Datum>> {
@@ -32,9 +36,15 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
     private List<Datum> midlist;
     private boolean isupdate = false;
     private boolean isLoaderExist = false;
+    private SharedPreferences sharedpref;
+    private final static String DATAPREFSNAME = "dataprefsname";
+    private final static String DATASAVEDSTRING = "datasavedstring";
+
 
     CentralFragmentPresenter(CentralFragmentInterface cfi) {
+
         this.cfinterface = cfi;
+
     }
 
     //call when button pressed in IMPL
@@ -49,6 +59,7 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
          getCoordinatesWithLoader (fix, update);
 
     }
+
 
     private void getCoordinatesWithLoader(String fix, boolean update) {
 
@@ -99,9 +110,29 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
                 mylist.remove(0);
             }
         }
-
         cfinterface.adapterrefresh(mylist, isdatanew);
         Log.e("MY_TAG", "refreshing adapter on presenter " + isdatanew);
+    }
+
+    private void addListToSharedPrefs(List<Datum> mylist) {
+        SharedPreferences.Editor editor;
+        Gson gson = new Gson();
+        Daily addeddaily = new Daily();
+        mylist.get(0).setCustomlocationname(autocompleted);
+        addeddaily.setData(mylist);
+        editor = sharedpref.edit();
+        String jsonSavedString = gson.toJson(addeddaily);
+        editor.putString(DATASAVEDSTRING, jsonSavedString);
+        editor.apply();
+        Log.e("MY_TAG", "add list to shared prefs " + jsonSavedString);
+    }
+
+
+    private List<Datum> getListFromPrefs() {
+        Gson gson = new Gson();
+        String json = sharedpref.getString(DATASAVEDSTRING, null);
+        Daily restoreddaily = gson.fromJson(json, Daily.class);
+        return restoreddaily.getData();
     }
 
     //loader callback methods
@@ -139,6 +170,7 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
             if (data != null && data.size()>8){
                 List<Datum> datawithbite = new PrognosticModel(data).createBiteList();
                 if (datawithbite != null){
+                    addListToSharedPrefs(datawithbite);
                     adapterrefresh(datawithbite, true, true);
                     Log.e("MY_TAG", "datawithbite");
                 } else {
@@ -166,6 +198,7 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
     // set aMainActivity
     void setActivity(AMainActivity aMainActivity) {
         this.mActivity = aMainActivity;
+        sharedpref = mActivity.getApplicationContext().getSharedPreferences(DATAPREFSNAME, Context.MODE_PRIVATE);
     }
 
     void setAutocompleted(String autocompleted) {
@@ -177,12 +210,20 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
 
     //temp Liat to init RVAdapter in starting app
     List<Datum> getTempAdapterList() {
-        Datum defoultdatum = new Datum();
-        List<Datum> mydatum = new ArrayList<>();
-        mydatum.add(defoultdatum);
-        return mydatum;
-    }
 
+        if (sharedpref.getString(DATASAVEDSTRING, null) != null){
+            List<Datum> listfromprefs = getListFromPrefs();
+            setAutocompleted(listfromprefs.get(0).getCustomlocationname());
+            adapterrefresh(listfromprefs, false, true);
+           return listfromprefs;
+        } else {
+
+            Datum defoultdatum = new Datum();
+            List<Datum> mydatum = new ArrayList<>();
+            mydatum.add(defoultdatum);
+            return mydatum;
+        }
+    }
 }
 
 

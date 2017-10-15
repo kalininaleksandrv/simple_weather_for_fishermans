@@ -69,7 +69,6 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> implements Shar
     @Override
     public List<Datum> loadInBackground() {
 
-//        getLastLocation();
         String askinglocation = "";
         Location incomelocation;
 
@@ -95,6 +94,8 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> implements Shar
                 askinglocation, EXCLUDE, LANG, UNITS);
 
             try {
+
+                Gson gson = new Gson();
                 Response<Weather> resp = weather_response.execute();
                 if (resp.isSuccessful()){
                     mylist = resp.body().getDaily().getData();
@@ -166,23 +167,16 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> implements Shar
 
             String [] restored = sharedpref.getString(SAVEDSTRING, null).split(","); //spliting string by sign ","
 
-            if (restored !=null) {
-                int rlen = restored.length; //define size of array, because we're know - last two words in it is coordinates and all other is name of city country etc
+            int rlen = restored.length; //define size of array, because we're know - last two words in it is coordinates and all other is name of city country etc
 
-                StringBuilder sb = new StringBuilder();
-
-                for (int i=0; i<rlen-2; i++){
-
-                    sb.append(restored[i]).append(", ");
-                }
-
-                defoult_city = sb.toString().replace("\"", "");
-
-                return new StringBuilder().append(restored[rlen-2]).append(",").append(restored[rlen-1]).toString();
-            } else {
-
-                return null;
+            StringBuilder sb = new StringBuilder();
+            for (int i=0; i<rlen-2; i++){
+                sb.append(restored[i]).append(", "); //got name of city, country etc
             }
+
+            defoult_city = sb.toString().replace("\"", "");
+
+            return new StringBuilder().append(restored[rlen-2]).append(",").append(restored[rlen-1]).toString();//got coordinater here
         }
     }
 

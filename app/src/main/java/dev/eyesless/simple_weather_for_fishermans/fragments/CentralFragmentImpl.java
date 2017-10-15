@@ -186,9 +186,11 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         adapter = new RVadapter(mylist);
         cf_recycler.setAdapter(adapter);
         cf_recycler.setVisibility(View.VISIBLE);
-        cf_progress.setVisibility(View.INVISIBLE);
-        cf_trytoload.setVisibility(View.INVISIBLE);
-        if (!isdatanew){mActivity.toastmaker(getString(R.string.nonewdata));}
+
+        if (isdatanew){
+            cf_progress.setVisibility(View.INVISIBLE);
+            cf_trytoload.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
