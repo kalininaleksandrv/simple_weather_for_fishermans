@@ -69,7 +69,7 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
         if ((update) || (isLoaderExist)) {
             mLoader.restartLoader(R.id.weather_loader_id, coordinatesbundle, this);
             isupdate = true;
-            Log.e("MY_TAG", "restart loader");
+            Log.e("MY_TAG", "just restart loader");
         } else {
             mLoader.initLoader(R.id.weather_loader_id, coordinatesbundle, this);
             isLoaderExist = true;
