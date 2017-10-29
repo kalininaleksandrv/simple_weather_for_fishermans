@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
- <android.support.constraint.ConstraintLayout
+<android.support.v4.widget.SwipeRefreshLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/swipe"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:context="dev.eyesless.simple_weather_for_fishermans.AMainActivity"
+    >
+
+ <android.support.constraint.ConstraintLayout
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="dev.eyesless.simple_weather_for_fishermans.AMainActivity"
     >
 
         <TextView
@@ -70,6 +77,8 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp" />
 
+
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_cf"
         android:layout_width="0dp"
@@ -119,5 +128,5 @@
         android:layout_marginTop="0dp"
         android:layout_marginBottom="8dp" />
 
-
 </android.support.constraint.ConstraintLayout>
+</android.support.v4.widget.SwipeRefreshLayout>

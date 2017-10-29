@@ -95,7 +95,6 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> implements Shar
 
             try {
 
-                Gson gson = new Gson();
                 Response<Weather> resp = weather_response.execute();
                 if (resp.isSuccessful()){
                     mylist = resp.body().getDaily().getData();
@@ -115,16 +114,6 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> implements Shar
             }
 
     }
-
-//    private List<Datum> getastrvadapterlist() {
-//
-//        Datum defoultdatum = new Datum();
-//        defoultdatum.setNew(false);
-//        List<Datum> mydatum = new ArrayList<>();
-//        mydatum.add(defoultdatum);
-//
-//        return mydatum;
-//    }
 
     private String getLastLocation() {
 

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -29,7 +30,7 @@ import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Datum
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
-public class CentralFragmentImpl extends Fragment implements CentralFragmentInterface {
+public class CentralFragmentImpl extends Fragment implements CentralFragmentInterface, SwipeRefreshLayout.OnRefreshListener {
 
     private static final int INFLATED_VIEW = R.layout.fragment_central;
     private View parentview;
@@ -39,6 +40,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     private TextView cf_trytoload;
     private ImageButton cf_imagebutton_find;
     private ProgressBar cf_progress;
+    private SwipeRefreshLayout cf_swipe;
     private final CentralFragmentPresenter cfpresenter;
     private AMainActivity mActivity;
     private RecyclerView cf_recycler;
@@ -92,14 +94,17 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         startSearch();
         cf_imagebutton_find.setOnClickListener(new cfIBtnOnClickListner());
         recyclerparamsinit();
+        cf_swipe.setOnRefreshListener(this);
     }
 
-   //set extended params to recycler view
+   //set extended params to recycler view and swipe refresher
     private void recyclerparamsinit() {
         cf_recycler.setHasFixedSize(true);
         cf_recycler.setLayoutManager(new LinearLayoutManager(this.getContext()));
         adapter = new RVadapter(cfpresenter.getTempAdapterList());
         cf_recycler.setAdapter(adapter);
+
+        cf_swipe.setColorSchemeResources(R.color.colorPrimaryDark);
     }
 
     private void inititems() {
@@ -110,6 +115,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         cf_imagebutton_find = (ImageButton) parentview.findViewById(R.id.btn_img_find_coords);
         cf_recycler = (RecyclerView) parentview.findViewById(R.id.recycler_view_cf);
         cf_progress = (ProgressBar) parentview.findViewById(R.id.progressBar_cf);
+        cf_swipe = (SwipeRefreshLayout) parentview.findViewById(R.id.swipe);
     }
 
     @Override
@@ -133,6 +139,13 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     @Override
     public void setCoords(String s) {
         cf_coordoutput.setText(s);
+    }
+
+    //when swipe refresh used
+    @Override
+    public void onRefresh() {
+        startSearch();//restart loading info
+        cf_swipe.setRefreshing(false);
     }
 
     private class cfIBtnOnClickListner implements View.OnClickListener {
