@@ -208,7 +208,7 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
 
     String getAutocompleeted() {return autocompleted;}
 
-    //temp Liat to init RVAdapter in starting app
+    //temp List to init RVAdapter in starting app
     List<Datum> getTempAdapterList() {
 
         if (sharedpref.getString(DATASAVEDSTRING, null) != null){

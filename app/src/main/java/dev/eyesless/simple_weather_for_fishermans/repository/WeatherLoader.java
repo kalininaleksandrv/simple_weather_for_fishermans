@@ -107,24 +107,24 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> implements Shar
                     }
                 else {
                         Log.e("MY_TAG", "weather reqwest body is NULL");
-                        return getastrvadapterlist();
+                        return null;
                     }
             } catch (IOException e) {
                 Log.e("MY_TAG", e.getMessage());
-                return getastrvadapterlist();
+                return null;
             }
 
     }
 
-    private List<Datum> getastrvadapterlist() {
-
-        Datum defoultdatum = new Datum();
-        defoultdatum.setNew(false);
-        List<Datum> mydatum = new ArrayList<>();
-        mydatum.add(defoultdatum);
-
-        return mydatum;
-    }
+//    private List<Datum> getastrvadapterlist() {
+//
+//        Datum defoultdatum = new Datum();
+//        defoultdatum.setNew(false);
+//        List<Datum> mydatum = new ArrayList<>();
+//        mydatum.add(defoultdatum);
+//
+//        return mydatum;
+//    }
 
     private String getLastLocation() {
 
