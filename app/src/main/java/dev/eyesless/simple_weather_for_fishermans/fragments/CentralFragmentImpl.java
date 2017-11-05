@@ -195,10 +195,17 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
 
     @Override
     public void adapterrefresh(List<Datum> mylist, boolean isdatanew) {
-        Log.e("MY_TAG", "refreshing adapter on view " + mylist.get(0).getSummary());
-        adapter = new RVadapter(mylist);
-        cf_recycler.setAdapter(adapter);
-        cf_recycler.setVisibility(View.VISIBLE);
+
+        if (mylist != null) {
+            Log.e("MY_TAG", "refreshing adapter on view " + mylist.get(0).getSummary());
+            adapter = new RVadapter(mylist);
+            cf_recycler.setAdapter(adapter);
+            cf_recycler.setVisibility(View.VISIBLE);
+        }
+
+        else {
+            mActivity.toastmaker(mActivity.getString(R.string.nonewdata));
+        }
 
         if (isdatanew){
             cf_progress.setVisibility(View.INVISIBLE);

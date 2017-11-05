@@ -3,6 +3,8 @@ package dev.eyesless.simple_weather_for_fishermans.api_interface;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import java.util.concurrent.TimeUnit;
+
 import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Weather;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -45,6 +47,7 @@ public interface weather_interface {
 
                 logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
                 OkHttpClient client = new OkHttpClient.Builder()
+                        .connectTimeout(5000, TimeUnit.MILLISECONDS)
                         .addInterceptor(logging) // TODO: 15.10.2017 remoove before production
                         .build();
 

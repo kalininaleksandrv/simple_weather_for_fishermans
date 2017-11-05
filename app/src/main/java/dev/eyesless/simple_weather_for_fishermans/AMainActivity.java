@@ -144,7 +144,7 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface 
     //making toasts
     @Override
     public void toastmaker(String s) {
-        final Toast myToast = Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG);
+        final Toast myToast = Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT);
         myToast.setGravity(Gravity.CENTER, 0, 30);
         myToast.show();
     }

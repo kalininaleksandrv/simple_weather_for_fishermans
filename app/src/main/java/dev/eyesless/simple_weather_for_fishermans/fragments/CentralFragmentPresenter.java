@@ -159,14 +159,14 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
                 adapterrefresh(data, isNew, false);
                 getPastWithLoader(data);
                 Log.e("MY_TAG", "databeforeBITE " + data.size());
-
             } else
             {
+                //if internet on phone is lost close progress and show toast in CentralFragmentImpl adapterrefresh
+                adapterrefresh(null, true, false);
                 Log.e("MY_TAG", "geting NULL weather");
             }
         }
         if (id == R.id.past_loader_id){
-
             if (data != null && data.size()>8){
                 List<Datum> datawithbite = new PrognosticModel(data).createBiteList();
                 if (datawithbite != null){
@@ -174,21 +174,21 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
                     adapterrefresh(datawithbite, true, true);
                     Log.e("MY_TAG", "datawithbite");
                 } else {
-                    mActivity.toastmaker(mActivity.getString(R.string.nobitedata));
+                    //if internet on phone is lost close progress and show toast in CentralFragmentImpl adapterrefresh
+                    adapterrefresh(null, true, false);
                     Log.e("MY_TAG", "prognostic model returns null");
                 }
             } else {
-                mActivity.toastmaker(mActivity.getString(R.string.nobitedata));
+                //if internet on phone is lost close progress and show toast in CentralFragmentImpl adapterrefresh
+                adapterrefresh(null, true, false);
                 Log.e("MY_TAG", "past weather loader returns null");
             }
         }
     }
-
     @Override
     public void onLoaderReset( Loader<List<Datum>> loader) {
         //do nothing
     }
-
 
     //setLoadManager
     void setLoadManager(LoaderManager loadmmngr) {

@@ -81,7 +81,7 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> implements Shar
                 askinglocation = from_loc_to_string(incomelocation);
                 //todo getResults may produse null
             } catch (IOException e) {
-                Log.e("MY_TAG", e.getMessage());
+                Log.e("MY_TAG", "coordinates request FAIL  "+ e.getMessage());
             }
         } else {
 
@@ -98,18 +98,19 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> implements Shar
                 Response<Weather> resp = weather_response.execute();
                 if (resp.isSuccessful()){
                     mylist = resp.body().getDaily().getData();
-                    Log.e("MY_TAG", "weather reqwest body is SUCSESS");
+                    Log.e("MY_TAG", "weather request body is SUCSESS");
                     mylist.get(0).setCustomccordinates(askinglocation);
                     mylist.get(0).setCustomlocationname(defoult_city);
                     addToPrefs(defoult_city, askinglocation);
                     return mylist;
                     }
                 else {
-                        Log.e("MY_TAG", "weather reqwest body is NULL");
+                    int statusCode = resp.code();
+                        Log.e("MY_TAG", "weather request: server return unexpected code: " + String.valueOf(statusCode));
                         return null;
                     }
             } catch (IOException e) {
-                Log.e("MY_TAG", e.getMessage());
+                Log.e("MY_TAG", "weather request FAIL  "+ e.getMessage());
                 return null;
             }
 
