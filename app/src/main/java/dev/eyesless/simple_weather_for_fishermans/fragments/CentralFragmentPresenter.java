@@ -140,9 +140,9 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
 
         switch (id) {
             case R.id.weather_loader_id:
-                return new WeatherLoader(mActivity, args);
+                return new WeatherLoader(mActivity.getApplication().getApplicationContext(), args);
             case R.id.past_loader_id:
-                return new WeatherPastLoader(mActivity, midlist);
+                return new WeatherPastLoader(mActivity.getApplication().getApplicationContext(), midlist);
             default:
                 return null;
         }
