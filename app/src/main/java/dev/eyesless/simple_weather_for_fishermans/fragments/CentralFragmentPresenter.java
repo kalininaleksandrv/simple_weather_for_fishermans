@@ -124,7 +124,6 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
         String jsonSavedString = gson.toJson(addeddaily);
         editor.putString(DATASAVEDSTRING, jsonSavedString);
         editor.apply();
-        Log.e("MY_TAG", "add list to shared prefs " + jsonSavedString);
     }
 
 

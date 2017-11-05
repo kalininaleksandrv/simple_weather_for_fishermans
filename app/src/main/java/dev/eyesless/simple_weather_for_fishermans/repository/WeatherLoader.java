@@ -69,7 +69,7 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> implements Shar
     @Override
     public List<Datum> loadInBackground() {
 
-        String askinglocation = "";
+        String askinglocation;
         Location incomelocation;
 
         if (!coordinates.equals("First,+Lounch")){
@@ -82,12 +82,11 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> implements Shar
                 //todo getResults may produse null
             } catch (IOException e) {
                 Log.e("MY_TAG", "coordinates request FAIL  "+ e.getMessage());
+                askinglocation = getLastLocation();
             }
         } else {
-
                 Log.e("MY_TAG", "try to request loc from getLastLocation ");
                 askinglocation = getLastLocation();
-
         }
 
         Call<Weather> weather_response = weather_interface.WeatherFactory.getInstance().getWeatherForecasts(private_key_weather,

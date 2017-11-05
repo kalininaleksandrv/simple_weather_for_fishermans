@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.util.concurrent.TimeUnit;
 
+import dev.eyesless.simple_weather_for_fishermans.BuildConfig;
 import dev.eyesless.simple_weather_for_fishermans.geocoding_responce_classes.Geocod;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -29,16 +30,18 @@ public interface geocoding_interfaces {
 
             if (service == null) {
 
-                HttpLoggingInterceptor logging = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
+                 HttpLoggingInterceptor logging = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
                     @Override public void log(@NonNull String message) {
                         Log.e("MY_TAG", "OkHttp: " + message);
                     }
                 });
 
-                logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+                logging.setLevel(BuildConfig.DEBUG ? HttpLoggingInterceptor.Level.BASIC : HttpLoggingInterceptor.Level.NONE);
                 OkHttpClient client = new OkHttpClient.Builder()
-                        .connectTimeout(5000, TimeUnit.MILLISECONDS)
                         .addInterceptor(logging) // TODO: 15.10.2017 remoove before production
+                        .retryOnConnectionFailure(false)
+                        .connectTimeout(5, TimeUnit.SECONDS)
+                        .readTimeout(1, TimeUnit.SECONDS)
                         .build();
 
                 Retrofit retrofit = new Retrofit.Builder()

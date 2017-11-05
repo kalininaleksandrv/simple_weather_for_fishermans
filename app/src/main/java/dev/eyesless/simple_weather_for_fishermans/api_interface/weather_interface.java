@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.util.concurrent.TimeUnit;
 
+import dev.eyesless.simple_weather_for_fishermans.BuildConfig;
 import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Weather;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -12,14 +13,12 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.Headers;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface weather_interface {
-
-    //  https://api.darksky.net/forecast/c247b7ec5aed169de0dc9c94a7d24c2a/55.7522,37.6156?exclude=hourly&lang=ru&units=si
-    //  https://api.darksky.net/forecast/c247b7ec5aed169de0dc9c94a7d24c2a/55.7522,37.6156,1502917200?exclude=hourly&lang=ru&units=si
-    //86400 unix milisec in 1 day
 
     String BASE_URL = "https://api.darksky.net/";
 
@@ -45,10 +44,12 @@ public interface weather_interface {
                     }
                 });
 
-                logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+                logging.setLevel(BuildConfig.DEBUG ? HttpLoggingInterceptor.Level.BASIC : HttpLoggingInterceptor.Level.NONE);
                 OkHttpClient client = new OkHttpClient.Builder()
-                        .connectTimeout(5000, TimeUnit.MILLISECONDS)
                         .addInterceptor(logging) // TODO: 15.10.2017 remoove before production
+                        .retryOnConnectionFailure(false)
+                        .connectTimeout(5, TimeUnit.SECONDS)
+                        .readTimeout(1, TimeUnit.SECONDS)
                         .build();
 
                 Retrofit retrofit = new Retrofit.Builder()
@@ -61,17 +62,11 @@ public interface weather_interface {
 
                 return service;
             }
-
             else {
                 return service;
             }
         }
-
-        // TODO: 18.08.2017 could i optimizet it with geocoding interface?
     }
-
-
-
 }
 
 

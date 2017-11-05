@@ -145,7 +145,6 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     @Override
     public void onRefresh() {
         startSearch();//restart loading info
-        cf_swipe.setRefreshing(false);
     }
 
     private class cfIBtnOnClickListner implements View.OnClickListener {
@@ -210,6 +209,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         if (isdatanew){
             cf_progress.setVisibility(View.INVISIBLE);
             cf_trytoload.setVisibility(View.INVISIBLE);
+            cf_swipe.setRefreshing(false);
         }
     }
 
