@@ -104,7 +104,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         adapter = new RVadapter(cfpresenter.getTempAdapterList());
         cf_recycler.setAdapter(adapter);
 
-        cf_swipe.setColorSchemeResources(R.color.colorPrimaryDark);
+        cf_swipe.setColorSchemeResources(R.color.colorPrimary);
     }
 
     private void inititems() {
