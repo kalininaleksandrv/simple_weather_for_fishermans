@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import dev.eyesless.simple_weather_for_fishermans.MyApplication;
 import dev.eyesless.simple_weather_for_fishermans.R;
 import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Datum;
 
@@ -141,13 +142,19 @@ class RVadapter extends RecyclerView.Adapter<RVadapter.WeatherViewHolder>{
     private String dateconverter(long time) {
 
         Locale russian = new Locale("ru");
+        String syslang = MyApplication.defSystemLanguage;
+        SimpleDateFormat sdf;
 
         if (time != 0) {
 
             Date date = new Date(time*1000L);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("EE, dd-MM-yyyy", russian);
+            if (syslang.equals("ru")){
 
+            sdf = new SimpleDateFormat("EE, dd-MM-yyyy", russian);}
+            else {
+                sdf = new SimpleDateFormat("EE, dd-MM-yyyy", Locale.ENGLISH);
+            }
             return sdf.format(date);
         } else {
 
