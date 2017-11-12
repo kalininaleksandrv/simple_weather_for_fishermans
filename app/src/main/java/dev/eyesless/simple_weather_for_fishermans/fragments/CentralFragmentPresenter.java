@@ -34,6 +34,7 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
     private String autocompleted;
     final static int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
     public final static String COORDINATES_IN_BUNDLE = "coords";
+    public final static String LOCATION_IN_BUNDLE = "locationinbundle";
     private LoaderManager mLoader;
     private List<Datum> midlist;
     private boolean isupdate = false;
@@ -41,6 +42,13 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
     private SharedPreferences sharedpref;
     private final static String DATAPREFSNAME = "dataprefsname";
     private final static String DATASAVEDSTRING = "datasavedstring";
+
+    private Double defoultLAT = 55.755826;
+    private Double defoultLNG = 37.6172999;
+    private final static String PREFSNAME = "prefsname";
+    private String defoult_city = "Москва, Россия";
+    private final static String SAVEDSTRING = "savedstr";
+    private final static String SAVEDLOC = "savedloc";
 
 
     CentralFragmentPresenter(CentralFragmentInterface cfi) {
@@ -54,7 +62,13 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
 
          String fix;
          //prepare to request autocompleeted place or defoult plase (Moscow, Russia)
-         if (autocompleted == null){fix = DEFOULT_LOC.replaceAll("\\s+","+");}
+         if (autocompleted == null){
+             if ((getFromPrefs(PREFSNAME, false) == null)) {
+                 fix = DEFOULT_LOC.replaceAll("\\s+","+"); //defoult loc returns only if plase in shard prefs is empty
+             } else {
+                 fix = getFromPrefs(PREFSNAME, false);
+             }
+         }
          else
              {fix = autocompleted.replaceAll("\\s+","+");}
 
@@ -67,7 +81,7 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
 
         Bundle coordinatesbundle = new Bundle();
         coordinatesbundle.putString(COORDINATES_IN_BUNDLE, fix);
-
+        coordinatesbundle.putString(LOCATION_IN_BUNDLE, getLastLocation());
         if ((update) || (isLoaderExist)) {
             mLoader.restartLoader(R.id.weather_loader_id, coordinatesbundle, this);
             isupdate = true;
@@ -76,6 +90,53 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
             mLoader.initLoader(R.id.weather_loader_id, coordinatesbundle, this);
             isLoaderExist = true;
         }
+    }
+    //return StartLocation NAME on first app lounch, then return loc NAME from prefs
+    private String getLastLocation() {
+
+        if (getFromPrefs(PREFSNAME, true)==null){
+            Log.e("MY_TAG", "NO PREFS, try to request loc from defoult ");
+            return new StringBuilder().append(defoultLAT).append(",").append(defoultLNG).toString();
+        } else {
+            return getFromPrefs(PREFSNAME, true).replace("\"", "");
+        }
+    }
+
+    //if "doweeneedlocation os false method returns SAVEDLOC means last asked location NAME, if true returns coordinates
+    private String getFromPrefs(String prefname, boolean doweneedlocation) {
+
+        SharedPreferences sharedpref = context.getSharedPreferences(prefname, Context.MODE_PRIVATE);
+
+        if (doweneedlocation) {
+            if (sharedpref.getString(SAVEDSTRING, null) == null){
+                return null;
+            }
+            else {
+                return sharedpref.getString(SAVEDSTRING, null);
+            }
+        } else {
+            if (sharedpref.getString(SAVEDSTRING, null) == null){
+                return null;
+            }
+            else {
+                return sharedpref.getString(SAVEDLOC, null).replace("\"", "");
+            }
+        }
+    }
+
+
+    private void addToPrefs(String valuecoords, String placecoords) {
+        SharedPreferences sharedpref;
+        SharedPreferences.Editor editor;
+        sharedpref = context.getSharedPreferences(CentralFragmentPresenter.PREFSNAME, Context.MODE_PRIVATE);
+
+        editor = sharedpref.edit();
+        Gson gson = new Gson();
+        String jsonSavedString = gson.toJson(new StringBuilder().append(valuecoords).toString());
+        String jsonPlaceSavedString = gson.toJson(new StringBuilder().append(placecoords).toString());
+        editor.putString(SAVEDSTRING, jsonSavedString);
+        editor.putString(SAVEDLOC, jsonPlaceSavedString);
+        editor.apply();
     }
 
     private void getPastWithLoader (List<Datum> mylist){
@@ -157,9 +218,10 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
             if (data != null) {
                 boolean isNew = data.get(0).isNew();
                 setAutocompleted(data.get(0).getCustomlocationname());
+                addToPrefs(data.get(0).getCustomccordinates(), data.get(0).getCustomlocationname());
                 adapterrefresh(data, isNew, false);
                 getPastWithLoader(data);
-                Log.e("MY_TAG", "databeforeBITE " + data.size());
+                Log.e("MY_TAG", "databeforeBITE " + data.get(0).getCustomlocationname());
             } else
             {
                 //if internet on phone is lost close progress and show toast in CentralFragmentImpl adapterrefresh
