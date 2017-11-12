@@ -9,9 +9,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import dev.eyesless.simple_weather_for_fishermans.R;
 import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Datum;
@@ -64,10 +66,12 @@ class RVadapter extends RecyclerView.Adapter<RVadapter.WeatherViewHolder>{
     @Override
     public void onBindViewHolder(WeatherViewHolder holder, int position) {
 
-        holder.temperature.setText(String.valueOf((int)weatherdataset.get(position).getTemperatureMin())+(char) 0x00B0+ "C / " +
-        String.valueOf((int)weatherdataset.get(position).getTemperatureMax()) +(char) 0x00B0+ "C");
+        String temperature = String.valueOf((int)weatherdataset.get(position).getTemperatureMin())+(char) 0x00B0+ "C / " +
+                String.valueOf((int)weatherdataset.get(position).getTemperatureMax()) +(char) 0x00B0+ "C";
+        holder.temperature.setText(temperature);
         holder.wind.setText(String.format("ветер - %s", windfrom(weatherdataset.get(position).getWindBearing())));
-        holder.pressure.setText("давление - " + String.valueOf((int)weatherdataset.get(position).getPressure())+"мм. рт. ст.");
+        String pressure = "давление - " + String.valueOf((int)weatherdataset.get(position).getPressure())+"мм. рт. ст.";
+        holder.pressure.setText(pressure);
         holder.percipe.setText(String.valueOf((int)(weatherdataset.get(position).getPrecipProbability()*100)+" %"));
         holder.date.setText(dateconverter(weatherdataset.get(position).getTime()));
         holder.weather.setImageResource(getimageresfromselector(weatherdataset.get(position).getIcon()));
@@ -136,11 +140,13 @@ class RVadapter extends RecyclerView.Adapter<RVadapter.WeatherViewHolder>{
     //convert unix time to string
     private String dateconverter(long time) {
 
+        Locale russian = new Locale("ru");
+
         if (time != 0) {
+
             Date date = new Date(time*1000L);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("EE, dd-MM-yyyy");
-            // TODO: 14.08.2017 disable this warning
+            SimpleDateFormat sdf = new SimpleDateFormat("EE, dd-MM-yyyy", russian);
 
             return sdf.format(date);
         } else {

@@ -1,5 +1,6 @@
 package dev.eyesless.simple_weather_for_fishermans.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,6 +29,7 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
 
     private final CentralFragmentInterface cfinterface;
     private AMainActivity mActivity;
+    private Context context;
     final static String DEFOULT_LOC = "First, Lounch";
     private String autocompleted;
     final static int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
@@ -140,9 +142,9 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
 
         switch (id) {
             case R.id.weather_loader_id:
-                return new WeatherLoader(mActivity.getApplication().getApplicationContext(), args);
+                return new WeatherLoader(context, args);
             case R.id.past_loader_id:
-                return new WeatherPastLoader(mActivity.getApplication().getApplicationContext(), midlist);
+                return new WeatherPastLoader(context, midlist);
             default:
                 return null;
         }
@@ -197,7 +199,8 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
     // set aMainActivity
     void setActivity(AMainActivity aMainActivity) {
         this.mActivity = aMainActivity;
-        sharedpref = mActivity.getApplicationContext().getSharedPreferences(DATAPREFSNAME, Context.MODE_PRIVATE);
+        this.context = aMainActivity.getApplication().getApplicationContext();
+        sharedpref = context.getSharedPreferences(DATAPREFSNAME, Context.MODE_PRIVATE);
     }
 
     void setAutocompleted(String autocompleted) {
