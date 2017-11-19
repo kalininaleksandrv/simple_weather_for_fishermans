@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
@@ -15,6 +16,7 @@ import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import dev.eyesless.simple_weather_for_fishermans.AMainActivity;
@@ -49,6 +51,8 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
     private String defoult_city = "Москва, Россия";
     private final static String SAVEDSTRING = "savedstr";
     private final static String SAVEDLOC = "savedloc";
+    private final static String SAVEDTIME = "savedtime";
+    private final static long DEFTIMEOFDELAY = 3600000;
 
 
     CentralFragmentPresenter(CentralFragmentInterface cfi) {
@@ -72,10 +76,29 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
          else
              {fix = autocompleted.replaceAll("\\s+","+");}
 
-         getCoordinatesWithLoader (fix, update);
+         //protect network from unnecessary requwest
+        if (isDataObsoled(fix)){
+            getCoordinatesWithLoader (fix, update);
+         Log.e("MY_TAG", "Data IS OBSOLED");
+        } else {
+            cfinterface.stoprefreashing();
+            mActivity.toastmaker(context.getResources().getString(R.string.stoprefresh));
+            Log.e("MY_TAG", "Data is NOT OBSOLED");
+        }
 
+     }
+
+     //return true if response data new and don't need to update
+    private boolean isDataObsoled(String data) {
+        String newdata = data.replace("+", " ");
+        String olddata = getFromPrefs(PREFSNAME, false);
+        long oldtime = getTimeFromPrefs(PREFSNAME)+DEFTIMEOFDELAY;
+        if (getSysTime()>oldtime || newdata == null || olddata == null) {
+            return true; //in case when time intervale (between recorded in last shared prefs and current system time) more hen defoult value OR in case when time intervale less then default and wee have"nt data  to compare
+        } else {
+                return (!newdata.equals(olddata)); //in case when time intervale less then default, returns result inverse by check - if user request same city
+        }
     }
-
 
     private void getCoordinatesWithLoader(String fix, boolean update) {
 
@@ -115,7 +138,7 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
                 return sharedpref.getString(SAVEDSTRING, null);
             }
         } else {
-            if (sharedpref.getString(SAVEDSTRING, null) == null){
+            if (sharedpref.getString(SAVEDLOC, null) == null){
                 return null;
             }
             else {
@@ -124,8 +147,13 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
         }
     }
 
+    private long getTimeFromPrefs (String prefname){
+        SharedPreferences sharedpref = context.getSharedPreferences(prefname, Context.MODE_PRIVATE);
+        return sharedpref.getLong(SAVEDTIME, 1);
+    }
 
-    private void addToPrefs(String valuecoords, String placecoords) {
+
+    private void addToPrefs(String valuecoords, String placecoords, Long reqwesttime) {
         SharedPreferences sharedpref;
         SharedPreferences.Editor editor;
         sharedpref = context.getSharedPreferences(CentralFragmentPresenter.PREFSNAME, Context.MODE_PRIVATE);
@@ -136,6 +164,7 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
         String jsonPlaceSavedString = gson.toJson(new StringBuilder().append(placecoords).toString());
         editor.putString(SAVEDSTRING, jsonSavedString);
         editor.putString(SAVEDLOC, jsonPlaceSavedString);
+        editor.putLong(SAVEDTIME, reqwesttime);
         editor.apply();
     }
 
@@ -173,7 +202,8 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
                 mylist.remove(0);
             }
         }
-        cfinterface.adapterrefresh(mylist, isdatanew);
+        cfinterface.adapterrefresh(mylist);
+        cfinterface.stoprefreashing();
         Log.e("MY_TAG", "refreshing adapter on presenter " + isdatanew);
     }
 
@@ -218,7 +248,7 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
             if (data != null) {
                 boolean isNew = data.get(0).isNew();
                 setAutocompleted(data.get(0).getCustomlocationname());
-                addToPrefs(data.get(0).getCustomccordinates(), data.get(0).getCustomlocationname());
+                addToPrefs(data.get(0).getCustomccordinates(), data.get(0).getCustomlocationname(), getSysTime());
                 adapterrefresh(data, isNew, false);
                 getPastWithLoader(data);
                 Log.e("MY_TAG", "databeforeBITE " + data.get(0).getCustomlocationname());
@@ -287,6 +317,11 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
             mydatum.add(defoultdatum);
             return mydatum;
         }
+    }
+
+    //return system time
+    private long getSysTime() {
+        return Calendar.getInstance().getTimeInMillis();
     }
 }
 

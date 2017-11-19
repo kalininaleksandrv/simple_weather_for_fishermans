@@ -15,5 +15,6 @@
     <string name="its_fishing">нет данных</string>
     <string name="trytoload">Пробуем получить данные из сети</string>
     <string name="nonewdata">не удалось загрузить данные, показываем старые данные… возможно у Вас нет доступа к Интернету или погодный сервер не доступен</string>
+    <string name="stoprefresh">обновление данных по одной локации возможно не чаще одного раза в час</string>
 
 </resources>

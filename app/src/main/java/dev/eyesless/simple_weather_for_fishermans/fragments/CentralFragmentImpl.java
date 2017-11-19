@@ -193,7 +193,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     }
 
     @Override
-    public void adapterrefresh(List<Datum> mylist, boolean isdatanew) {
+    public void adapterrefresh(List<Datum> mylist) {
 
         if (mylist != null) {
             Log.e("MY_TAG", "refreshing adapter on view " + mylist.get(0).getSummary());
@@ -204,12 +204,6 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
 
         else {
             mActivity.toastmaker(mActivity.getString(R.string.nonewdata));
-        }
-
-        if (isdatanew){
-            cf_progress.setVisibility(View.INVISIBLE);
-            cf_trytoload.setVisibility(View.INVISIBLE);
-            cf_swipe.setRefreshing(false);
         }
     }
 
@@ -228,5 +222,12 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
 
     private void setCurrentcocation(String currentcocation) {
         this.currentcocation = currentcocation;
+    }
+
+    @Override
+    public void stoprefreashing (){
+        cf_progress.setVisibility(View.INVISIBLE);
+        cf_trytoload.setVisibility(View.INVISIBLE);
+        cf_swipe.setRefreshing(false);
     }
 }
