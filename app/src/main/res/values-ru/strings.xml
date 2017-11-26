@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Просто погода для рыбаков</string>
+    <string name="drawer_open">Открыт</string>
+    <string name="drawer_closed">Закрыт</string>
+    <string name="about">О программе</string>
+    <string name="action_settings">Настройки</string>
+    <string name="to_change">вы можете изменить локацию на необходимую</string>
+    <string name="btn_img_find_coords">изменить место</string>
+    <string name="autocompleeterror">К сожалению, во время выбора адреса произошла ошибка, прпробуйте снова</string>
+    <string name="nonetworcconnection">Проверьте доступ к Интернету или поробуйте изменить место</string>
+    <string name="locunavaliable">Изменение локации не доступно</string>
+    <string name="nodata_close">Н\Д</string>
+    <string name="nodata_full">нет данных</string>
+    <string name="its_weather">нет данных</string>
+    <string name="its_fishing">нет данных</string>
+    <string name="trytoload">Пробуем получить данные из сети</string>
+    <string name="nonewdata">не удалось загрузить данные, показываем старые данные… возможно у Вас нет доступа к Интернету или погодный сервер не доступен</string>
+    <string name="stoprefresh">обновление данных по одной локации возможно не чаще одного раза в час</string>
+    <string name="nordeast">северо-восточный</string>
+    <string name="east">восточный</string>
+    <string name="southeast">юго-восточный</string>
+    <string name="south">южный</string>
+    <string name="southwest">юго-западный</string>
+    <string name="west">западный</string>
+    <string name="nordwest">северо-западный</string>
+    <string name="north">северный</string>
+    <string name="wind">ветер: </string>
+    <string name="pressure">давление: </string>
+    <string name="mmrtst">мм. рт. ст.</string>
+
+
+
+</resources>

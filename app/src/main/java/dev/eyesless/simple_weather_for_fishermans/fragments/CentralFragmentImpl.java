@@ -101,7 +101,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     private void recyclerparamsinit() {
         cf_recycler.setHasFixedSize(true);
         cf_recycler.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        adapter = new RVadapter(cfpresenter.getTempAdapterList());
+        adapter = new RVadapter(cfpresenter.getTempAdapterList(), getContext());
         cf_recycler.setAdapter(adapter);
 
         cf_swipe.setColorSchemeResources(R.color.colorPrimary);
@@ -197,7 +197,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
 
         if (mylist != null) {
             Log.e("MY_TAG", "refreshing adapter on view " + mylist.get(0).getSummary());
-            adapter = new RVadapter(mylist);
+            adapter = new RVadapter(mylist, getContext());
             cf_recycler.setAdapter(adapter);
             cf_recycler.setVisibility(View.VISIBLE);
         }

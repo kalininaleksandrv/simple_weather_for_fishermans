@@ -1,5 +1,6 @@
 package dev.eyesless.simple_weather_for_fishermans.fragments;
 
+import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -24,6 +25,7 @@ import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Datum
 class RVadapter extends RecyclerView.Adapter<RVadapter.WeatherViewHolder>{
 
     private List<Datum> weatherdataset;
+    private Context context;
 
     static class WeatherViewHolder extends RecyclerView.ViewHolder {
 
@@ -50,11 +52,11 @@ class RVadapter extends RecyclerView.Adapter<RVadapter.WeatherViewHolder>{
         }
     }
 
-    RVadapter(List<Datum> data) {
+    RVadapter(List<Datum> data, Context context) {
 
         this.weatherdataset = data;
+        this.context = context;
         Log.e("MY_TAG", "creating RV " + data.get(0).getSummary());
-
 
     }
 
@@ -70,8 +72,9 @@ class RVadapter extends RecyclerView.Adapter<RVadapter.WeatherViewHolder>{
         String temperature = String.valueOf((int)weatherdataset.get(position).getTemperatureMin())+(char) 0x00B0+ "C / " +
                 String.valueOf((int)weatherdataset.get(position).getTemperatureMax()) +(char) 0x00B0+ "C";
         holder.temperature.setText(temperature);
-        holder.wind.setText(String.format("ветер - %s", windfrom(weatherdataset.get(position).getWindBearing())));
-        String pressure = "давление - " + String.valueOf((int)weatherdataset.get(position).getPressure())+"мм. рт. ст.";
+        String wind = context.getString(R.string.wind) + " " + windfrom(weatherdataset.get(position).getWindBearing());
+        holder.wind.setText(wind);
+        String pressure = context.getString(R.string.pressure) + String.valueOf((int)weatherdataset.get(position).getPressure())+" "+ context.getString(R.string.mmrtst); //25,4 mm = 1 inch
         holder.pressure.setText(pressure);
         holder.percipe.setText(String.valueOf((int)(weatherdataset.get(position).getPrecipProbability()*100)+" %"));
         holder.date.setText(dateconverter(weatherdataset.get(position).getTime()));
@@ -127,14 +130,15 @@ class RVadapter extends RecyclerView.Adapter<RVadapter.WeatherViewHolder>{
     //convert direction of wind from degree to string
        private String windfrom(long windBearing) {
            String direction = "??";
-           if (windBearing > 30 && windBearing < 61) {direction = "северо-восточный";}
-           if (windBearing > 60 && windBearing < 121) {direction = "восточный";}
-           if (windBearing > 120 && windBearing < 151) {direction = "юго-восточный";}
-           if (windBearing > 150 && windBearing < 211) {direction = "южный";}
-           if (windBearing > 210 && windBearing < 241) {direction = "юго-западный";}
-           if (windBearing > 240 && windBearing < 301) {direction = "западный";}
-           if (windBearing > 300 && windBearing < 331) {direction = "северо-западный";}
-           if ((windBearing > 330 && windBearing < 361) || (windBearing > 0 && windBearing < 31) ) {direction = "северный";}
+           if (windBearing > 30 && windBearing < 61) {direction = context.getString(R.string.nordeast);}
+           if (windBearing > 60 && windBearing < 121) {direction = context.getString(R.string.east);}
+           if (windBearing > 120 && windBearing < 151) {direction = context.getString(R.string.southeast);}
+           if (windBearing > 150 && windBearing < 211) {direction = context.getString(R.string.south);
+           }
+           if (windBearing > 210 && windBearing < 241) {direction = context.getString(R.string.southwest);}
+           if (windBearing > 240 && windBearing < 301) {direction = context.getString(R.string.west);}
+           if (windBearing > 300 && windBearing < 331) {direction = context.getString(R.string.nordwest);}
+           if ((windBearing > 330 && windBearing < 361) || (windBearing > 0 && windBearing < 31) ) {direction = context.getString(R.string.north);}
            return direction;
        }
 

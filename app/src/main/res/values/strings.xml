@@ -1,20 +1,30 @@
 <resources>
     <string name="app_name">Simple_Weather_For_Fishermans</string>
-    <string name="drawer_open">Открыт</string>
-    <string name="drawer_closed">Закрыт</string>
-    <string name="about">О программе</string>
-    <string name="action_settings">Настройки</string>
-    <string name="to_change">вы можете изменить локацию на необходимую</string>
-    <string name="btn_img_find_coords">изменить место</string>
-    <string name="autocompleeterror">К сожалению, во время выбора адреса произошла ошибка, прпробуйте снова</string>
-    <string name="nonetworcconnection">Проверьте доступ к Интернету или поробуйте изменить место</string>
-    <string name="locunavaliable">Изменение локации не доступно</string>
-    <string name="nodata_close">Н\Д</string>
-    <string name="nodata_full">нет данных</string>
-    <string name="its_weather">нет данных</string>
-    <string name="its_fishing">нет данных</string>
-    <string name="trytoload">Пробуем получить данные из сети</string>
-    <string name="nonewdata">не удалось загрузить данные, показываем старые данные… возможно у Вас нет доступа к Интернету или погодный сервер не доступен</string>
-    <string name="stoprefresh">обновление данных по одной локации возможно не чаще одного раза в час</string>
-
+    <string name="drawer_open">Open</string>
+    <string name="drawer_closed">Closed</string>
+    <string name="about">About app</string>
+    <string name="action_settings">Settings</string>
+    <string name="to_change">You should change location here</string>
+    <string name="btn_img_find_coords">Change place</string>
+    <string name="autocompleeterror">Unfortunately, something goes wrong, please try again</string>
+    <string name="nonetworcconnection">Check the Internet or try to change place</string>
+    <string name="locunavaliable">Location changes deny</string>
+    <string name="nodata_close">N/D</string>
+    <string name="nodata_full">no data</string>
+    <string name="its_weather">no data</string>
+    <string name="its_fishing">no data</string>
+    <string name="trytoload">Trying to retrieve data from remote server</string>
+    <string name="nonewdata">Failed to load data here is the old data… a network or weather server is not available</string>
+    <string name="stoprefresh">updating data for same location allow only one time per hour</string>
+    <string name="nordeast">north-east</string>
+    <string name="east">east</string>
+    <string name="southeast">south-east</string>
+    <string name="south">south</string>
+    <string name="southwest">south-west</string>
+    <string name="west">west</string>
+    <string name="nordwest">north-werst</string>
+    <string name="north">north</string>
+    <string name="wind">wind: </string>
+    <string name="pressure">pressure: </string>
+    <string name="mmrtst">mmHg</string>
 </resources>
