@@ -4,7 +4,7 @@
     <string name="drawer_closed">Закрыт</string>
     <string name="about">О программе</string>
     <string name="action_settings">Настройки</string>
-    <string name="to_change">вы можете изменить локацию на необходимую</string>
+    <string name="to_change">Нажимте на текст чтобы выбрать локацию или на компасс чтобы получить данные GPS</string>
     <string name="btn_img_find_coords">изменить место</string>
     <string name="autocompleeterror">К сожалению, во время выбора адреса произошла ошибка, прпробуйте снова</string>
     <string name="nonetworcconnection">Проверьте доступ к Интернету или поробуйте изменить место</string>
@@ -27,7 +27,8 @@
     <string name="wind">ветер: </string>
     <string name="pressure">давление: </string>
     <string name="mmrtst">мм. рт. ст.</string>
-
-
+    <string name="nogps">GPS недоступен или не получено разрешение на использование</string>
+    <string name="gpsenabled">GPS включен, можно использовать кнопку "компас"</string>
+    <string name="gpsdisabled">GPS выключен, местоположение больше не отслеживается</string>
 
 </resources>

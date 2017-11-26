@@ -1,11 +1,18 @@
 package dev.eyesless.simple_weather_for_fishermans.fragments;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
@@ -27,7 +34,7 @@ import dev.eyesless.simple_weather_for_fishermans.repository.WeatherPastLoader;
 import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Daily;
 import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Datum;
 
-public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<List<Datum>> {
+public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<List<Datum>>, LocationListener {
 
     private final CentralFragmentInterface cfinterface;
     private AMainActivity mActivity;
@@ -54,6 +61,8 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
     private final static String SAVEDTIME = "savedtime";
     private final static long DEFTIMEOFDELAY = 3600000;
 
+    private LocationManager locationManager;
+
 
     CentralFragmentPresenter(CentralFragmentInterface cfi) {
 
@@ -62,41 +71,41 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
     }
 
     //call when button pressed in IMPL
-     void startSearch(boolean update) {
+    void startSearch(boolean update) {
 
-         String fix;
-         //prepare to request autocompleeted place or defoult plase (Moscow, Russia)
-         if (autocompleted == null){
-             if ((getFromPrefs(PREFSNAME, false) == null)) {
-                 fix = DEFOULT_LOC.replaceAll("\\s+","+"); //defoult loc returns only if plase in shard prefs is empty
-             } else {
-                 fix = getFromPrefs(PREFSNAME, false);
-             }
-         }
-         else
-             {fix = autocompleted.replaceAll("\\s+","+");}
+        String fix;
+        //prepare to request autocompleeted place or defoult plase (Moscow, Russia)
+        if (autocompleted == null) {
+            if ((getFromPrefs(PREFSNAME, false) == null)) {
+                fix = DEFOULT_LOC.replaceAll("\\s+", "+"); //defoult loc returns only if plase in shard prefs is empty
+            } else {
+                fix = getFromPrefs(PREFSNAME, false);
+            }
+        } else {
+            fix = autocompleted.replaceAll("\\s+", "+");
+        }
 
-         //protect network from unnecessary requwest
-        if (isDataObsoled(fix)){
-            getCoordinatesWithLoader (fix, update);
-         Log.e("MY_TAG", "Data IS OBSOLED");
+        //protect network from unnecessary requwest
+        if (isDataObsoled(fix)) {
+            getCoordinatesWithLoader(fix, update);
+            Log.e("MY_TAG", "Data IS OBSOLED");
         } else {
             cfinterface.stoprefreashing();
             mActivity.toastmaker(context.getResources().getString(R.string.stoprefresh));
             Log.e("MY_TAG", "Data is NOT OBSOLED");
         }
 
-     }
+    }
 
-     //return true if response data new and don't need to update
+    //return true if response data new and don't need to update
     private boolean isDataObsoled(String data) {
         String newdata = data.replace("+", " ");
         String olddata = getFromPrefs(PREFSNAME, false);
-        long oldtime = getTimeFromPrefs(PREFSNAME)+DEFTIMEOFDELAY;
-        if (getSysTime()>oldtime || newdata == null || olddata == null) {
+        long oldtime = getTimeFromPrefs(PREFSNAME) + DEFTIMEOFDELAY;
+        if (getSysTime() > oldtime || newdata == null || olddata == null) {
             return true; //in case when time intervale (between recorded in last shared prefs and current system time) more hen defoult value OR in case when time intervale less then default and wee have"nt data  to compare
         } else {
-                return (!newdata.equals(olddata)); //in case when time intervale less then default, returns result inverse by check - if user request same city
+            return (!newdata.equals(olddata)); //in case when time intervale less then default, returns result inverse by check - if user request same city
         }
     }
 
@@ -114,10 +123,11 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
             isLoaderExist = true;
         }
     }
+
     //return StartLocation NAME on first app lounch, then return loc NAME from prefs
     private String getLastLocation() {
 
-        if (getFromPrefs(PREFSNAME, true)==null){
+        if (getFromPrefs(PREFSNAME, true) == null) {
             Log.e("MY_TAG", "NO PREFS, try to request loc from defoult ");
             return new StringBuilder().append(defoultLAT).append(",").append(defoultLNG).toString();
         } else {
@@ -131,23 +141,21 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
         SharedPreferences sharedpref = context.getSharedPreferences(prefname, Context.MODE_PRIVATE);
 
         if (doweneedlocation) {
-            if (sharedpref.getString(SAVEDSTRING, null) == null){
+            if (sharedpref.getString(SAVEDSTRING, null) == null) {
                 return null;
-            }
-            else {
+            } else {
                 return sharedpref.getString(SAVEDSTRING, null);
             }
         } else {
-            if (sharedpref.getString(SAVEDLOC, null) == null){
+            if (sharedpref.getString(SAVEDLOC, null) == null) {
                 return null;
-            }
-            else {
+            } else {
                 return sharedpref.getString(SAVEDLOC, null).replace("\"", "");
             }
         }
     }
 
-    private long getTimeFromPrefs (String prefname){
+    private long getTimeFromPrefs(String prefname) {
         SharedPreferences sharedpref = context.getSharedPreferences(prefname, Context.MODE_PRIVATE);
         return sharedpref.getLong(SAVEDTIME, 1);
     }
@@ -168,16 +176,16 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
         editor.apply();
     }
 
-    private void getPastWithLoader (List<Datum> mylist){
+    private void getPastWithLoader(List<Datum> mylist) {
 
-          midlist = mylist;
-            if (isupdate){
-                mLoader.restartLoader(R.id.past_loader_id, Bundle.EMPTY, this);
-                Log.e("MY_TAG", "restart PAST loader");
-            }
-                else {
-                mLoader.initLoader(R.id.past_loader_id, Bundle.EMPTY, this);
-                Log.e("MY_TAG", "init PAST loader");}
+        midlist = mylist;
+        if (isupdate) {
+            mLoader.restartLoader(R.id.past_loader_id, Bundle.EMPTY, this);
+            Log.e("MY_TAG", "restart PAST loader");
+        } else {
+            mLoader.initLoader(R.id.past_loader_id, Bundle.EMPTY, this);
+            Log.e("MY_TAG", "init PAST loader");
+        }
     }
 
     //start intent to autocompletion location
@@ -191,7 +199,78 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
         } catch (GooglePlayServicesRepairableException e) {
             Log.e("Failed: Google Play", e.getMessage());
         } catch (GooglePlayServicesNotAvailableException e) {
-            Log.e("Failed: Play . n aval. ", e.getMessage());        }
+            Log.e("Failed: Play . n aval. ", e.getMessage());
+        }
+    }
+
+    //trying to get coordinates from gps
+    void getGpsPermission() {
+
+        if (Build.VERSION.SDK_INT >= 23) {
+
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                getCoordinatesFromGps();
+            } else {
+                cfinterface.getGpsPermission();
+            }
+        }
+            else {
+            getCoordinatesFromGps();
+            // TODO: 26.11.2017 must check if devise has GPS and GPS ON
+        }
+    }
+
+
+    //here try to get coordinates from GPS
+    void getCoordinatesFromGps(){
+
+        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        try {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, DEFTIMEOFDELAY, 10000, this);
+            informUserAboutLastLocation();
+        } catch (SecurityException | NullPointerException e) {
+            informUserAboutGpsUnavaliable();
+        }
+
+    }
+
+    private void informUserAboutLastLocation() {
+        String locationProvider = LocationManager.GPS_PROVIDER;
+        try {
+            Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
+            mActivity.toastmaker(String.valueOf(lastKnownLocation.getLatitude())+ " " + String.valueOf(lastKnownLocation.getLongitude()));
+        } catch (SecurityException e) {
+            informUserAboutGpsUnavaliable();
+        }
+
+    }
+
+    void informUserAboutGpsUnavaliable() {
+        mActivity.toastmaker(context.getString(R.string.nogps));
+    }
+
+    //location listner results placed here
+    @Override
+    public void onLocationChanged(Location location) {
+        informUserAboutLastLocation();
+    }
+
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        mActivity.toastmaker(context.getString(R.string.gpsenabled));
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+        mActivity.toastmaker(context.getString(R.string.gpsdisabled));
+
     }
 
     private void adapterrefresh(List<Datum> mylist, boolean isdatanew, boolean remooveelements) {
@@ -323,6 +402,9 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
     private long getSysTime() {
         return Calendar.getInstance().getTimeInMillis();
     }
+
+
+
 }
 
 

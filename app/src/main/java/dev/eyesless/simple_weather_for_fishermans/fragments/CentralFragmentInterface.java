@@ -10,8 +10,6 @@ interface CentralFragmentInterface {
      //call when presenter set a coord in view
      void setCoords (String s);
 
-     void startActivityFromPresenter ();
-
      void setDefoultLoc();
 
      void setLocUnavaliable ();
@@ -19,4 +17,6 @@ interface CentralFragmentInterface {
      void adapterrefresh(List<Datum> mylist);
 
      void stoprefreashing();
+
+    void getGpsPermission();
 }

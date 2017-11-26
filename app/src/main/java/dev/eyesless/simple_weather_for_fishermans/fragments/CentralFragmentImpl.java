@@ -1,9 +1,13 @@
 package dev.eyesless.simple_weather_for_fishermans.fragments;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -15,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.Status;
@@ -30,7 +35,7 @@ import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Datum
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
-public class CentralFragmentImpl extends Fragment implements CentralFragmentInterface, SwipeRefreshLayout.OnRefreshListener {
+public class CentralFragmentImpl extends Fragment implements CentralFragmentInterface, SwipeRefreshLayout.OnRefreshListener, ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final int INFLATED_VIEW = R.layout.fragment_central;
     private View parentview;
@@ -92,6 +97,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         cf_progress.setVisibility(View.VISIBLE);
         setDefoultLoc();
         startSearch();
+        cf_defoultloc.setOnClickListener(new cfIBtnOnClickListner());
         cf_imagebutton_find.setOnClickListener(new cfIBtnOnClickListner());
         recyclerparamsinit();
         cf_swipe.setOnRefreshListener(this);
@@ -150,11 +156,19 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     private class cfIBtnOnClickListner implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            startActivityFromPresenter();
+            switch(v.getId()) {
+                case R.id.txt_defaults:
+                    startActivityFromPresenter();
+                    break;
+                case R.id.btn_img_find_coords:
+                    getCordinatesFromGps ();
+                    break;
+            }
         }
     }
 
-    @Override
+    private void getCordinatesFromGps() { cfpresenter.getGpsPermission();}
+
     public void startActivityFromPresenter() {
         cfpresenter.startActivity(this);
     }
@@ -229,5 +243,19 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         cf_progress.setVisibility(View.INVISIBLE);
         cf_trytoload.setVisibility(View.INVISIBLE);
         cf_swipe.setRefreshing(false);
+    }
+
+    @Override
+    public void getGpsPermission() {
+        ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+    }
+
+    //here the result of permission request in method getCoordinatesFromGps
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(grantResults[0] == PackageManager.PERMISSION_GRANTED){cfpresenter.getCoordinatesFromGps();}
+
+        if(grantResults[0] == PackageManager.PERMISSION_DENIED){cfpresenter.informUserAboutGpsUnavaliable();}
     }
 }
