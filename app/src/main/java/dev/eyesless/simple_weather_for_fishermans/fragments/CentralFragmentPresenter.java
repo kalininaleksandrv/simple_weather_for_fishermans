@@ -11,6 +11,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
@@ -42,6 +44,7 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
     final static String DEFOULT_LOC = "First, Lounch";
     private String autocompleted;
     final static int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+    final static int GPS_ENABLER_REQUEST_CODE = 2;
     public final static String COORDINATES_IN_BUNDLE = "coords";
     public final static String LOCATION_IN_BUNDLE = "locationinbundle";
     private LoaderManager mLoader;
@@ -60,8 +63,6 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
     private final static String SAVEDLOC = "savedloc";
     private final static String SAVEDTIME = "savedtime";
     private final static long DEFTIMEOFDELAY = 3600000;
-
-    private LocationManager locationManager;
 
 
     CentralFragmentPresenter(CentralFragmentInterface cfi) {
@@ -204,19 +205,35 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
     }
 
     //trying to get coordinates from gps
-    void getGpsPermission() {
+    void getGpsPermission(CentralFragmentImpl centralFragment) {
 
-        if (Build.VERSION.SDK_INT >= 23) {
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
-            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                getCoordinatesFromGps();
+        //check if GPS is ON, make intent to ON if its OFF
+
+        if (locationManager!=null) {
+            if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+
+                mActivity.toastmaker(context.getString(R.string.pleaseenablegps));
+            Intent intnt = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            centralFragment.startActivityForResult(intnt, GPS_ENABLER_REQUEST_CODE);
+
             } else {
-                cfinterface.getGpsPermission();
+
+                if (Build.VERSION.SDK_INT >= 23) {
+
+                    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        getCoordinatesFromGps();
+                    } else {
+                        cfinterface.getGpsPermission();
+                    }
+                } else {
+                    getCoordinatesFromGps();
+                    // TODO: 26.11.2017 must check if devise has GPS and GPS ON
+                }
             }
-        }
-            else {
-            getCoordinatesFromGps();
-            // TODO: 26.11.2017 must check if devise has GPS and GPS ON
+        } else {
+            informUserAboutGpsUnavaliable();
         }
     }
 
@@ -224,22 +241,42 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
     //here try to get coordinates from GPS
     void getCoordinatesFromGps(){
 
-        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        try {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, DEFTIMEOFDELAY, 10000, this);
-            informUserAboutLastLocation();
-        } catch (SecurityException | NullPointerException e) {
-            informUserAboutGpsUnavaliable();
-        }
+        mActivity.toastmaker("теперь все готово к получению координат");
+
+//        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+//        try {
+//            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+//            informUserAboutLastLocation();
+//        } catch (SecurityException | NullPointerException e) {
+//            Log.e("MY_TAG", "Exception in getCoordinatesFromGps GPSPROVIDER " + e);
+//
+//            try {
+//                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+//                informUserAboutLastLocation();
+//            } catch (SecurityException | NullPointerException ee) {
+//                Log.e("MY_TAG", "Exception in getCoordinatesFromGps NETWORKPROVIDER " + ee);
+//                informUserAboutGpsUnavaliable();
+//            }
+//        }
+
+            // TODO: 03.12.2017  add correct delay instead 1000 ms and 1 m
+
 
     }
+//
+//    public void remooveGpsProvUpdates (){
+//        if (locationManager != null) {
+//            locationManager.removeUpdates(this);
+//        }
+//    }
 
-    private void informUserAboutLastLocation() {
+    private void informUserAboutLastLocation(Location location) {
         String locationProvider = LocationManager.GPS_PROVIDER;
         try {
-            Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
-            mActivity.toastmaker(String.valueOf(lastKnownLocation.getLatitude())+ " " + String.valueOf(lastKnownLocation.getLongitude()));
+       //     Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
+            mActivity.toastmaker(String.valueOf(location.getLatitude())+ " " + String.valueOf(location.getLongitude()));
         } catch (SecurityException e) {
+            Log.e("MY_TAG", "Exception in informUserAboutLastLocation " + e);
             informUserAboutGpsUnavaliable();
         }
 
@@ -252,7 +289,7 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
     //location listner results placed here
     @Override
     public void onLocationChanged(Location location) {
-        informUserAboutLastLocation();
+        informUserAboutLastLocation(location);
     }
 
 
@@ -268,9 +305,7 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
 
     @Override
     public void onProviderDisabled(String provider) {
-
         mActivity.toastmaker(context.getString(R.string.gpsdisabled));
-
     }
 
     private void adapterrefresh(List<Datum> mylist, boolean isdatanew, boolean remooveelements) {

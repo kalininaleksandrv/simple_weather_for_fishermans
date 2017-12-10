@@ -30,4 +30,5 @@
     <string name="nogps">GPS unavailable or no access permission</string>
     <string name="gpsenabled">GPS enabled, you can use compass button</string>
     <string name="gpsdisabled">GPS disabled, your location do not updates</string>
+    <string name="pleaseenablegps">This function is disable when GPS is off. Please enable GPS and then push BACK</string>
 </resources>

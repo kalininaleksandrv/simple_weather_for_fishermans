@@ -103,7 +103,13 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         cf_swipe.setOnRefreshListener(this);
     }
 
-   //set extended params to recycler view and swipe refresher
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    //set extended params to recycler view and swipe refresher
     private void recyclerparamsinit() {
         cf_recycler.setHasFixedSize(true);
         cf_recycler.setLayoutManager(new LinearLayoutManager(this.getContext()));
@@ -161,13 +167,11 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
                     startActivityFromPresenter();
                     break;
                 case R.id.btn_img_find_coords:
-                    getCordinatesFromGps ();
+                    cfpresenter.getGpsPermission(CentralFragmentImpl.this);
                     break;
             }
         }
     }
-
-    private void getCordinatesFromGps() { cfpresenter.getGpsPermission();}
 
     public void startActivityFromPresenter() {
         cfpresenter.startActivity(this);
@@ -194,6 +198,14 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
 
             } else if (resultCode == RESULT_CANCELED) {
                 Log.e("MY_TAG", "operation canceled by user");
+            }
+        }
+
+        if (requestCode == CentralFragmentPresenter.GPS_ENABLER_REQUEST_CODE){
+
+            if (resultCode == RESULT_OK){
+                cfpresenter.getGpsPermission(CentralFragmentImpl.this);
+            } else if (resultCode == RESULT_CANCELED) {
             }
         }
     }
@@ -247,7 +259,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
 
     @Override
     public void getGpsPermission() {
-        ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
     }
 
     //here the result of permission request in method getCoordinatesFromGps
