@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.Status;
@@ -103,6 +102,11 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         cf_swipe.setOnRefreshListener(this);
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+    }
 
     @Override
     public void onStop() {
@@ -206,6 +210,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
             if (resultCode == RESULT_OK){
                 cfpresenter.getGpsPermission(CentralFragmentImpl.this);
             } else if (resultCode == RESULT_CANCELED) {
+                // TODO: 10.12.2017 handle GPS on correctly with example from SO 
             }
         }
     }
@@ -259,7 +264,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
 
     @Override
     public void getGpsPermission() {
-        ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+        ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 1);
     }
 
     //here the result of permission request in method getCoordinatesFromGps

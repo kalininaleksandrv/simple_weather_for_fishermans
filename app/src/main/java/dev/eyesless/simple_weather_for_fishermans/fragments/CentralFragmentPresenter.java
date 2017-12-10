@@ -1,17 +1,15 @@
 package dev.eyesless.simple_weather_for_fishermans.fragments;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -21,7 +19,16 @@ import android.util.Log;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -36,7 +43,7 @@ import dev.eyesless.simple_weather_for_fishermans.repository.WeatherPastLoader;
 import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Daily;
 import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Datum;
 
-public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<List<Datum>>, LocationListener {
+public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<List<Datum>> {
 
     private final CentralFragmentInterface cfinterface;
     private AMainActivity mActivity;
@@ -64,6 +71,9 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
     private final static String SAVEDTIME = "savedtime";
     private final static long DEFTIMEOFDELAY = 3600000;
 
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private LocationRequest mLocationRequest;
+    private LocationCallback mLocationCallback;
 
     CentralFragmentPresenter(CentralFragmentInterface cfi) {
 
@@ -211,25 +221,24 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
 
         //check if GPS is ON, make intent to ON if its OFF
 
-        if (locationManager!=null) {
-            if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+        if (locationManager != null) {
+            if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 
                 mActivity.toastmaker(context.getString(R.string.pleaseenablegps));
-            Intent intnt = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            centralFragment.startActivityForResult(intnt, GPS_ENABLER_REQUEST_CODE);
+                Intent intnt = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                centralFragment.startActivityForResult(intnt, GPS_ENABLER_REQUEST_CODE);
 
             } else {
 
                 if (Build.VERSION.SDK_INT >= 23) {
 
-                    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         getCoordinatesFromGps();
                     } else {
                         cfinterface.getGpsPermission();
                     }
                 } else {
                     getCoordinatesFromGps();
-                    // TODO: 26.11.2017 must check if devise has GPS and GPS ON
                 }
             }
         } else {
@@ -237,38 +246,73 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
         }
     }
 
-
     //here try to get coordinates from GPS
-    void getCoordinatesFromGps(){
+    void getCoordinatesFromGps() {
 
-        mActivity.toastmaker("теперь все готово к получению координат");
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
 
-//        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-//        try {
-//            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-//            informUserAboutLastLocation();
-//        } catch (SecurityException | NullPointerException e) {
-//            Log.e("MY_TAG", "Exception in getCoordinatesFromGps GPSPROVIDER " + e);
-//
-//            try {
-//                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
-//                informUserAboutLastLocation();
-//            } catch (SecurityException | NullPointerException ee) {
-//                Log.e("MY_TAG", "Exception in getCoordinatesFromGps NETWORKPROVIDER " + ee);
-//                informUserAboutGpsUnavaliable();
-//            }
-//        }
+        // Create the location request to start receiving updates
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setInterval(DEFTIMEOFDELAY);
+        mLocationRequest.setFastestInterval(DEFTIMEOFDELAY);
 
-            // TODO: 03.12.2017  add correct delay instead 1000 ms and 1 m
+        // Create LocationSettingsRequest object using location request
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+        builder.addLocationRequest(mLocationRequest);
+        LocationSettingsRequest locationSettingsRequest = builder.build();
 
+        // Check whether location settings are satisfied
+        // https://developers.google.com/android/reference/com/google/android/gms/location/SettingsClient
+        SettingsClient settingsClient = LocationServices.getSettingsClient(context);
+        settingsClient.checkLocationSettings(locationSettingsRequest);
+
+        //we're actually already check the permissions up here, but AS thought its mistake, so we check it again
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            cfinterface.getGpsPermission();
+        }
+
+        mLocationCallback = new LocationCallback()   {
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            onLocationChanged(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude());
+        }};
+
+
+        // new Google API SDK v11 uses getFusedLocationProviderClient
+        fusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback,
+                null);
+
+
+        fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+            @Override
+            public void onComplete(@NonNull Task<Location> task) {
+                if(task.getResult()!=null){
+                    //do nothing - all in mLocationCallback
+                } else {
+                   informUserAboutGpsUnavaliable();
+                }
+            }
+        });
+    }
+
+    private void onLocationChanged(Double latitude, Double longitude) {
+
+        if (latitude != null && longitude !=null) {
+
+            mActivity.toastmaker("координаты получены в ОНКомплит: " + String.valueOf(latitude) + " " + String.valueOf(longitude));
+
+        } else {
+            informUserAboutGpsUnavaliable();
+        }
 
     }
-//
-//    public void remooveGpsProvUpdates (){
-//        if (locationManager != null) {
-//            locationManager.removeUpdates(this);
-//        }
-//    }
+
+    public void remooveGpsProvUpdates (){
+        if (fusedLocationProviderClient != null) {
+            fusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+        }
+    }
 
     private void informUserAboutLastLocation(Location location) {
         String locationProvider = LocationManager.GPS_PROVIDER;
@@ -284,28 +328,6 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
 
     void informUserAboutGpsUnavaliable() {
         mActivity.toastmaker(context.getString(R.string.nogps));
-    }
-
-    //location listner results placed here
-    @Override
-    public void onLocationChanged(Location location) {
-        informUserAboutLastLocation(location);
-    }
-
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-        mActivity.toastmaker(context.getString(R.string.gpsenabled));
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-        mActivity.toastmaker(context.getString(R.string.gpsdisabled));
     }
 
     private void adapterrefresh(List<Datum> mylist, boolean isdatanew, boolean remooveelements) {

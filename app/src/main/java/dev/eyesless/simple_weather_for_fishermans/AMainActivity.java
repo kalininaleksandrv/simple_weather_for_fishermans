@@ -1,14 +1,8 @@
 package dev.eyesless.simple_weather_for_fishermans;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -24,16 +18,20 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.location.LocationCallback;
 
 import dev.eyesless.simple_weather_for_fishermans.fragments.CentralFragmentImpl;
 
-public class AMainActivity extends AppCompatActivity implements AMainIntwerface  {
+public class AMainActivity extends AppCompatActivity implements AMainIntwerface {
 
     private static final int LAYOUT = R.layout.activity_amain;
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private ActionBarDrawerToggle drawerToggle;
     private DrawerLayout drawer;
     private final AMainPresenter presenter;
+
+    private LocationCallback mLocationCallback;
+
 
     public AMainActivity() {
         presenter = new AMainPresenter(this);
@@ -169,17 +167,4 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface 
         return true;
     }
 
-
-//    public void getGpsPermission() {
-//        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-//    }
-//
-//    //here the result of permission request in method getCoordinatesFromGps
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        if(grantResults[0] == PackageManager.PERMISSION_GRANTED){toastmaker("GRANDED");}
-//
-//        if(grantResults[0] == PackageManager.PERMISSION_DENIED){toastmaker("DENIED");}
-//    }
 }
