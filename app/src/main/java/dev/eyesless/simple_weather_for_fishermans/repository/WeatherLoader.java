@@ -45,8 +45,8 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> {
 
         this.private_key_weather = dev.eyesless.simple_weather_for_fishermans.Keys.getDarkSkyPrivateKey();
         this.private_key = dev.eyesless.simple_weather_for_fishermans.Keys.getGoogleMapPrivateKey();
-        this.coordinates = args.getString(CentralFragmentPresenter.COORDINATES_IN_BUNDLE);
-        this.locations = args.getString(CentralFragmentPresenter.LOCATION_IN_BUNDLE);
+        this.coordinates = args.getString(CentralFragmentPresenter.COORDINATES_IN_BUNDLE); //here is NAME of location
+        this.locations = args.getString(CentralFragmentPresenter.LOCATION_IN_BUNDLE); //here is LAT LNG of location
         Log.e("MY_TAG", "create coordinates loader");
 
     }
@@ -66,7 +66,18 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> {
         String askinglocation;
         Location incomelocation;
 
-        if (!coordinates.equals("First,+Lounch")){
+        if (coordinates.equals("First,+Lounch")){
+
+            coordinates = defoult_city;
+            Log.e("MY_TAG", "try to request loc from getLastLocation ");
+            askinglocation = locations;
+
+        }else if (coordinates.equals("GPS")){
+
+            coordinates = "GPS: " + locations;
+            askinglocation = locations;
+
+        }else{
             Call<Geocod> response = geocoding_interfaces.CoordinatesFactory.getInstance().getCoordinates(coordinates, private_key);
             try {
                 Log.e("MY_TAG", "try to request new loc " + coordinates);
@@ -76,10 +87,6 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> {
                 Log.e("MY_TAG", "coordinates request FAIL  "+ e.getMessage());
                 askinglocation = locations;
             }
-        } else {
-                coordinates = defoult_city;
-                Log.e("MY_TAG", "try to request loc from getLastLocation ");
-                askinglocation = locations;
         }
 
         Call<Weather> weather_response = weather_interface.WeatherFactory.getInstance().getWeatherForecasts(private_key_weather,

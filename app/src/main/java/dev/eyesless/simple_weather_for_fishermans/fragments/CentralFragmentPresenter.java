@@ -9,7 +9,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Looper;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -49,6 +48,7 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
     private AMainActivity mActivity;
     private Context context;
     final static String DEFOULT_LOC = "First, Lounch";
+    private final static String GPS_LOC = "GPS";
     private String autocompleted;
     final static int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
     final static int GPS_ENABLER_REQUEST_CODE = 2;
@@ -66,8 +66,8 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
     private Double defoultLNG = 37.6172999;
     private final static String PREFSNAME = "prefsname";
     private String defoult_city = "Москва, Россия";
-    private final static String SAVEDSTRING = "savedstr";
-    private final static String SAVEDLOC = "savedloc";
+    private final static String SAVEDSTRING = "savedstr"; //its LAT and LNG coordinates
+    private final static String SAVEDLOC = "savedloc"; // its NAME of country and city
     private final static String SAVEDTIME = "savedtime";
     private final static long DEFTIMEOFDELAY = 3600000;
 
@@ -98,7 +98,7 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
 
         //protect network from unnecessary requwest
         if (isDataObsoled(fix)) {
-            getCoordinatesWithLoader(fix, update);
+            getCoordinatesWithLoader(fix, getLastLocation(), update);
             Log.e("MY_TAG", "Data IS OBSOLED");
         } else {
             cfinterface.stoprefreashing();
@@ -120,11 +120,11 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
         }
     }
 
-    private void getCoordinatesWithLoader(String fix, boolean update) {
+    private void getCoordinatesWithLoader(String fix, String latandlng, boolean update) {
 
         Bundle coordinatesbundle = new Bundle();
         coordinatesbundle.putString(COORDINATES_IN_BUNDLE, fix);
-        coordinatesbundle.putString(LOCATION_IN_BUNDLE, getLastLocation());
+        coordinatesbundle.putString(LOCATION_IN_BUNDLE, latandlng);
         if ((update) || (isLoaderExist)) {
             mLoader.restartLoader(R.id.weather_loader_id, coordinatesbundle, this);
             isupdate = true;
@@ -146,7 +146,7 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
         }
     }
 
-    //if "doweeneedlocation os false method returns SAVEDLOC means last asked location NAME, if true returns coordinates
+    //if "doweeneedlocation" is TRUE returns SAVEDSTRING means coordinates LAT and LNG, if FALSE method returns SAVEDLOC means last asked location NAME
     private String getFromPrefs(String prefname, boolean doweneedlocation) {
 
         SharedPreferences sharedpref = context.getSharedPreferences(prefname, Context.MODE_PRIVATE);
@@ -296,16 +296,22 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
         });
     }
 
+    //HERE IS METHOD WHEN GPS COORDINATION ACSESSED
     private void onLocationChanged(Double latitude, Double longitude) {
-
+        //first check if gps returns null then show to user gps problem toast
         if (latitude != null && longitude !=null) {
 
-            mActivity.toastmaker("координаты получены в ОНКомплит: " + String.valueOf(latitude) + " " + String.valueOf(longitude));
-
+            //protect network from unnecessary requwest - check if user already asking same location, if he's not - lounch NEW loader with coordinates from GPS
+            if (isDataObsoled(GPS_LOC+": "+String.valueOf(latitude)+","+String.valueOf(longitude))) {
+                String coordinatesfromgpstostring = String.valueOf(latitude)+","+String.valueOf(longitude);
+                getCoordinatesWithLoader(GPS_LOC, coordinatesfromgpstostring, false);
+            } else {
+                cfinterface.stoprefreashing();
+                mActivity.toastmaker(context.getResources().getString(R.string.stoprefresh));
+            }
         } else {
             informUserAboutGpsUnavaliable();
         }
-
     }
 
     public void remooveGpsProvUpdates (){
@@ -317,7 +323,6 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
     private void informUserAboutLastLocation(Location location) {
         String locationProvider = LocationManager.GPS_PROVIDER;
         try {
-       //     Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
             mActivity.toastmaker(String.valueOf(location.getLatitude())+ " " + String.valueOf(location.getLongitude()));
         } catch (SecurityException e) {
             Log.e("MY_TAG", "Exception in informUserAboutLastLocation " + e);
