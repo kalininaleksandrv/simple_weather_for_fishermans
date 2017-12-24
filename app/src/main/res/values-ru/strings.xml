@@ -3,6 +3,7 @@
     <string name="drawer_open">Открыт</string>
     <string name="drawer_closed">Закрыт</string>
     <string name="about">О программе</string>
+    <string name="mailtodev">Написать нам</string>
     <string name="action_settings">Настройки</string>
     <string name="to_change">Нажимте на текст чтобы выбрать локацию или на компасс чтобы получить данные GPS</string>
     <string name="btn_img_find_coords">изменить место</string>
@@ -31,5 +32,7 @@
     <string name="gpsenabled">GPS включен, можно использовать кнопку "компас"</string>
     <string name="gpsdisabled">GPS выключен, местоположение больше не отслеживается</string>
     <string name="pleaseenablegps">Эта функция не работает когда GPS выключен. Включите GPS и после нажмите НАЗАД</string>
+    <string name="email_subj">Это письмо про приложение "Погода для рыбака"</string>
+    <string name="nosuchactivity">Не найдено приложения для отправки почты</string>
 
 </resources>

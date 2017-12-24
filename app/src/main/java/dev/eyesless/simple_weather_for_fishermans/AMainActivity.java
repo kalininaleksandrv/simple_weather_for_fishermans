@@ -1,10 +1,15 @@
 package dev.eyesless.simple_weather_for_fishermans;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.ShareCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -20,18 +25,18 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.LocationCallback;
 
+import java.security.Key;
+
+import dev.eyesless.simple_weather_for_fishermans.fragments.AboutFragment;
 import dev.eyesless.simple_weather_for_fishermans.fragments.CentralFragmentImpl;
 
-public class AMainActivity extends AppCompatActivity implements AMainIntwerface {
+public class AMainActivity extends AppCompatActivity implements AMainIntwerface, AboutFragment.OnFragmentInteractionListener, NavigationView.OnNavigationItemSelectedListener {
 
     private static final int LAYOUT = R.layout.activity_amain;
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private ActionBarDrawerToggle drawerToggle;
     private DrawerLayout drawer;
     private final AMainPresenter presenter;
-
-    private LocationCallback mLocationCallback;
-
 
     public AMainActivity() {
         presenter = new AMainPresenter(this);
@@ -66,6 +71,7 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface 
         naview.getMenu().clear();
         naview.inflateMenu(R.menu.menu_navigation);
         naview.inflateHeaderView(R.layout.navigation_header);
+        naview.setNavigationItemSelectedListener(this);
     }
 
     //create custom toolbar
@@ -106,6 +112,25 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface 
 
         //here is plase to handle another items on uper menu
         return super.onOptionsItemSelected(item);
+    }
+
+    //handle user select in drawer menu
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+
+            case R.id.menu_navigation_about: {
+                frameRemoover(new AboutFragment(), "About");
+                break;
+            }
+            case R.id.menu_navigation_mailtodevs: {
+                sendingEmail();
+                break;
+            }
+        }
+        //close navigation drawer
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     private void uppermenuselector(int itemId) {
@@ -167,4 +192,23 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface 
         return true;
     }
 
+    //call back from AboutFragment
+    @Override
+    public void onFragmentInteraction() {
+        frameRemoover(new CentralFragmentImpl(), "Central");
+    }
+
+    //email sending functionality
+    private void sendingEmail() {
+            try {
+                Intent myintent = ShareCompat.IntentBuilder.from(AMainActivity.this)
+                        .setEmailTo(new String[]{Keys.EMAIL_ADRESS})
+                        .setSubject(getString(R.string.email_subj))
+                        .setType("text/plain")
+                        .getIntent();
+                startActivity(myintent);
+            } catch (ActivityNotFoundException e) {
+                toastmaker(getString(R.string.nosuchactivity));
+            }
+    }
 }
