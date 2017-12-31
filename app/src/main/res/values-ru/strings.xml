@@ -2,7 +2,7 @@
     <string name="app_name">Просто погода для рыбаков</string>
     <string name="drawer_open">Открыт</string>
     <string name="drawer_closed">Закрыт</string>
-    <string name="about">О программе</string>
+    <string name="about">О приложении</string>
     <string name="mailtodev">Написать нам</string>
     <string name="action_settings">Настройки</string>
     <string name="to_change">Нажимте на текст чтобы выбрать локацию или на компасс чтобы получить данные GPS</string>
