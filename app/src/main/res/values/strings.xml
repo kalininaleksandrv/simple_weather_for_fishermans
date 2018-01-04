@@ -34,5 +34,7 @@
     <string name="pleaseenablegps">This function is disable when GPS is off. Please enable GPS and then push BACK</string>
     <string name="email_subj">Aboun your app - Weather For Fishing</string>
     <string name="nosuchactivity">No app to send e-mail found</string>
+    <string name="gotit">I got it!</string>
+
 
 </resources>

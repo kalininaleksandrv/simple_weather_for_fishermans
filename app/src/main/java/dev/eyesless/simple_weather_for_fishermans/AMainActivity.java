@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ShareCompat;
@@ -23,14 +24,11 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.location.LocationCallback;
 
-import java.security.Key;
-
-import dev.eyesless.simple_weather_for_fishermans.fragments.AboutFragment;
+import dev.eyesless.simple_weather_for_fishermans.fragments.AboutDialogFragment;
 import dev.eyesless.simple_weather_for_fishermans.fragments.CentralFragmentImpl;
 
-public class AMainActivity extends AppCompatActivity implements AMainIntwerface, AboutFragment.OnFragmentInteractionListener, NavigationView.OnNavigationItemSelectedListener {
+public class AMainActivity extends AppCompatActivity implements AMainIntwerface, NavigationView.OnNavigationItemSelectedListener {
 
     private static final int LAYOUT = R.layout.activity_amain;
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
@@ -56,12 +54,24 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface,
         inittoolbar();
 
         initDrawerTogle ();
+
     }
+
 
     @Override
     protected void onResume() {
         super.onResume();
         checkPlayServices();
+        //pass context to presenret, also see "onPause"
+        presenter.setActivity(this);
+        isFirstLounch();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //protect memory leak
+        presenter.setNullToActivity();
     }
 
     //create navigation view and plugged custom menu (res/menu) and header
@@ -120,7 +130,7 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface,
         switch (item.getItemId()) {
 
             case R.id.menu_navigation_about: {
-                frameRemoover(new AboutFragment(), "About");
+                showDialogAbout();
                 break;
             }
             case R.id.menu_navigation_mailtodevs: {
@@ -158,16 +168,29 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface,
         return super.onCreateOptionsMenu(menu);
     }
 
+    private void isFirstLounch() {
+       presenter.isFirstLounch();
+    }
+
 
     //main method for remoove frames when clicked
     private void frameRemoover(Fragment fragment, String mytag) {
-
         android.support.v4.app.FragmentTransaction fratramain = getSupportFragmentManager().beginTransaction();
         fratramain.replace(R.id.replaced_main, fragment, mytag);
         fratramain.addToBackStack(null);
         fratramain.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         fratramain.commit();
+    }
 
+    //create dialog window "about programm", this method could be call whether from AMainActivity or from AmainPresenter;
+    @Override
+    public void showDialogAbout (){
+        //first check if dialog is already create, for example, if orientation was changed, if it does - dissmiss it;
+        DialogFragment dialogFragment = (DialogFragment)getSupportFragmentManager().findFragmentByTag("aboutdialog");
+        if (dialogFragment != null) { dialogFragment.dismiss();}
+        //second create new dialog
+        AboutDialogFragment aboutDialogFragment = new AboutDialogFragment();
+        aboutDialogFragment.show(getSupportFragmentManager(), "aboutdialog");
     }
 
     //making toasts
@@ -190,12 +213,6 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface,
             return false;
         }
         return true;
-    }
-
-    //call back from AboutFragment
-    @Override
-    public void onFragmentInteraction() {
-        frameRemoover(new CentralFragmentImpl(), "Central");
     }
 
     //email sending functionality

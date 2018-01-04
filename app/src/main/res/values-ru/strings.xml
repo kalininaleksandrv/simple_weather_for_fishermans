@@ -34,5 +34,7 @@
     <string name="pleaseenablegps">Эта функция не работает когда GPS выключен. Включите GPS и после нажмите НАЗАД</string>
     <string name="email_subj">Это письмо про приложение "Погода для рыбака"</string>
     <string name="nosuchactivity">Не найдено приложения для отправки почты</string>
+    <string name="gotit">Понятно!</string>
+
 
 </resources>

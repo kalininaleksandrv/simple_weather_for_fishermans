@@ -314,22 +314,22 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
         }
     }
 
-    public void remooveGpsProvUpdates (){
-        if (fusedLocationProviderClient != null) {
-            fusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
-        }
-    }
-
-    private void informUserAboutLastLocation(Location location) {
-        String locationProvider = LocationManager.GPS_PROVIDER;
-        try {
-            mActivity.toastmaker(String.valueOf(location.getLatitude())+ " " + String.valueOf(location.getLongitude()));
-        } catch (SecurityException e) {
-            Log.e("MY_TAG", "Exception in informUserAboutLastLocation " + e);
-            informUserAboutGpsUnavaliable();
-        }
-
-    }
+//    public void remooveGpsProvUpdates (){
+//        if (fusedLocationProviderClient != null) {
+//            fusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+//        }
+//    }
+//
+//    private void informUserAboutLastLocation(Location location) {
+//        String locationProvider = LocationManager.GPS_PROVIDER;
+//        try {
+//            mActivity.toastmaker(String.valueOf(location.getLatitude())+ " " + String.valueOf(location.getLongitude()));
+//        } catch (SecurityException e) {
+//            Log.e("MY_TAG", "Exception in informUserAboutLastLocation " + e);
+//            informUserAboutGpsUnavaliable();
+//        }
+//
+//    }
 
     void informUserAboutGpsUnavaliable() {
         mActivity.toastmaker(context.getString(R.string.nogps));
