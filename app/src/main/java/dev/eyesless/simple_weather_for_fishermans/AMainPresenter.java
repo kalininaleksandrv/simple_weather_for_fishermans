@@ -3,10 +3,6 @@ package dev.eyesless.simple_weather_for_fishermans;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.google.gson.Gson;
-
-import dev.eyesless.simple_weather_for_fishermans.fragments.CentralFragmentPresenter;
-
 class AMainPresenter {
 
     private final AMainIntwerface aMainIntwerface;

@@ -35,6 +35,14 @@
     <string name="email_subj">Aboun your app - Weather For Fishing</string>
     <string name="nosuchactivity">No app to send e-mail found</string>
     <string name="gotit">I got it!</string>
+    <string name="pleasereadabout">Using this app you’re completely agreeing to terms and conditions in “About app” section</string>
+    <string name="termsofusage">(App) is freeware application with open source code, developed by Eyesless.dev
+        (you could see the App code on our GitHub account). This app is in beta-test phase and distributed “as-is”
+        without any commitment from the developer to user or third part. The only way we distribute this App -
+        Google Play, please DO NOT install this app from any another source. If you using this app it means, you’re accept
+        all possible risks of this using, and you’re agreed, that you , and only you completely responsible for any of consequences,
+        of this action. Otherwise, you should stop using and should delete this app from your device immediately.</string>
+
 
 
 </resources>
