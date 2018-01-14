@@ -191,6 +191,7 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface,
         //second create new dialog
         AboutDialogFragment aboutDialogFragment = new AboutDialogFragment();
         aboutDialogFragment.show(getSupportFragmentManager(), "aboutdialog");
+        aboutDialogFragment.setCancelable(false);
     }
 
     //making toasts
