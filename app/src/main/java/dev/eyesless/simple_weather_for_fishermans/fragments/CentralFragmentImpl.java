@@ -116,6 +116,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     //set extended params to recycler view and swipe refresher
     private void recyclerparamsinit() {
         cf_recycler.setHasFixedSize(true);
+        cf_recycler.setBackgroundColor(0xFF9575CD);
         cf_recycler.setLayoutManager(new LinearLayoutManager(this.getContext()));
         adapter = new RVadapter(cfpresenter.getTempAdapterList(), getContext());
         cf_recycler.setAdapter(adapter);

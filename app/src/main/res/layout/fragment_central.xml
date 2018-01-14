@@ -13,10 +13,12 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+     android:background="@color/colorBackground"
     >
 
         <TextView
             android:id="@+id/txt_defaults"
+            android:textColor="@android:color/white"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintHeight_default="wrap"
@@ -32,12 +34,13 @@
 
         <TextView
             android:id="@+id/txt_to_change"
+            android:textColor="@color/colorAccent"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintHeight_default="wrap"
             android:gravity="start"
             android:text="@string/to_change"
-            android:textSize="@dimen/text_size_micro"
+            android:textSize="@dimen/text_size_smallest"
             android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/txt_defaults"
             android:layout_marginLeft="8dp"
@@ -62,6 +65,7 @@
 
     <TextView
                 android:id="@+id/txt_coordinates"
+                android:textColor="@android:color/white"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintHeight_default="wrap"
@@ -111,6 +115,7 @@
 
      <TextView
          android:id="@+id/try_to_load_data"
+         android:textColor="@android:color/white"
          android:layout_width="0dp"
          android:layout_height="wrap_content"
          android:layout_marginEnd="0dp"
