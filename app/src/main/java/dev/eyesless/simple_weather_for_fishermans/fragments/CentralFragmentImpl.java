@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -115,12 +116,25 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
 
     //set extended params to recycler view and swipe refresher
     private void recyclerparamsinit() {
+
+
+
         cf_recycler.setHasFixedSize(true);
-        cf_recycler.setBackgroundColor(0xFF9575CD);
+        cf_recycler.setBackgroundColor(0xFF673AB7);
         cf_recycler.setLayoutManager(new LinearLayoutManager(this.getContext()));
         adapter = new RVadapter(cfpresenter.getTempAdapterList(), getContext());
         cf_recycler.setAdapter(adapter);
 
+        //separate cards on recycle view
+        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(cf_recycler.getContext(), DividerItemDecoration.VERTICAL);
+        try {
+            mDividerItemDecoration.setDrawable(getContext().getDrawable(R.drawable.divider_gradiented));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        cf_recycler.addItemDecoration(mDividerItemDecoration);
+
+        //set color scheme to swipe animation
         cf_swipe.setColorSchemeResources(R.color.colorPrimary);
     }
 
