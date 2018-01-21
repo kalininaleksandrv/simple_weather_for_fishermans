@@ -99,11 +99,9 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
         //protect network from unnecessary requwest
         if (isDataObsoled(fix)) {
             getCoordinatesWithLoader(fix, getLastLocation(), update);
-            Log.e("MY_TAG", "Data IS OBSOLED");
         } else {
             cfinterface.stoprefreashing();
             mActivity.toastmaker(context.getResources().getString(R.string.stoprefresh));
-            Log.e("MY_TAG", "Data is NOT OBSOLED");
         }
 
     }
@@ -128,7 +126,6 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
         if ((update) || (isLoaderExist)) {
             mLoader.restartLoader(R.id.weather_loader_id, coordinatesbundle, this);
             isupdate = true;
-            Log.e("MY_TAG", "just restart loader");
         } else {
             mLoader.initLoader(R.id.weather_loader_id, coordinatesbundle, this);
             isLoaderExist = true;
@@ -139,7 +136,6 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
     private String getLastLocation() {
 
         if (getFromPrefs(PREFSNAME, true) == null) {
-            Log.e("MY_TAG", "NO PREFS, try to request loc from defoult ");
             return new StringBuilder().append(defoultLAT).append(",").append(defoultLNG).toString();
         } else {
             return getFromPrefs(PREFSNAME, true).replace("\"", "");
@@ -192,10 +188,8 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
         midlist = mylist;
         if (isupdate) {
             mLoader.restartLoader(R.id.past_loader_id, Bundle.EMPTY, this);
-            Log.e("MY_TAG", "restart PAST loader");
         } else {
             mLoader.initLoader(R.id.past_loader_id, Bundle.EMPTY, this);
-            Log.e("MY_TAG", "init PAST loader");
         }
     }
 
@@ -314,23 +308,6 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
         }
     }
 
-//    public void remooveGpsProvUpdates (){
-//        if (fusedLocationProviderClient != null) {
-//            fusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
-//        }
-//    }
-//
-//    private void informUserAboutLastLocation(Location location) {
-//        String locationProvider = LocationManager.GPS_PROVIDER;
-//        try {
-//            mActivity.toastmaker(String.valueOf(location.getLatitude())+ " " + String.valueOf(location.getLongitude()));
-//        } catch (SecurityException e) {
-//            Log.e("MY_TAG", "Exception in informUserAboutLastLocation " + e);
-//            informUserAboutGpsUnavaliable();
-//        }
-//
-//    }
-
     void informUserAboutGpsUnavaliable() {
         mActivity.toastmaker(context.getString(R.string.nogps));
     }
@@ -345,7 +322,6 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
         }
         cfinterface.adapterrefresh(mylist);
         cfinterface.stoprefreashing();
-        Log.e("MY_TAG", "refreshing adapter on presenter " + isdatanew);
     }
 
     private void addListToSharedPrefs(List<Datum> mylist) {
@@ -392,12 +368,10 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
                 addToPrefs(data.get(0).getCustomccordinates(), data.get(0).getCustomlocationname(), getSysTime());
                 adapterrefresh(data, isNew, false);
                 getPastWithLoader(data);
-                Log.e("MY_TAG", "databeforeBITE " + data.get(0).getCustomlocationname());
             } else
             {
                 //if internet on phone is lost close progress and show toast in CentralFragmentImpl adapterrefresh
                 adapterrefresh(null, true, false);
-                Log.e("MY_TAG", "geting NULL weather");
             }
         }
         if (id == R.id.past_loader_id){
@@ -406,16 +380,13 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
                 if (datawithbite != null){
                     addListToSharedPrefs(datawithbite);
                     adapterrefresh(datawithbite, true, true);
-                    Log.e("MY_TAG", "datawithbite");
                 } else {
                     //if internet on phone is lost close progress and show toast in CentralFragmentImpl adapterrefresh
                     adapterrefresh(null, true, false);
-                    Log.e("MY_TAG", "prognostic model returns null");
                 }
             } else {
                 //if internet on phone is lost close progress and show toast in CentralFragmentImpl adapterrefresh
                 adapterrefresh(null, true, false);
-                Log.e("MY_TAG", "past weather loader returns null");
             }
         }
     }
@@ -464,8 +435,6 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
     private long getSysTime() {
         return Calendar.getInstance().getTimeInMillis();
     }
-
-
 
 }
 

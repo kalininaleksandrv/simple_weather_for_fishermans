@@ -56,7 +56,6 @@ class RVadapter extends RecyclerView.Adapter<RVadapter.WeatherViewHolder>{
 
         this.weatherdataset = data;
         this.context = context;
-        Log.e("MY_TAG", "creating RV " + data.get(0).getSummary());
 
     }
 

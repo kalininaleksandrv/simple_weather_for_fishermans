@@ -39,7 +39,6 @@ public class WeatherPastLoader extends AsyncTaskLoader <List<Datum>> {
         this.listofdata = listofdata;
         this.coordinates = listofdata.get(0).getCustomccordinates();
         this.currenttime = listofdata.get(0).getTime();
-        Log.e("MY_TAG", "create past weather loader");
     }
 
 
@@ -61,8 +60,6 @@ public class WeatherPastLoader extends AsyncTaskLoader <List<Datum>> {
             Call<Weather> weather_response = weather_interface.WeatherFactory.getInstance().getWeatherForecasts(private_key_weather,
                     askedtime, EXCLUDE, LANG, UNITS);
 
-            Log.e("MY_TAG", "asking new weather "+ askedtime);
-
             try {
                 Response<Weather> resp = weather_response.execute();
 
@@ -72,7 +69,6 @@ public class WeatherPastLoader extends AsyncTaskLoader <List<Datum>> {
                         setCurrenttime(nextcurrenttime);}
 
             } catch (IOException e) {
-                Log.e("MY_TAG", "weather PAST response returns empty or error " + e);
                 return null;}
             }
 

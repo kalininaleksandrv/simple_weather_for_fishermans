@@ -69,7 +69,6 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> {
         if (coordinates.equals("First,+Lounch")){
 
             coordinates = defoult_city;
-            Log.e("MY_TAG", "try to request loc from getLastLocation ");
             askinglocation = locations;
 
         }else if (coordinates.equals("GPS")){
@@ -80,11 +79,9 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> {
         }else{
             Call<Geocod> response = geocoding_interfaces.CoordinatesFactory.getInstance().getCoordinates(coordinates, private_key);
             try {
-                Log.e("MY_TAG", "try to request new loc " + coordinates);
                 incomelocation = response.execute().body().getResults().get(0).getGeometry().getLocation();
                 askinglocation = from_loc_to_string(incomelocation);
             } catch (IOException e) {
-                Log.e("MY_TAG", "coordinates request FAIL  "+ e.getMessage());
                 askinglocation = locations;
             }
         }
@@ -99,16 +96,13 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> {
                     mylist = resp.body().getDaily().getData();
                     mylist.get(0).setCustomccordinates(askinglocation);
                     mylist.get(0).setCustomlocationname(coordinates.replace("+", " "));
-                    Log.e("MY_TAG", "weather request body is SUCSESS " + "coords is: " + askinglocation + "place is: " + coordinates.replace("+", " "));
                     return mylist;
                     }
                 else {
                     int statusCode = resp.code();
-                        Log.e("MY_TAG", "weather request: server return unexpected code: " + String.valueOf(statusCode));
                         return null;
                     }
             } catch (IOException e) {
-                Log.e("MY_TAG", "weather request FAIL  "+ e.getMessage());
                 return null;
             }
 

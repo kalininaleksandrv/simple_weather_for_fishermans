@@ -71,7 +71,6 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             setCurrentcocation(savedInstanceState.getString(CURRENT_LOC));
-            Log.e("MY_TAG", "restoring defoult loc " + savedInstanceState.getString(CURRENT_LOC));
         }
     }
 
@@ -205,7 +204,6 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
                 Place place = PlaceAutocomplete.getPlace(mActivity, data);
 
                 cfpresenter.setAutocompleted(place.getAddress().toString());
-                Log.e("MY_TAG", place.getAddress().toString());
                 cfpresenter.startSearch(true);
                 cf_progress.setVisibility(View.VISIBLE);
                 cf_trytoload.setVisibility(View.VISIBLE);
@@ -213,10 +211,8 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(mActivity, data);
                 mActivity.toastmaker(getResources().getString(R.string.autocompleeterror));
-                Log.e("MY_TAG", status.getStatusMessage());
 
             } else if (resultCode == RESULT_CANCELED) {
-                Log.e("MY_TAG", "operation canceled by user");
             }
         }
 
@@ -225,7 +221,6 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
             if (resultCode == RESULT_OK){
                 cfpresenter.getGpsPermission(CentralFragmentImpl.this);
             } else if (resultCode == RESULT_CANCELED) {
-                // TODO: 10.12.2017 handle GPS on correctly with example from SO 
             }
         }
     }
@@ -242,7 +237,6 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     public void adapterrefresh(List<Datum> mylist) {
 
         if (mylist != null) {
-            Log.e("MY_TAG", "refreshing adapter on view " + mylist.get(0).getSummary());
             adapter = new RVadapter(mylist, getContext());
             cf_recycler.setAdapter(adapter);
             cf_recycler.setVisibility(View.VISIBLE);

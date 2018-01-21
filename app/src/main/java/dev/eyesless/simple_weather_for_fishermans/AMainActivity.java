@@ -96,11 +96,9 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface,
         drawerToggle = new ActionBarDrawerToggle(this, drawer, R.string.drawer_open, R.string.drawer_closed){
             public void onDrawerClosed (View v) {
                 super.onDrawerClosed(v);
-                Log.i("MY_TAG", "close");
             }
             public void onDrawerOpened (View v) {
                 super.onDrawerOpened(v);
-                Log.i("MY_TAG", "open");
             }
         };
 
