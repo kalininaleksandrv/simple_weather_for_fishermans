@@ -37,6 +37,7 @@
     <string name="nosuchactivity">No app to send e-mail found</string>
     <string name="gotit">I got it!</string>
     <string name="pleasereadabout">Using this app you’re completely agreeing to terms and conditions in “About app” section</string>
+    <string name="nothingtosetup">Sorry, settings unavailable in this version of app</string>
     <string name="termsofusage">(App) is freeware application with open source code, developed by Eyesless.dev
         (you could see the App code on our GitHub account). This app is in beta-test phase and distributed “as-is”
         without any commitment from the developer to user or third part. The only way we distribute this App -

@@ -19,7 +19,7 @@ class AMainPresenter {
 
      void setmenuid(int itemId) {
 
-         aMainIntwerface.toastmaker(String.valueOf(itemId));
+         aMainIntwerface.toastmaker(context.getString(R.string.nothingtosetup));
     }
 
     void isFirstLounch() {
@@ -33,7 +33,6 @@ class AMainPresenter {
             editor = sharedpref.edit();
             editor.putBoolean(SAVEDBOOLEAN, true);
             editor.apply();
-
         }
     }
 
