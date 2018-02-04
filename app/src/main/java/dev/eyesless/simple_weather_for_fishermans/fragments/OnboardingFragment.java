@@ -1,0 +1,75 @@
+package dev.eyesless.simple_weather_for_fishermans.fragments;
+
+import android.content.Context;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+
+import dev.eyesless.simple_weather_for_fishermans.AMainIntwerface;
+import dev.eyesless.simple_weather_for_fishermans.R;
+
+
+public class OnboardingFragment extends Fragment {
+
+    private AMainIntwerface mActivityCallback;
+    private View parentview;
+
+
+    public OnboardingFragment() {
+    }
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_onboarding, container, false);
+
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof AMainIntwerface) {
+            mActivityCallback = (AMainIntwerface) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement AMainIntwerface");
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        this.parentview = getView();
+        Button okButton = null;
+        if (parentview != null) {
+            okButton = (Button) parentview.findViewById(R.id.ok_with_onboarding);
+            okButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mActivityCallback.hideonboarding();
+                }
+            });
+        }
+
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mActivityCallback = null;
+    }
+
+}

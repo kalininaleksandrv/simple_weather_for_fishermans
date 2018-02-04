@@ -27,6 +27,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 
 import dev.eyesless.simple_weather_for_fishermans.fragments.AboutDialogFragment;
 import dev.eyesless.simple_weather_for_fishermans.fragments.CentralFragmentImpl;
+import dev.eyesless.simple_weather_for_fishermans.fragments.OnboardingFragment;
 
 public class AMainActivity extends AppCompatActivity implements AMainIntwerface, NavigationView.OnNavigationItemSelectedListener {
 
@@ -170,11 +171,38 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface,
        presenter.isFirstLounch();
     }
 
+    //we're show onboarding and then "trems and conditions" showDialogAbout
+    @Override
+    public void showOnboarding() {
+        frameAbover(new OnboardingFragment(), "Onboarding");
+    }
+
+    //we're show onboarding and then "trems and conditions" showDialogAbout
+    @Override
+    public void hideonboarding() {
+        //hide onboarding fragment, and main fragment is remaining
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag("Onboarding");
+        if(fragment != null) {
+            getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+        }
+        //show tems and conditions
+        showDialogAbout();
+    }
 
     //main method for remoove frames when clicked
     private void frameRemoover(Fragment fragment, String mytag) {
         android.support.v4.app.FragmentTransaction fratramain = getSupportFragmentManager().beginTransaction();
         fratramain.replace(R.id.replaced_main, fragment, mytag);
+        fratramain.addToBackStack(null);
+        fratramain.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        fratramain.commit();
+    }
+
+    //method for show fragment above old fragment
+
+    private void frameAbover(Fragment fragment, String mytag) {
+        android.support.v4.app.FragmentTransaction fratramain = getSupportFragmentManager().beginTransaction();
+        fratramain.add(R.id.replaced_main, fragment, mytag);
         fratramain.addToBackStack(null);
         fratramain.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         fratramain.commit();

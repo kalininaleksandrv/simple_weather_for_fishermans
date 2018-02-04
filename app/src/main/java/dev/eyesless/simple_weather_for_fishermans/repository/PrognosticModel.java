@@ -83,14 +83,16 @@ public class PrognosticModel {
             int disastercounter = 0;
 
             int [] temperatureArray = new int[5];
-
             double [] pressureArray = new double[5];
+            double [] precipArray = new double[5];
+
 
             //filling arrays by data
             for (int i = 0; i < PROGNOSE_DEPTH; i++) {
 
                 temperatureArray[i] = isTempretureGood(incomedata.get(startingday+i).getTemperatureMin(), incomedata.get(startingday+i).getTemperatureMax());
                 pressureArray [i] = incomedata.get(startingday+i).getPressure();
+                precipArray[i] = incomedata.get(startingday+i).getPrecipIntensity();
             }
 
             //effect of temperature
@@ -166,6 +168,11 @@ public class PrognosticModel {
                     break;
             }
 
+            // TODO: 28.01.2018 precip intensity
+            // 0.5-1 liitle rain part day, 1-2 rain part day little rain all day, 1.5-2.5 rain all day, 2,5-4 heavy rain all day its mm per hour so 1mm = 24 mm/day,
+            // officialy havy rain - 30-100 mm/day, wery havy rain - 100-200 mm/day
+            //should programmed effects of 1 - "firs day rain" 2 - "third day rain" 3 - "first day dry after long rain"
+
 
             Log.i("MY_TAG", "Starting day is: " + String.valueOf(startingday));
             Log.i("MY_TAG", "Array is: " + Arrays.toString(temperatureArray));
@@ -195,6 +202,7 @@ public class PrognosticModel {
                 }
             }
 
+            //increasing starting day (j)
             startingday++;
 
         }
