@@ -36,6 +36,7 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface,
     private ActionBarDrawerToggle drawerToggle;
     private DrawerLayout drawer;
     private final AMainPresenter presenter;
+    int counter = 0;
 
     public AMainActivity() {
         presenter = new AMainPresenter(this);
@@ -168,6 +169,7 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface,
     }
 
     private void isFirstLounch() {
+        //we show terms and conditions if its first lounch
        presenter.isFirstLounch();
     }
 
@@ -185,8 +187,6 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface,
         if(fragment != null) {
             getSupportFragmentManager().beginTransaction().remove(fragment).commit();
         }
-        //show tems and conditions
-        showDialogAbout();
     }
 
     //main method for remoove frames when clicked
@@ -206,6 +206,15 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface,
         fratramain.addToBackStack(null);
         fratramain.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         fratramain.commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+                if (counter == 0){
+                    toastmaker(getString(R.string.secondbackpressed));
+                    counter++;
+                }
     }
 
     //create dialog window "about programm", this method could be call whether from AMainActivity or from AmainPresenter;

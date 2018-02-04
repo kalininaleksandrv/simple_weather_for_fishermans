@@ -26,7 +26,7 @@ class AMainPresenter {
 
         if (!getFirstLounch()) {
             //first call method to show alert "about"
-            aMainIntwerface.showOnboarding();
+            aMainIntwerface.showDialogAbout();
             //if getFirsLounch returns true means its first lounch
             //second add value in shared prefs
             sharedpref = context.getSharedPreferences(FIRSTLOUNCHPREF, Context.MODE_PRIVATE);

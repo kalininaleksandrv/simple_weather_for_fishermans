@@ -49,6 +49,7 @@
         all possible risks of this using, and you’re agreed, that you , and only you completely responsible for any of consequences,
         of this action. Otherwise, you should stop using and should delete this app from your device immediately.</string>
     <string name="arrow">arrow</string>
+    <string name="secondbackpressed">press one more time to exit app</string>
 
 
 </resources>

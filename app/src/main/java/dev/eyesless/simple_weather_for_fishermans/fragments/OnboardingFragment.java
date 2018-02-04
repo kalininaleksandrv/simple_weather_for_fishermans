@@ -34,9 +34,7 @@ public class OnboardingFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_onboarding, container, false);
-
     }
-
 
     @Override
     public void onAttach(Context context) {
@@ -53,7 +51,9 @@ public class OnboardingFragment extends Fragment {
     public void onStart() {
         super.onStart();
         this.parentview = getView();
-        Button okButton = null;
+
+        //hide onboarding if user click GOT IT
+        Button okButton;
         if (parentview != null) {
             okButton = (Button) parentview.findViewById(R.id.ok_with_onboarding);
             okButton.setOnClickListener(new View.OnClickListener() {
@@ -63,7 +63,6 @@ public class OnboardingFragment extends Fragment {
                 }
             });
         }
-
     }
 
     @Override
@@ -71,5 +70,4 @@ public class OnboardingFragment extends Fragment {
         super.onDetach();
         mActivityCallback = null;
     }
-
 }

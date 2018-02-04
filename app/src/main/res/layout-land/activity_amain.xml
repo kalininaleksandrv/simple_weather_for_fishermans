@@ -33,6 +33,14 @@
 
         </android.support.v7.widget.Toolbar>
 
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:srcCompat="@drawable/nature_land"
+            android:scaleType="fitXY"
+            android:contentDescription="@string/arrow" />
+
 
         <FrameLayout
             android:id="@+id/replaced_main"
