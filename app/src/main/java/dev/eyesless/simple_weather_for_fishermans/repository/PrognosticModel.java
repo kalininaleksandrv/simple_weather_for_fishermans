@@ -21,6 +21,13 @@ public class PrognosticModel {
     private final static int PROG_TEMPRETURE_MAX_BAD = 30;
     private final static int PROG_TEMPRETURE_MIN_BAD = -22;
 
+    private final static String WEATHER_GOOD = "good";
+    private final static String WEATHER_AVERAGE = "average";
+    private final static String WEATHER_DOWNWARD = "downward";
+    private final static String WEATHER_BAD = "bad";
+    private final static String WEATHER_NO_DATA = "nodata";
+
+
     private final static int PROGNOSE_DEPTH = 5;
     private final static int DAYS_COUNT = 7;
 
@@ -185,14 +192,14 @@ public class PrognosticModel {
                 if ( max(optimumcounter, worsecounter) > max(badcounter, disastercounter)){
 
                     if (optimumcounter > worsecounter){
-                        dayEstimate[j]="good";
+                        dayEstimate[j]=WEATHER_GOOD;
                     } else {
-                        dayEstimate[j]="average";
+                        dayEstimate[j]=WEATHER_AVERAGE;
                     }
                 } else if (badcounter > disastercounter) {
-                    dayEstimate[j]="downward";
+                    dayEstimate[j]=WEATHER_DOWNWARD;
                 } else {
-                    dayEstimate[j]="bad";
+                    dayEstimate[j]=WEATHER_BAD;
                 }
             } else {
                 //if pressure changing fast 3 and more days bite will be bad despite other effects
