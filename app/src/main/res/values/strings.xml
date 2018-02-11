@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Simple_Weather_For_Fishermans</string>
+    <string name="app_name">Nibble weather</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_closed">Closed</string>
     <string name="about">About app</string>

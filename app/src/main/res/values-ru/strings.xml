@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Просто погода для рыбаков</string>
+    <string name="app_name">Клевая погода</string>
     <string name="drawer_open">Открыт</string>
     <string name="drawer_closed">Закрыт</string>
     <string name="about">О приложении</string>
