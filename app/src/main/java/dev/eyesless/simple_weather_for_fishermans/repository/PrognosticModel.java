@@ -20,6 +20,7 @@ public class PrognosticModel {
     private final static int PROG_TEMPRETURE_MIN_WORSE = -14;
     private final static int PROG_TEMPRETURE_MAX_BAD = 30;
     private final static int PROG_TEMPRETURE_MIN_BAD = -22;
+    private final static int PROG_IS_WARM_PART = 7;
 
     private final static String WEATHER_GOOD = "good";
     private final static String WEATHER_AVERAGE = "average";
@@ -44,7 +45,7 @@ public class PrognosticModel {
         mintemparray = new double[13];
     }
 
-    //in this method wee provide incoming list od Datum to outcoming.
+    //in this method wee provide incoming list of Datum to outcoming.
     public List<Datum> createBiteList(){
             if (incomedata != null) {
                 outcomedata = new ArrayList<>();
@@ -93,10 +94,10 @@ public class PrognosticModel {
             double [] pressureArray = new double[5];
             double [] precipArray = new double[5];
 
+            boolean isWarmPartOfYear = isWarmPartOfYear(incomedata.get(0).getTemperatureMin(), incomedata.get(0).getTemperatureMax());
 
             //filling arrays by data
             for (int i = 0; i < PROGNOSE_DEPTH; i++) {
-
                 temperatureArray[i] = isTempretureGood(incomedata.get(startingday+i).getTemperatureMin(), incomedata.get(startingday+i).getTemperatureMax());
                 pressureArray [i] = incomedata.get(startingday+i).getPressure();
                 precipArray[i] = incomedata.get(startingday+i).getPrecipIntensity();
@@ -175,10 +176,37 @@ public class PrognosticModel {
                     break;
             }
 
-            // TODO: 28.01.2018 precip intensity
             // 0.5-1 liitle rain part day, 1-2 rain part day little rain all day, 1.5-2.5 rain all day, 2,5-4 heavy rain all day its mm per hour so 1mm = 24 mm/day,
             // officialy havy rain - 30-100 mm/day, wery havy rain - 100-200 mm/day
-            //should programmed effects of 1 - "firs day rain" 2 - "third day rain" 3 - "first day dry after long rain"
+
+            //first day rain after long summer dry or first day dry after long rains
+            if (isWarmPartOfYear){ //working only in warm part of year
+
+                Log.i("MY_TAG", "PERCIP CURRENT: " + String.valueOf(precipArray[4]));
+                Log.i("MY_TAG", "PERCIP ARRAY: " + String.valueOf(precipArray[3]) + " "+ String.valueOf(precipArray[2]) + " "+ String.valueOf(precipArray[1]) + " ");
+
+                double precipcompareindex = (Math.abs((precipArray[3]+precipArray[2]+precipArray[1])/3)-precipArray[4]); //difference between current day and average value of 3 previous days
+
+                if (precipArray[3]>0.5 && precipArray[2]>0.5 && precipArray[1]>0.5){
+
+                    Log.i("MY_TAG", "LONG RAINS CONDITION");
+
+                    optimumcounter--;
+                    worsecounter ++;
+                    badcounter++;
+                }
+
+                if(precipArray[4]<0.5 && precipcompareindex>1){ //found sharpness of precipitation intensity
+
+                    Log.i("MY_TAG", "FIRST DAY precipitation CHANGING CONDITION");
+
+                    optimumcounter+=3;
+                    worsecounter --;
+                    badcounter=0;
+                    disastercounter=0;
+                }
+            }
+
 
 
             Log.i("MY_TAG", "Starting day is: " + String.valueOf(startingday));
@@ -220,9 +248,19 @@ public class PrognosticModel {
 
     }
 
+    private boolean isWarmPartOfYear(double temperatureMin, double temperatureMax) {
+
+        double incometemperature = (temperatureMin+temperatureMax)/2;
+
+
+        return incometemperature > PROG_IS_WARM_PART;
+    }
+
     private int isTempretureGood(double temperatureMin, double temperatureMax){
 
         double incometemperature = (temperatureMin+temperatureMax)/2;
+
+
 
         int temperaturescore;
 

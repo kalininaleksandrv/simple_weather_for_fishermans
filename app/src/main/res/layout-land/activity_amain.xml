@@ -16,31 +16,28 @@
         android:layout_height="match_parent"
         >
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:minHeight="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:theme="@style/ToolBarStyle"
-            app:popupTheme="@style/ToolBarPopStyle"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="0dp"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginLeft="0dp"
-            app:layout_constraintLeft_toLeftOf="parent">
-
-        </android.support.v7.widget.Toolbar>
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:srcCompat="@drawable/nature_land"
+            android:contentDescription="@string/arrow"
             android:scaleType="fitXY"
-            android:contentDescription="@string/arrow" />
+            app:srcCompat="@drawable/nature_land" />
 
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:popupTheme="@style/ToolBarPopStyle"
+            app:theme="@style/ToolBarStyle">
+
+        </android.support.v7.widget.Toolbar>
 
         <FrameLayout
             android:id="@+id/replaced_main"
@@ -59,7 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/guideline_main_1"
-            app:layout_constraintGuide_percent="0.1"
+            app:layout_constraintGuide_percent="0.08"
             android:orientation="horizontal" />
 
 
