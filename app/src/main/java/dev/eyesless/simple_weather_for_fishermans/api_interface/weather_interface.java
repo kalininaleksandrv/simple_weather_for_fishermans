@@ -48,8 +48,8 @@ public interface weather_interface {
                 OkHttpClient client = new OkHttpClient.Builder()
                         .addInterceptor(logging) // TODO: 15.10.2017 remoove before production
                         .retryOnConnectionFailure(false)
-                        .connectTimeout(5, TimeUnit.SECONDS)
-                        .readTimeout(1, TimeUnit.SECONDS)
+                        .connectTimeout(10, TimeUnit.SECONDS)
+                        .readTimeout(20, TimeUnit.SECONDS)
                         .build();
 
                 Retrofit retrofit = new Retrofit.Builder()

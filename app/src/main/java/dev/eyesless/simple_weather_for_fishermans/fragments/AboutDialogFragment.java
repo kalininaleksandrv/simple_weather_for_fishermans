@@ -30,7 +30,7 @@ public class AboutDialogFragment extends DialogFragment {
         super.onCreateDialog(savedInstanceState);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.custom_alert, null); //todo Warning:(29, 61) Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout's root element)
+        View view = inflater.inflate(R.layout.custom_alert, null);
 
         //add clicklistnet to hold "got it" button pressen and show onboarding page
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
