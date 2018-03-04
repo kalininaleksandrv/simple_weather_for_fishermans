@@ -1,9 +1,9 @@
 package dev.eyesless.simple_weather_for_fishermans.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +52,9 @@ public class OnboardingFragment extends Fragment {
         super.onStart();
         this.parentview = getView();
 
+
+
+
         //hide onboarding if user click GOT IT
         Button okButton;
         if (parentview != null) {
@@ -59,6 +62,9 @@ public class OnboardingFragment extends Fragment {
             okButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    //remoove current fragment from backstack to correct work backpressure app exit (additional bask-click needed if not)
+                    FragmentManager mymanager = getFragmentManager();
+                    mymanager.popBackStack();
                     mActivityCallback.hideonboarding();
                 }
             });
@@ -68,6 +74,7 @@ public class OnboardingFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+
         mActivityCallback = null;
     }
 }

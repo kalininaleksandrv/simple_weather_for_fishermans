@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.view.GravityCompat;
@@ -191,17 +192,24 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface,
 
     //main method for remoove frames when clicked
     private void frameRemoover(Fragment fragment, String mytag) {
-        android.support.v4.app.FragmentTransaction fratramain = getSupportFragmentManager().beginTransaction();
+
+        FragmentManager mymanager = getSupportFragmentManager();
+
+        android.support.v4.app.FragmentTransaction fratramain = mymanager.beginTransaction();
         fratramain.replace(R.id.replaced_main, fragment, mytag);
         fratramain.addToBackStack(null);
         fratramain.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         fratramain.commit();
+
+
     }
 
     //method for show fragment above old fragment
 
     private void frameAbover(Fragment fragment, String mytag) {
-        android.support.v4.app.FragmentTransaction fratramain = getSupportFragmentManager().beginTransaction();
+
+        FragmentManager mymanager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction fratramain = mymanager.beginTransaction();
         fratramain.add(R.id.replaced_main, fragment, mytag);
         fratramain.addToBackStack(null);
         fratramain.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);

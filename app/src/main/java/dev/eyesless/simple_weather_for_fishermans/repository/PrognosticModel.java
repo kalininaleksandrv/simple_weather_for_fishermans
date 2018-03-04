@@ -120,9 +120,7 @@ public class PrognosticModel {
                                 if (longitude<=113 && longitude>82 ){
                                     return latitude >= 49 && latitude <= 60;
                                 } else {
-
                                     return false;
-
                                 }
                             }
                         }
