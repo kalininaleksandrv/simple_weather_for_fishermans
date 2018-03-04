@@ -38,15 +38,7 @@ public interface weather_interface {
 
             if (service == null) {
 
-                HttpLoggingInterceptor logging = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
-                    @Override public void log(@NonNull String message) {
-                        Log.e("MY_TAG", "OkHttp: " + message);
-                    }
-                });
-
-                logging.setLevel(BuildConfig.DEBUG ? HttpLoggingInterceptor.Level.BASIC : HttpLoggingInterceptor.Level.NONE);
                 OkHttpClient client = new OkHttpClient.Builder()
-                        .addInterceptor(logging) // TODO: 15.10.2017 remoove before production
                         .retryOnConnectionFailure(false)
                         .connectTimeout(10, TimeUnit.SECONDS)
                         .readTimeout(20, TimeUnit.SECONDS)

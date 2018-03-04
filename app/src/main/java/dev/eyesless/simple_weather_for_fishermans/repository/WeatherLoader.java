@@ -47,7 +47,6 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> {
         this.private_key = dev.eyesless.simple_weather_for_fishermans.Keys.getGoogleMapPrivateKey();
         this.coordinates = args.getString(CentralFragmentPresenter.COORDINATES_IN_BUNDLE); //here is NAME of location
         this.locations = args.getString(CentralFragmentPresenter.LOCATION_IN_BUNDLE); //here is LAT LNG of location
-        Log.e("MY_TAG", "create coordinates loader");
 
     }
 

@@ -202,9 +202,7 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
 
             centralFragment.startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
         } catch (GooglePlayServicesRepairableException e) {
-            Log.e("Failed: Google Play", e.getMessage());
         } catch (GooglePlayServicesNotAvailableException e) {
-            Log.e("Failed: Play . n aval. ", e.getMessage());
         }
     }
 

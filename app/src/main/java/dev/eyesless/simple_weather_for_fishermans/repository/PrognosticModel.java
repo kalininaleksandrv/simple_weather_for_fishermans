@@ -35,14 +35,10 @@ public class PrognosticModel {
     private final List<Datum> incomedata;
     private List<Datum> outcomedata;
 
-    private final double[] maxtemparray;
-    private final double[] mintemparray;
     private final static double PRESSUREDEVIATION = 0.008; //officially changing pressure more than 8% defined as "sharp change"
 
     public PrognosticModel(List<Datum> incomedata) {
         this.incomedata = incomedata;
-        maxtemparray = new double[13];
-        mintemparray = new double[13];
     }
 
     //in this method we provide incoming list of Datum to outcoming.
@@ -94,7 +90,6 @@ public class PrognosticModel {
             String [] splittingstring = incomestring.split(",", 2);
             Double latitude = Double.valueOf(splittingstring[0]);
             Double longitude = Double.valueOf(splittingstring [1]);
-            Log.i("MY_TAG", "Custom coordinates = " + incomestring);
 
             //checking if lant and lng in range of acceptable values
             if (longitude<=-55 && longitude>=-130 ){
@@ -191,10 +186,7 @@ public class PrognosticModel {
                 int temp = temperatureArray[4];
 
                 if ((temperatureArray[3]-temp)>=2 && (temperatureArray[2]-temp)>=2 && (temperatureArray[1]-temp)>=2 && (temperatureArray[0]-temp)>=2){
-
                     optimumcounter++;
-                    Log.i("MY_TAG", "Effect of fast normalising: last day = " + String.valueOf(startingday) + "previous days = " + String.valueOf(temperatureArray[3])+ String.valueOf(temperatureArray[2])+ String.valueOf(temperatureArray[1])+ String.valueOf(temperatureArray[0]));
-
                 }
             }
 
@@ -223,14 +215,12 @@ public class PrognosticModel {
                 case 2 :
                     optimumcounter--;
                     worsecounter++;
-                    Log.i("MY_TAG", "Pressure WORSE");
                     break;
                 case 3 :
                     optimumcounter-=2;
                     worsecounter ++;
                     badcounter ++;
                     pressureAccumulatedEffect++;
-                    Log.i("MY_TAG", "Pressure BAD");
                     break;
                 case 4 :
                     optimumcounter-=3;
@@ -238,7 +228,6 @@ public class PrognosticModel {
                     badcounter+=3;
                     disastercounter++;
                     pressureAccumulatedEffect++;
-                    Log.i("MY_TAG", "Pressure DISASTER");
                     break;
             }
 
@@ -248,39 +237,22 @@ public class PrognosticModel {
             //first day rain after long summer dry or first day dry after long rains
             if (isWarmPartOfYear){ //working only in warm part of year
 
-                Log.i("MY_TAG", "PERCIP CURRENT: " + String.valueOf(precipArray[4]));
-                Log.i("MY_TAG", "PERCIP ARRAY: " + String.valueOf(precipArray[3]) + " "+ String.valueOf(precipArray[2]) + " "+ String.valueOf(precipArray[1]) + " ");
 
                 double precipcompareindex = (Math.abs((precipArray[3]+precipArray[2]+precipArray[1])/3)-precipArray[4]); //difference between current day and average value of 3 previous days
 
                 if (precipArray[3]>0.5 && precipArray[2]>0.5 && precipArray[1]>0.5){
-
-                    Log.i("MY_TAG", "LONG RAINS CONDITION");
-
                     optimumcounter--;
                     worsecounter ++;
                     badcounter++;
                 }
 
                 if(precipArray[4]<0.5 && precipcompareindex>1){ //found sharpness of precipitation intensity
-
-                    Log.i("MY_TAG", "FIRST DAY precipitation CHANGING CONDITION");
-
                     optimumcounter+=3;
                     worsecounter --;
                     badcounter=0;
                     disastercounter=0;
                 }
             }
-
-
-
-            Log.i("MY_TAG", "Starting day is: " + String.valueOf(startingday));
-            Log.i("MY_TAG", "Array is: " + Arrays.toString(temperatureArray));
-            Log.i("MY_TAG", "Counter is" + " disaster = " + String.valueOf(disastercounter)
-                    + " bad = " + String.valueOf(badcounter)
-                    + " worse = " + String.valueOf(worsecounter)
-                    + " optimum = " + String.valueOf(optimumcounter));
 
             if (pressureAccumulatedEffect<3) {
                 if ( max(optimumcounter, worsecounter) > max(badcounter, disastercounter)){
@@ -299,7 +271,6 @@ public class PrognosticModel {
                 //if pressure changing fast 3 and more days bite will be bad despite other effects
                 if (pressureAccumulatedEffect>=3){
                         dayEstimate[j]="bad";
-                        Log.i("MY_TAG", "Pressure ACCUM BAD");
                 }
             }
 
@@ -307,8 +278,6 @@ public class PrognosticModel {
             startingday++;
 
         }
-
-        Log.i("MY_TAG", "Days estimate array is: " + Arrays.toString(dayEstimate));
 
         return dayEstimate;
 
