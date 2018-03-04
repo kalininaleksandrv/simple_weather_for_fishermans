@@ -45,7 +45,7 @@ public class PrognosticModel {
         mintemparray = new double[13];
     }
 
-    //in this method wee provide incoming list of Datum to outcoming.
+    //in this method we provide incoming list of Datum to outcoming.
     public List<Datum> createBiteList(){
             if (incomedata != null) {
                 outcomedata = new ArrayList<>();
@@ -53,7 +53,15 @@ public class PrognosticModel {
                 Iterator<Datum> in_iterator = incomedata.iterator();
                 int count = 0;
 
-                String [] arrayOfPrognose = getIncomeData();
+                String[] arrayOfPrognose;
+
+                boolean isccordrange = isCordinatesInRange(incomedata);
+
+                if (isccordrange) {
+                    arrayOfPrognose = getIncomeData();
+                } else {
+                    arrayOfPrognose = getNoData();
+                }
 
                 while (in_iterator.hasNext()) {
                     Datum defoultdatum = in_iterator.next();
@@ -73,6 +81,66 @@ public class PrognosticModel {
             } else {
                 return null;
             }
+    }
+
+    //check coordinates belong to range
+    private boolean isCordinatesInRange(List<Datum> incomedata){
+
+           //there is String with coordinates, we put in incomedata in WeatherLoader
+            String incomestring = incomedata.get(4).getCustomccordinates();
+
+        if (incomestring!=null) {
+            //spliting one string to walues and convert it to double
+            String [] splittingstring = incomestring.split(",", 2);
+            Double latitude = Double.valueOf(splittingstring[0]);
+            Double longitude = Double.valueOf(splittingstring [1]);
+            Log.i("MY_TAG", "Custom coordinates = " + incomestring);
+
+            //checking if lant and lng in range of acceptable values
+            if (longitude<=-55 && longitude>=-130 ){
+                return latitude >= 38 && latitude <= 62;
+            } else {
+
+                if (longitude<=21 && longitude>=-10 ){
+                    return latitude >= 42 && latitude <= 60;
+                } else {
+
+                    if (longitude<=50 && longitude>22 ){
+                        return latitude >= 43 && latitude <= 65;
+                    } else {
+
+                        if (longitude<=62 && longitude>51 ){
+                            return latitude >= 51 && latitude <= 67;
+                        } else {
+
+                            if (longitude<=81 && longitude>63 ){
+                                return latitude >= 53 && latitude <= 66;
+                            } else {
+
+                                if (longitude<=113 && longitude>82 ){
+                                    return latitude >= 49 && latitude <= 60;
+                                } else {
+
+                                    return false;
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            return true;
+        }
+    }
+
+    //if coordinates NOT belong to range fill array NODATA value
+    private  String  [] getNoData (){
+        String  [] dayEstimate = new String [DAYS_COUNT];
+        for (int j = 0; j < DAYS_COUNT; j++) {
+            dayEstimate[j] = WEATHER_NO_DATA;
+        }
+        return dayEstimate;
     }
 
     private String [] getIncomeData() {
