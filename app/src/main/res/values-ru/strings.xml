@@ -27,7 +27,7 @@
     <string name="north">северный</string>
     <string name="wind">ветер: </string>
     <string name="pressure">давление: </string>
-    <string name="percipe">влажн: </string>
+    <string name="percipe">вероятн.осад: </string>
     <string name="mmrtst">мм. рт. ст.</string>
     <string name="nogps">GPS недоступен или не получено разрешение на использование</string>
     <string name="gpsenabled">GPS включен, можно использовать кнопку "компас"</string>

@@ -26,8 +26,8 @@
     <string name="nordwest">north-werst</string>
     <string name="north">north</string>
     <string name="wind">wind: </string>
-    <string name="pressure">pressure: </string>
-    <string name="percipe">perc.: </string>
+    <string name="pressure">pressure:</string>
+    <string name="percipe">perc.prob:</string>
     <string name="mmrtst">mmHg</string>
     <string name="nogps">GPS unavailable or no access permission</string>
     <string name="gpsenabled">GPS enabled, you can use compass button</string>
