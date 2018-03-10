@@ -1,9 +1,6 @@
 package dev.eyesless.simple_weather_for_fishermans.repository;
 
-import android.util.Log;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 

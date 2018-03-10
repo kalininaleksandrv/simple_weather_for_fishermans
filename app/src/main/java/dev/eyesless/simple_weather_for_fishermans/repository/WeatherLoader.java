@@ -1,15 +1,10 @@
 package dev.eyesless.simple_weather_for_fishermans.repository;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
-import android.util.Log;
-
-import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import dev.eyesless.simple_weather_for_fishermans.api_interface.geocoding_interfaces;
