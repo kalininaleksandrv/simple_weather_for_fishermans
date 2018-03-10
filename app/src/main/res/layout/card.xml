@@ -35,7 +35,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/nodata_close"
-                android:textSize="@dimen/text_size_big"
+                android:textSize="@dimen/text_size"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
                 android:layout_marginTop="8dp"
                 app:layout_constraintTop_toTopOf="@id/textView_data"

@@ -73,9 +73,9 @@ class RVadapter extends RecyclerView.Adapter<RVadapter.WeatherViewHolder>{
         holder.temperature.setText(temperature);
         String wind = context.getString(R.string.wind) + " " + windfrom(weatherdataset.get(position).getWindBearing());
         holder.wind.setText(wind);
-        String pressure = context.getString(R.string.pressure) + String.valueOf((int)weatherdataset.get(position).getPressure())+" "+ context.getString(R.string.mmrtst); //25,4 mm = 1 inch
+        String pressure = context.getString(R.string.pressure) + " " + String.valueOf((int)(weatherdataset.get(position).getPressure()*0.75))+" "+ context.getString(R.string.mmrtst); //25,4 mm = 1 inch
         holder.pressure.setText(pressure);
-        String percipe = context.getString(R.string.percipe) + String.valueOf((int)(weatherdataset.get(position).getPrecipProbability()*100)+" %");
+        String percipe = context.getString(R.string.percipe) + " " + String.valueOf((int)(weatherdataset.get(position).getPrecipProbability()*100)+" %");
         holder.percipe.setText(percipe);
         holder.date.setText(dateconverter(weatherdataset.get(position).getTime()));
         holder.weather.setImageResource(getimageresfromselector(weatherdataset.get(position).getIcon()));

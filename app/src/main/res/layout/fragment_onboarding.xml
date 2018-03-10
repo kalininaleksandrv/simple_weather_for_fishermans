@@ -1,8 +1,7 @@
 <android.support.constraint.ConstraintLayout
-
+    android:id="@+id/constraint_onboarding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/swipe"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -65,15 +64,16 @@
         app:layout_constraintStart_toEndOf="@+id/imageView_straihgtarrow"
         app:layout_constraintTop_toBottomOf="@+id/imageView_inclinedarrow" />
 
-    <Button
+    <TextView
         android:id="@+id/ok_with_onboarding"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:background="@color/colorAccent"
-        android:text="@string/gotit"
+        android:text="@string/tapanyplace"
+        android:textColor="@color/colorAccent"
+        android:textSize="@dimen/text_size_big"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
