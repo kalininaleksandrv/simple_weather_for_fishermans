@@ -2,12 +2,14 @@ package dev.eyesless.simple_weather_for_fishermans.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 
 import dev.eyesless.simple_weather_for_fishermans.AMainIntwerface;
 import dev.eyesless.simple_weather_for_fishermans.R;
@@ -56,10 +58,12 @@ public class OnboardingFragment extends Fragment {
 
 
         //hide onboarding if user click GOT IT
-        Button okButton;
+
+        ConstraintLayout constraintLayout;
+
         if (parentview != null) {
-            okButton = (Button) parentview.findViewById(R.id.ok_with_onboarding);
-            okButton.setOnClickListener(new View.OnClickListener() {
+            constraintLayout = (ConstraintLayout) parentview.findViewById(R.id.constraint_onboarding);
+            constraintLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //remoove current fragment from backstack to correct work backpressure app exit (additional bask-click needed if not)

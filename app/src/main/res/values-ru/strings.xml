@@ -50,4 +50,6 @@
         прекратить использование приложения и удалить его с Вашего устройства.</string>
     <string name="arrow">стрелка</string>
     <string name="secondbackpressed">нажмите еще раз, чтобы выйти из приложения</string>
+    <string name="tapanyplace">Прикоснитесь к экрану, чтобы продолжить</string>
+
 </resources>

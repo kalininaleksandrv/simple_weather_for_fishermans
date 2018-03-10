@@ -50,6 +50,7 @@
         of this action. Otherwise, you should stop using and should delete this app from your device immediately.</string>
     <string name="arrow">arrow</string>
     <string name="secondbackpressed">press one more time to exit app</string>
+    <string name="tapanyplace">Tap on screen to continue</string>
 
 
 </resources>

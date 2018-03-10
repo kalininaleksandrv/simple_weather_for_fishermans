@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/swipe"
+    android:id="@+id/constraint_onboarding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWithTransparency"
@@ -28,7 +28,6 @@
         android:id="@+id/onboarding_straight_arrow"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:background="@drawable/custom_textview"
@@ -57,31 +56,29 @@
         android:id="@+id/onboarding_inclined_arrow"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="24dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/custom_textview"
         android:gravity="end"
         android:text="@string/inclinedarrow"
-        android:textSize="@dimen/text_size_small"
         android:textColor="@color/colorAccent"
+        android:textSize="@dimen/text_size_small"
         app:layout_constraintBottom_toTopOf="@+id/imageView_oval"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/onboarding_straight_arrow"
         app:layout_constraintWidth_default="wrap" />
 
-    <Button
+    <TextView
         android:id="@+id/ok_with_onboarding"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:background="@color/colorAccent"
-        android:text="@string/gotit"
+        android:text="@string/tapanyplace"
+        android:textColor="@color/colorAccent"
+        android:textSize="@dimen/text_size"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <ImageView
         android:id="@+id/imageView_oval"
