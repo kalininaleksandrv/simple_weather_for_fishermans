@@ -25,7 +25,6 @@ public interface geocoding_interfaces {
 
             if (service == null) {
 
-
                 OkHttpClient client = new OkHttpClient.Builder()
                         .retryOnConnectionFailure(false)
                         .connectTimeout(5, TimeUnit.SECONDS)
@@ -42,7 +41,6 @@ public interface geocoding_interfaces {
 
                 return service;
             }
-
             else {
                 return service;
             }
