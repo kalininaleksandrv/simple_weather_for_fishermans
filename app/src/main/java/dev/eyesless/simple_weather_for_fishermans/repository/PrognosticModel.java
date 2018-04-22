@@ -97,11 +97,11 @@ public class PrognosticModel {
                     return latitude >= 42 && latitude <= 60;
                 } else {
 
-                    if (longitude<=50 && longitude>22 ){
+                    if (longitude<=50 && longitude>21 ){
                         return latitude >= 43 && latitude <= 65;
                     } else {
 
-                        if (longitude<=62 && longitude>51 ){
+                        if (longitude<=62 && longitude>50 ){
                             return latitude >= 51 && latitude <= 67;
                         } else {
 
@@ -109,7 +109,7 @@ public class PrognosticModel {
                                 return latitude >= 53 && latitude <= 66;
                             } else {
 
-                                if (longitude<=113 && longitude>82 ){
+                                if (longitude<=113 && longitude>81 ){
                                     return latitude >= 49 && latitude <= 60;
                                 } else {
                                     return false;
