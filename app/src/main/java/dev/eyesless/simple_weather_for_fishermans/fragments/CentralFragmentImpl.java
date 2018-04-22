@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -52,6 +53,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     private LoaderManager mLoader;
     private final static String CURRENT_LOC = "currentloc";
     private String currentcocation;
+    private FloatingActionButton cf_floatingbutton;
 
 
     public CentralFragmentImpl() {
@@ -97,6 +99,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         startSearch();
         cf_defoultloc.setOnClickListener(new cfIBtnOnClickListner());
         cf_imagebutton_find.setOnClickListener(new cfIBtnOnClickListner());
+        cf_floatingbutton.setOnClickListener(new cfIBtnOnClickListner());
         recyclerparamsinit();
         cf_swipe.setOnRefreshListener(this);
     }
@@ -145,6 +148,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         cf_recycler = (RecyclerView) parentview.findViewById(R.id.recycler_view_cf);
         cf_progress = (ProgressBar) parentview.findViewById(R.id.progressBar_cf);
         cf_swipe = (SwipeRefreshLayout) parentview.findViewById(R.id.swipe);
+        cf_floatingbutton = (FloatingActionButton) parentview.findViewById(R.id.floatingActionButton_cf);
     }
 
     @Override
@@ -185,6 +189,9 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
                     break;
                 case R.id.btn_img_find_coords:
                     cfpresenter.getGpsPermission(CentralFragmentImpl.this);
+                    break;
+                case R.id.floatingActionButton_cf:
+                    startActivityFromPresenter();
                     break;
             }
         }
