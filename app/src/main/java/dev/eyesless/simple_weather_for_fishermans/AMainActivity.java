@@ -264,7 +264,7 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface,
                 Intent myintent = ShareCompat.IntentBuilder.from(AMainActivity.this)
                         .setEmailTo(new String[]{Keys.EMAIL_ADRESS})
                         .setSubject(getString(R.string.email_subj))
-                        .setType("text/plain")
+                        .setType("message/partial")
                         .getIntent();
                 Intent choosedintent = Intent.createChooser(myintent, getResources().getString(R.string.chooseemailapp));
                 startActivity(choosedintent);
