@@ -141,9 +141,10 @@
          android:layout_marginBottom="64dp"
          android:layout_marginEnd="32dp"
          android:clickable="true"
+         app:backgroundTint="@color/colorPrimaryDark"
          app:layout_constraintBottom_toBottomOf="parent"
          app:layout_constraintEnd_toEndOf="parent"
-         app:rippleColor="@color/colorPrimaryDark"
+         app:rippleColor="@color/colorAccent"
          app:srcCompat="@drawable/plus" />
 
 </android.support.constraint.ConstraintLayout>
