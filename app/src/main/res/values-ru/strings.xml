@@ -51,5 +51,6 @@
     <string name="arrow">стрелка</string>
     <string name="secondbackpressed">нажмите еще раз, чтобы выйти из приложения</string>
     <string name="tapanyplace">Прикоснитесь к экрану, чтобы продолжить</string>
+    <string name="chooseemailapp">Выберите ПОЧТОВОЕ приложение (НЕ мессенджер)</string>
 
 </resources>

@@ -266,7 +266,8 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface,
                         .setSubject(getString(R.string.email_subj))
                         .setType("text/plain")
                         .getIntent();
-                startActivity(myintent);
+                Intent choosedintent = Intent.createChooser(myintent, getResources().getString(R.string.chooseemailapp));
+                startActivity(choosedintent);
             } catch (ActivityNotFoundException e) {
                 toastmaker(getString(R.string.nosuchactivity));
             }
