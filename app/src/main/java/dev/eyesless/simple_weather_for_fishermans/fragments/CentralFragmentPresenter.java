@@ -59,8 +59,7 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
     final static String DEFOULT_LOC = "First, Lounch";
     private final static String GPS_LOC = "GPS";
     private String autocompleted;
-    final static int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
-    final static int GPS_ENABLER_REQUEST_CODE = 2;
+
     public final static String COORDINATES_IN_BUNDLE = "coords";
     public final static String LOCATION_IN_BUNDLE = "locationinbundle";
     private LoaderManager mLoader;
@@ -80,7 +79,9 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
     private final static String SAVEDTIME = "savedtime";
     private final static long DEFTIMEOFDELAY = 3600000;
 
-    private static final int REQUEST_CHECK_SETTINGS = 0x1;
+    public final static int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+    public final static int GPS_ENABLER_REQUEST_CODE = 2;
+    public final static int REQUEST_CHECK_SETTINGS = 3;
 
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationRequest mLocationRequest;

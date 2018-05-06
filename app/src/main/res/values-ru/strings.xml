@@ -52,5 +52,6 @@
     <string name="secondbackpressed">нажмите еще раз, чтобы выйти из приложения</string>
     <string name="tapanyplace">Прикоснитесь к экрану, чтобы продолжить</string>
     <string name="chooseemailapp">Выберите ПОЧТОВОЕ приложение (НЕ мессенджер)</string>
+    <string name="pressonemoretime">Нажмите на значок компаса, если хотите получить координаты</string>
 
 </resources>

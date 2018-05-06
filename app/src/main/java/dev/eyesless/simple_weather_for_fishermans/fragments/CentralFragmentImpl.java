@@ -1,6 +1,7 @@
 package dev.eyesless.simple_weather_for_fishermans.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.Status;
@@ -203,33 +205,49 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         cfpresenter.startActivity(this);
     }
 
-    //result of autocompleet transfering to Central Fragment
+//    //result of autocompleet transfering to Central Fragment
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CentralFragmentPresenter.PLACE_AUTOCOMPLETE_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
 
-                Place place = PlaceAutocomplete.getPlace(mActivity, data);
+            case CentralFragmentPresenter.PLACE_AUTOCOMPLETE_REQUEST_CODE:
 
-                cfpresenter.setAutocompleted(place.getAddress().toString());
-                cfpresenter.startSearch(true);
-                cf_progress.setVisibility(View.VISIBLE);
-                cf_trytoload.setVisibility(View.VISIBLE);
+                switch (resultCode){
 
-            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                Status status = PlaceAutocomplete.getStatus(mActivity, data);
-                mActivity.toastmaker(getResources().getString(R.string.autocompleeterror));
+                    case RESULT_OK:
 
-            } else if (resultCode == RESULT_CANCELED) {
-            }
-        }
+                        Place place = PlaceAutocomplete.getPlace(mActivity, data);
+                        cfpresenter.setAutocompleted(place.getAddress().toString());
+                        cfpresenter.startSearch(true);
+                        cf_progress.setVisibility(View.VISIBLE);
+                        cf_trytoload.setVisibility(View.VISIBLE);
+                        break;
 
-        if (requestCode == CentralFragmentPresenter.GPS_ENABLER_REQUEST_CODE){
+                    case PlaceAutocomplete.RESULT_ERROR:
 
-            if (resultCode == RESULT_OK){
-                cfpresenter.getGpsPermission(CentralFragmentImpl.this);
-            } else if (resultCode == RESULT_CANCELED) {
-            }
+                        Status status = PlaceAutocomplete.getStatus(mActivity, data);
+                        mActivity.toastmaker(getResources().getString(R.string.autocompleeterror));
+                        break;
+
+                    case RESULT_CANCELED:
+                        break;
+
+                }break;
+
+            case CentralFragmentPresenter.GPS_ENABLER_REQUEST_CODE:
+
+                switch (resultCode){
+
+                    case RESULT_OK:
+
+                        mActivity.toastmaker(getResources().getString(R.string.pressonemoretime));
+                        break;
+
+                    case RESULT_CANCELED:
+                        break;
+
+                }break;
         }
     }
 

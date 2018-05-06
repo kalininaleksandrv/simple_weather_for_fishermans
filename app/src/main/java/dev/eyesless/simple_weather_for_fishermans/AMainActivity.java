@@ -25,9 +25,13 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 
 import dev.eyesless.simple_weather_for_fishermans.fragments.AboutDialogFragment;
 import dev.eyesless.simple_weather_for_fishermans.fragments.CentralFragmentImpl;
+import dev.eyesless.simple_weather_for_fishermans.fragments.CentralFragmentPresenter;
 import dev.eyesless.simple_weather_for_fishermans.fragments.OnboardingFragment;
 
 public class AMainActivity extends AppCompatActivity implements AMainIntwerface, NavigationView.OnNavigationItemSelectedListener {
@@ -280,19 +284,19 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface,
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch (requestCode) {
-            // Check for the integer request code originally supplied to startResolutionForResult().
-            case REQUEST_CHECK_SETTINGS:
+        switch(requestCode) {
+
+            case CentralFragmentPresenter.REQUEST_CHECK_SETTINGS:
+                // Check for the integer request code originally supplied to startResolutionForResult().
                 switch (resultCode) {
                     case Activity.RESULT_OK:
-                        //do nothing
+//                            cfpresenter.getGpsPermission(CentralFragmentImpl.this);
+                        toastmaker(getResources().getString(R.string.pressonemoretime));
                         break;
                     case Activity.RESULT_CANCELED:
-                        toastmaker(getApplicationContext().getString(R.string.nogps));
+                        toastmaker(getResources().getString(R.string.nogps));
                         break;
-                }
-                break;
-
+                }break;
         }
     }
 }

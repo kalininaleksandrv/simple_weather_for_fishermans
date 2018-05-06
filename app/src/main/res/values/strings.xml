@@ -52,6 +52,8 @@
     <string name="secondbackpressed">press one more time to exit app</string>
     <string name="tapanyplace">Tap on screen to continue</string>
     <string name="chooseemailapp">Choose E-MAIL app(NOT MESSENGER)</string>
+    <string name="pressonemoretime">Press on COMPASS icon to get GPS coordinates</string>
+
 
 
 </resources>
