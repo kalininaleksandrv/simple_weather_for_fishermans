@@ -3,13 +3,16 @@ package dev.eyesless.simple_weather_for_fishermans.fragments;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.provider.Settings;
+import android.service.carrier.CarrierMessagingService;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
@@ -17,21 +20,28 @@ import android.support.v4.content.Loader;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 import dev.eyesless.simple_weather_for_fishermans.AMainActivity;
 import dev.eyesless.simple_weather_for_fishermans.R;
@@ -69,6 +79,8 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
     private final static String SAVEDLOC = "savedloc"; // its NAME of country and city
     private final static String SAVEDTIME = "savedtime";
     private final static long DEFTIMEOFDELAY = 3600000;
+
+    private static final int REQUEST_CHECK_SETTINGS = 0x1;
 
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationRequest mLocationRequest;
@@ -223,7 +235,7 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
 
                 if (Build.VERSION.SDK_INT >= 23) {
 
-                    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         getCoordinatesFromGps();
                     } else {
                         cfinterface.getGpsPermission();
@@ -237,6 +249,11 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
         }
     }
 
+    void gerCoordinatesDirectlyFromGps () {
+
+
+    }
+
     //here try to get coordinates from GPS
     void getCoordinatesFromGps() {
 
@@ -244,7 +261,7 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
 
         // Create the location request to start receiving updates
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         mLocationRequest.setInterval(DEFTIMEOFDELAY);
         mLocationRequest.setFastestInterval(DEFTIMEOFDELAY);
 
@@ -256,17 +273,22 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
         // Check whether location settings are satisfied
         // https://developers.google.com/android/reference/com/google/android/gms/location/SettingsClient
         SettingsClient settingsClient = LocationServices.getSettingsClient(context);
-        settingsClient.checkLocationSettings(locationSettingsRequest);
+        Task<LocationSettingsResponse> task = settingsClient.checkLocationSettings(locationSettingsRequest);
 
         //we're actually already check the permissions up here, but AS thought its mistake, so we check it again
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             cfinterface.getGpsPermission();
         }
 
         mLocationCallback = new LocationCallback()   {
         @Override
         public void onLocationResult(LocationResult locationResult) {
-            onLocationChanged(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude());
+
+            if (locationResult!=null) {
+                onLocationChanged(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude());
+            } else {
+                informUserAboutGpsUnavaliable();
+            }
         }};
 
 
@@ -274,17 +296,25 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
         fusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback,
                 null);
 
+        task.addOnFailureListener(mActivity, new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            if (e instanceof ResolvableApiException) {
+                                // Location settings are not satisfied, but this can be fixed
+                                // by showing the user a dialog.
+                                try {
+                                    // Show the dialog by calling startResolutionForResult(),
+                                    // and check the result in onActivityResult().
+                                    ResolvableApiException resolvable = (ResolvableApiException) e;
+                                    resolvable.startResolutionForResult(mActivity,
+                                            REQUEST_CHECK_SETTINGS);
+                                } catch (IntentSender.SendIntentException sendEx) {
+                                    // Ignore the error.
+                                }
+                            }
+                        }
+                    });
 
-        fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-            @Override
-            public void onComplete(@NonNull Task<Location> task) {
-                if(task.getResult()!=null){
-                    //do nothing - all in mLocationCallback
-                } else {
-                   informUserAboutGpsUnavaliable();
-                }
-            }
-        });
     }
 
     //HERE IS METHOD WHEN GPS COORDINATION ACSESSED

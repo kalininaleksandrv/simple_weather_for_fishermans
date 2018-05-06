@@ -1,5 +1,6 @@
 package dev.eyesless.simple_weather_for_fishermans;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -37,6 +38,8 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface,
     private DrawerLayout drawer;
     private final AMainPresenter presenter;
     int counter = 0;
+
+    private static final int REQUEST_CHECK_SETTINGS = 0x1;
 
     public AMainActivity() {
         presenter = new AMainPresenter(this);
@@ -271,5 +274,25 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface,
             } catch (ActivityNotFoundException e) {
                 toastmaker(getString(R.string.nosuchactivity));
             }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            // Check for the integer request code originally supplied to startResolutionForResult().
+            case REQUEST_CHECK_SETTINGS:
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+                        //do nothing
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        toastmaker(getApplicationContext().getString(R.string.nogps));
+                        break;
+                }
+                break;
+
+        }
     }
 }
