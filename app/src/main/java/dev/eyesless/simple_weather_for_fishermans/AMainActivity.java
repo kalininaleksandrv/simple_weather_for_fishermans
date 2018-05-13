@@ -108,6 +108,10 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface,
             }
             public void onDrawerOpened (View v) {
                 super.onDrawerOpened(v);
+                //if central fragment not active when drawer opened - launch central fragment
+                if (!isFragmentActive()){
+                    frameRemoover(new CentralFragmentImpl(), "Central");
+                }
             }
         };
 
@@ -298,5 +302,10 @@ public class AMainActivity extends AppCompatActivity implements AMainIntwerface,
                         break;
                 }break;
         }
+    }
+
+    boolean isFragmentActive (){
+
+        return getSupportFragmentManager().findFragmentByTag("Central") != null;
     }
 }
