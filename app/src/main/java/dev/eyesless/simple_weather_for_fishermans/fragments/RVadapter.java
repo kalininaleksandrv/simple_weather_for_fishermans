@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -69,7 +70,7 @@ class RVadapter extends RecyclerView.Adapter<RVadapter.WeatherViewHolder>{
         String temperature = String.valueOf((int)weatherdataset.get(position).getTemperatureMin())+(char) 0x00B0+ "C / " +
                 String.valueOf((int)weatherdataset.get(position).getTemperatureMax()) +(char) 0x00B0+ "C";
         holder.temperature.setText(temperature);
-        String wind = context.getString(R.string.wind) + " " + windfrom(weatherdataset.get(position).getWindBearing());
+        String wind = context.getString(R.string.wind) + " " + windfrom(weatherdataset.get(position).getWindBearing()) + " " + mphToMetpersec(weatherdataset.get(position).getWindSpeed())+" "+context.getString(R.string.mps);
         holder.wind.setText(wind);
         String pressure = context.getString(R.string.pressure) + " " + String.valueOf((int)(weatherdataset.get(position).getPressure()*0.75))+" "+ context.getString(R.string.mmrtst); //25,4 mm = 1 inch
         holder.pressure.setText(pressure);
@@ -164,5 +165,12 @@ class RVadapter extends RecyclerView.Adapter<RVadapter.WeatherViewHolder>{
             return "00-00-0000";
         }
 
+    }
+
+    //convert miles per hour to meters per second
+    private String mphToMetpersec (double d){
+        String pattern = "##0.0";
+        DecimalFormat decimalFormat = new DecimalFormat(pattern);
+        return  decimalFormat.format(d);
     }
 }

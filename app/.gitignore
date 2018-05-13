@@ -1,2 +1,3 @@
 /build
 /gradle.properties
+/src/main/java/dev/eyesless/simple_weather_for_fishermans/Keys.java
