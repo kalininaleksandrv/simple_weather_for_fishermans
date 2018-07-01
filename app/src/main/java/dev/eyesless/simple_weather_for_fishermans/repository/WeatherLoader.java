@@ -12,7 +12,6 @@ import dev.eyesless.simple_weather_for_fishermans.api_interface.weather_interfac
 import dev.eyesless.simple_weather_for_fishermans.fragments.CentralFragmentPresenter;
 import dev.eyesless.simple_weather_for_fishermans.geocoding_responce_classes.Geocod;
 import dev.eyesless.simple_weather_for_fishermans.geocoding_responce_classes.Location;
-import dev.eyesless.simple_weather_for_fishermans.geocoding_responce_classes.Result;
 import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Datum;
 import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Weather;
 import retrofit2.Call;
