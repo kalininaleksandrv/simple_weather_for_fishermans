@@ -75,7 +75,7 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> {
             try {
                 incomelocation = response.execute().body().getResults().get(0).getGeometry().getLocation();
                 askinglocation = from_loc_to_string(incomelocation);
-            } catch (IOException e) {
+            } catch (IOException | ArrayIndexOutOfBoundsException e) {
                 askinglocation = locations;
             }
         }
