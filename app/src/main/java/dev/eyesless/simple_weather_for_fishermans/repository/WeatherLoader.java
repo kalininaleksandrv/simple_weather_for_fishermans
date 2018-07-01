@@ -12,6 +12,7 @@ import dev.eyesless.simple_weather_for_fishermans.api_interface.weather_interfac
 import dev.eyesless.simple_weather_for_fishermans.fragments.CentralFragmentPresenter;
 import dev.eyesless.simple_weather_for_fishermans.geocoding_responce_classes.Geocod;
 import dev.eyesless.simple_weather_for_fishermans.geocoding_responce_classes.Location;
+import dev.eyesless.simple_weather_for_fishermans.geocoding_responce_classes.Result;
 import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Datum;
 import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Weather;
 import retrofit2.Call;
@@ -72,10 +73,11 @@ public class WeatherLoader extends AsyncTaskLoader <List<Datum>> {
 
         }else{
             Call<Geocod> response = geocoding_interfaces.CoordinatesFactory.getInstance().getCoordinates(coordinates, private_key);
+
             try {
                 incomelocation = response.execute().body().getResults().get(0).getGeometry().getLocation();
                 askinglocation = from_loc_to_string(incomelocation);
-            } catch (IOException | ArrayIndexOutOfBoundsException e) {
+            } catch (IOException | IndexOutOfBoundsException e) {
                 askinglocation = locations;
             }
         }
