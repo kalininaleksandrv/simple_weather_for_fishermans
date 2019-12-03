@@ -202,7 +202,7 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
     }
 
     //start intent to autocompletion location
-    void startActivity(Context context) {
+    void startActivity(CentralFragmentImpl centralFragment) {
 
 //        try {
 //            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
@@ -224,7 +224,7 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
                 AutocompleteActivityMode.FULLSCREEN, fields)
                 .build(mActivity);
 
-        mActivity.startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+        centralFragment.startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
 
     }
 

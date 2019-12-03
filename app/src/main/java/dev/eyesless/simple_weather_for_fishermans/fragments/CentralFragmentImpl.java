@@ -201,7 +201,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     }
 
     public void startActivityFromPresenter() {
-        cfpresenter.startActivity(mActivity.getApplication().getApplicationContext());
+        cfpresenter.startActivity(this);
     }
 
 //    //result of autocompleet transfering to Central Fragment
@@ -220,11 +220,13 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
 //                        cfpresenter.setAutocompleted(place.getAddress().toString());
 
                         Place place = Autocomplete.getPlaceFromIntent(data);
-                        Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
+                        Log.i(TAG, "Place: " + place.getAttributions() + ", " + place.getId());
+                        cfpresenter.setAutocompleted(place.getName());
 
-//                        cfpresenter.startSearch(true);
-//                        cf_progress.setVisibility(View.VISIBLE);
-//                        cf_trytoload.setVisibility(View.VISIBLE);
+
+                        cfpresenter.startSearch(true);
+                        cf_progress.setVisibility(View.VISIBLE);
+                        cf_trytoload.setVisibility(View.VISIBLE);
                         break;
 
                     case AutocompleteActivity.RESULT_ERROR:
