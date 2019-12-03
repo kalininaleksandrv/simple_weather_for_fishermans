@@ -1,11 +1,9 @@
 package dev.eyesless.simple_weather_for_fishermans.fragments;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,18 +15,17 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.Switch;
 import android.widget.TextView;
 
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
 
 import java.util.List;
 
@@ -38,6 +35,7 @@ import dev.eyesless.simple_weather_for_fishermans.weather_response_classes.Datum
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+import static com.android.volley.VolleyLog.TAG;
 
 public class CentralFragmentImpl extends Fragment implements CentralFragmentInterface, SwipeRefreshLayout.OnRefreshListener, ActivityCompat.OnRequestPermissionsResultCallback {
 
@@ -77,6 +75,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
         if (savedInstanceState != null) {
             setCurrentcocation(savedInstanceState.getString(CURRENT_LOC));
         }
+
     }
 
     @Override
@@ -202,7 +201,7 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
     }
 
     public void startActivityFromPresenter() {
-        cfpresenter.startActivity(this);
+        cfpresenter.startActivity(mActivity.getApplication().getApplicationContext());
     }
 
 //    //result of autocompleet transfering to Central Fragment
@@ -217,16 +216,19 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
 
                     case RESULT_OK:
 
-                        Place place = PlaceAutocomplete.getPlace(mActivity, data);
-                        cfpresenter.setAutocompleted(place.getAddress().toString());
-                        cfpresenter.startSearch(true);
-                        cf_progress.setVisibility(View.VISIBLE);
-                        cf_trytoload.setVisibility(View.VISIBLE);
+//                        Place place = PlaceAutocomplete.getPlace(mActivity, data);
+//                        cfpresenter.setAutocompleted(place.getAddress().toString());
+
+                        Place place = Autocomplete.getPlaceFromIntent(data);
+                        Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
+
+//                        cfpresenter.startSearch(true);
+//                        cf_progress.setVisibility(View.VISIBLE);
+//                        cf_trytoload.setVisibility(View.VISIBLE);
                         break;
 
-                    case PlaceAutocomplete.RESULT_ERROR:
+                    case AutocompleteActivity.RESULT_ERROR:
 
-                        Status status = PlaceAutocomplete.getStatus(mActivity, data);
                         mActivity.toastmaker(getResources().getString(R.string.autocompleeterror));
                         break;
 

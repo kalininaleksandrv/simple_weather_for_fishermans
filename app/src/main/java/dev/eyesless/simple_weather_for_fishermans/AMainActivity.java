@@ -25,9 +25,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 
 import dev.eyesless.simple_weather_for_fishermans.fragments.AboutDialogFragment;
 import dev.eyesless.simple_weather_for_fishermans.fragments.CentralFragmentImpl;

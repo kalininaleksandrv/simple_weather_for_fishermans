@@ -1,26 +1,21 @@
 package dev.eyesless.simple_weather_for_fishermans.fragments;
 
 import android.Manifest;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.provider.Settings;
-import android.service.carrier.CarrierMessagingService;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -29,21 +24,22 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
-import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
-import java.util.concurrent.Executor;
 
 import dev.eyesless.simple_weather_for_fishermans.AMainActivity;
+import dev.eyesless.simple_weather_for_fishermans.Keys;
 import dev.eyesless.simple_weather_for_fishermans.R;
 import dev.eyesless.simple_weather_for_fishermans.repository.PrognosticModel;
 import dev.eyesless.simple_weather_for_fishermans.repository.WeatherLoader;
@@ -206,16 +202,31 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
     }
 
     //start intent to autocompletion location
-    void startActivity(CentralFragmentImpl centralFragment) {
+    void startActivity(Context context) {
 
-        try {
-            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
-                    .build(mActivity);
+//        try {
+//            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
+//                    .build(mActivity);
+//
+//            centralFragment.startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+//        } catch (GooglePlayServicesRepairableException e) {
+//        } catch (GooglePlayServicesNotAvailableException e) {
+//        }
 
-            centralFragment.startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
-        } catch (GooglePlayServicesRepairableException e) {
-        } catch (GooglePlayServicesNotAvailableException e) {
+        if (!Places.isInitialized()) {
+            Places.initialize(context, "AIzaSyDE7pigGYfZdRJnMv3UxBD82_sV2UGIHLw");
         }
+
+        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+
+        // Start the autocomplete intent.
+        Intent intent = new Autocomplete.IntentBuilder(
+                AutocompleteActivityMode.FULLSCREEN, fields)
+                .build(mActivity);
+
+        mActivity.startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+
+
     }
 
     //trying to get coordinates from gps
@@ -229,8 +240,8 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
             if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 
                 mActivity.toastmaker(context.getString(R.string.pleaseenablegps));
-                Intent intnt = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                centralFragment.startActivityForResult(intnt, GPS_ENABLER_REQUEST_CODE);
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                centralFragment.startActivityForResult(intent, GPS_ENABLER_REQUEST_CODE);
 
             } else {
 
