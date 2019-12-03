@@ -214,7 +214,7 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
 //        }
 
         if (!Places.isInitialized()) {
-            Places.initialize(context, "AIzaSyDE7pigGYfZdRJnMv3UxBD82_sV2UGIHLw");
+            Places.initialize(context, Keys.getGooglePlacesPrivateKey());
         }
 
         List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
@@ -225,7 +225,6 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
                 .build(mActivity);
 
         mActivity.startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
-
 
     }
 
