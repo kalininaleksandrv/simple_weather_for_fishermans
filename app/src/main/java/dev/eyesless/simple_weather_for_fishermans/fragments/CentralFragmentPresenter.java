@@ -1,7 +1,6 @@
 package dev.eyesless.simple_weather_for_fishermans.fragments;
 
 import android.Manifest;
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
