@@ -203,15 +203,6 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
     //start intent to autocompletion location
     void startActivity(CentralFragmentImpl centralFragment) {
 
-//        try {
-//            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
-//                    .build(mActivity);
-//
-//            centralFragment.startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
-//        } catch (GooglePlayServicesRepairableException e) {
-//        } catch (GooglePlayServicesNotAvailableException e) {
-//        }
-
         if (!Places.isInitialized()) {
             Places.initialize(context, Keys.getGooglePlacesPrivateKey());
         }
@@ -257,11 +248,6 @@ public class CentralFragmentPresenter implements LoaderManager.LoaderCallbacks<L
         } else {
             informUserAboutGpsUnavaliable();
         }
-    }
-
-    void gerCoordinatesDirectlyFromGps () {
-
-
     }
 
     //here try to get coordinates from GPS

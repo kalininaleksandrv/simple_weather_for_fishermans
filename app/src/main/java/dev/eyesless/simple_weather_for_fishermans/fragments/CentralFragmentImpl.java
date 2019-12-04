@@ -216,9 +216,6 @@ public class CentralFragmentImpl extends Fragment implements CentralFragmentInte
 
                     case RESULT_OK:
 
-//                        Place place = PlaceAutocomplete.getPlace(mActivity, data);
-//                        cfpresenter.setAutocompleted(place.getAddress().toString());
-
                         Place place = Autocomplete.getPlaceFromIntent(data);
                         Log.i(TAG, "Place: " + place.getAttributions() + ", " + place.getId());
                         cfpresenter.setAutocompleted(place.getName());
